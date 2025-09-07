@@ -1,0 +1,37 @@
+Members:
+Ninad -> Backend
+Shweta -> Frontend
+Mandaar -> YoloV8
+Shreya -> Frontend
+
+-- Tasks --
+Frontend: [React.js | Vanilla CSS | Tailwind CSS | MUI/shadcn]
+User UI / Login, Signup, OTP, Profile Page
+Admin UI / Basic Tables for models (scalable), Google Map
+Officials UI / Dashboard -> Request Management, Current Requests, Google Map
+
+Backend: [Node.js | Passport.js | MongoDB | Mongo | Cloudinary]
+Complete Auth
+Profile Management
+Process Requests
+RUD Requests
+Handling cloud image storage
+
+YoloV8:
+Data collection
+Internal working explanation
+
+user: {
+    role,
+    imageUrl,
+    aadharNo (Optional)
+}
+report: { // user 
+    _id,
+    imageUrl,
+    yoloUrl,
+    location,
+    time,
+    allotted
+}
+
