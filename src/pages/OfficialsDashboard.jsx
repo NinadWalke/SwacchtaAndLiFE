@@ -60,64 +60,128 @@ export default function OfficialsDashboard() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Officials Dashboard - City Reports</h2>
+    <div style={{
+      minHeight: "100vh",
+      background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
+      padding: "40px 0"
+    }}>
+      <div style={{
+        maxWidth: 1000,
+        margin: "0 auto",
+        padding: 32,
+        background: "#fff",
+        border: "1px solid #ddd",
+        borderRadius: 16,
+        boxShadow: "0 4px 24px rgba(0,0,0,0.10)",
+        display: "flex",
+        flexDirection: "column",
+        gap: 32
+      }}>
+        <h2 style={{ color: "#1976d2", fontSize: 32, fontWeight: 700, marginBottom: 8 }}>
+          Officials Dashboard - City Reports
+        </h2>
 
-      {/* Map */}
-      <MapContainer
-        center={[28.615, 77.210]}
-        zoom={13}
-        style={{ height: "400px", width: "100%", marginBottom: "20px" }}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        />
-        {reports.map((r) => (
-          <Marker
-            key={r.id}
-            position={[r.lat, r.lng]}
-            icon={r.status === "Resolved" ? greenIcon : redIcon}
+        {/* Map Card */}
+        <div style={{
+          background: "#e3f2fd",
+          borderRadius: 12,
+          padding: 24,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.07)"
+        }}>
+          <h3 style={{ color: "#1976d2", marginBottom: 16 }}>Reports Map</h3>
+          <MapContainer
+            center={[28.615, 77.210]}
+            zoom={13}
+            style={{ height: "400px", width: "100%", marginBottom: "20px", borderRadius: "8px" }}
           >
-            <Popup>
-              <strong>{r.location}</strong>
-              <br />
-              Status: {r.status}
-              <br />
-              <button onClick={() => toggleStatus(r.id)}>
-                Mark {r.status === "Resolved" ? "Pending" : "Resolved"}
-              </button>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            />
+            {reports.map((r) => (
+              <Marker
+                key={r.id}
+                position={[r.lat, r.lng]}
+                icon={r.status === "Resolved" ? greenIcon : redIcon}
+              >
+                <Popup>
+                  <strong>{r.location}</strong>
+                  <br />
+                  Status: {r.status}
+                  <br />
+                  <button
+                    onClick={() => toggleStatus(r.id)}
+                    style={{
+                      padding: "6px 12px",
+                      background: r.status === "Resolved" ? "#fbc02d" : "#388e3c",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: 4,
+                      cursor: "pointer",
+                      fontWeight: "bold",
+                      marginTop: 8
+                    }}
+                  >
+                    Mark {r.status === "Resolved" ? "Pending" : "Resolved"}
+                  </button>
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
+        </div>
 
-      {/* Table */}
-      <h3>Reports List</h3>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ borderBottom: "1px solid #ccc" }}>
-            <th>ID</th>
-            <th>Location</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {reports.map((r) => (
-            <tr key={r.id} style={{ borderBottom: "1px solid #eee" }}>
-              <td>{r.id}</td>
-              <td>{r.location}</td>
-              <td>{r.status}</td>
-              <td>
-                <button onClick={() => toggleStatus(r.id)}>
-                  Mark {r.status === "Resolved" ? "Pending" : "Resolved"}
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        {/* Table Card */}
+        <div style={{
+          background: "#f5f5f5",
+          borderRadius: 12,
+          padding: 24,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
+        }}>
+          <h3 style={{ color: "#1976d2", marginBottom: 16 }}>Reports List</h3>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              textAlign: "left",
+              fontSize: 16
+            }}>
+              <thead>
+                <tr style={{ borderBottom: "2px solid #ccc" }}>
+                  <th style={{ padding: "8px 12px" }}>ID</th>
+                  <th style={{ padding: "8px 12px" }}>Location</th>
+                  <th style={{ padding: "8px 12px" }}>Status</th>
+                  <th style={{ padding: "8px 12px" }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reports.map((r) => (
+                  <tr key={r.id} style={{ borderBottom: "1px solid #eee" }}>
+                    <td style={{ padding: "8px 12px" }}>{r.id}</td>
+                    <td style={{ padding: "8px 12px" }}>{r.location}</td>
+                    <td style={{ padding: "8px 12px" }}>{r.status}</td>
+                    <td style={{ padding: "8px 12px" }}>
+                      <button
+                        onClick={() => toggleStatus(r.id)}
+                        style={{
+                          padding: "6px 12px",
+                          background: r.status === "Resolved" ? "#fbc02d" : "#388e3c",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: 4,
+                          cursor: "pointer",
+                          fontWeight: "bold"
+                        }}
+                      >
+                        Mark {r.status === "Resolved" ? "Pending" : "Resolved"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
