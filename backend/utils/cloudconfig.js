@@ -10,7 +10,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'beautify4u_dev',
+        folder: 'swacchtaAndLiFE',
         allowedFormats: ['jpg', 'png', 'jpeg'],
     },
 });
