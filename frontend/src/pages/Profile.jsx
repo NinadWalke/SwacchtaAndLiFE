@@ -52,8 +52,6 @@ export default function Profile() {
 
   return (
     <div style={{ background: "#f5fdf7", minHeight: "100vh" }}>
-      <Navbar />
-
       {/* SaaS-style Hero Section */}
       <section
         className="hero"
