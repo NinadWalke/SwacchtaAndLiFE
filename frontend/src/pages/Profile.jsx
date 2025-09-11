@@ -1,21 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import api from "../utils/axiosConfig";
+import { useAuth } from "../components/AuthContext";
 
 export default function Profile() {
+  const {logout} = useAuth();
   const [edit, setEdit] = useState(false);
-  const [name, setName] = useState("Test User");
-  const [email, setEmail] = useState("test@example.com");
-  const [mobile, setMobile] = useState("9876543210");
-  const [password, setPassword] = useState("password123");
-  const [aadhar, setAadhar] = useState("1234-5678-9012");
-  const [location, setLocation] = useState("Delhi, India");
-  const [gender, setGender] = useState("Male");
+  const [currUser, setCurrUser] = useState(null);
 
-  const handleSave = (e) => {
-    e.preventDefault();
-    setEdit(false);
-    alert("Profile updated!");
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await api.get("/auth/check");
+      setCurrUser(res.data.user);
+    };
+    getUser();
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCurrUser({ ...currUser, [name]: value });
   };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    try {
+      await api.put(`/profile/${currUser._id}`, currUser);
+      setEdit(false);
+      alert("Profile updated!");
+    } catch (err) {
+      console.error(err);
+      alert("Error updating profile");
+    }
+  };
+  const handleLogout = async () => {
+    try {
+      const res = await api.post("/auth/logout");
+      if (res.data.successMsg) {
+        alert(res.data.successMsg);
+        // Optional: clear user from context or redirect to login
+        logout();
+        window.location.href = "/login"; // redirect to login page
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error logging out. Please try again.");
+    }
+  };
+  
+
+  if (!currUser) return <div>Loading...</div>;
 
   return (
     <div style={{ background: "#f5fdf7", minHeight: "100vh" }}>
@@ -33,7 +66,14 @@ export default function Profile() {
           boxShadow: "0 4px 24px rgba(44,62,80,0.08)",
         }}
       >
-        <h2 style={{ fontSize: "2.5rem", fontWeight: 800, marginBottom: 8, letterSpacing: 1 }}>
+        <h2
+          style={{
+            fontSize: "2.5rem",
+            fontWeight: 800,
+            marginBottom: 8,
+            letterSpacing: 1,
+          }}
+        >
           Account Settings
         </h2>
         <p style={{ fontSize: "1.15rem", maxWidth: 540, margin: "0 auto" }}>
@@ -54,13 +94,15 @@ export default function Profile() {
           display: "flex",
           gap: "40px",
           alignItems: "flex-start",
-          flexWrap: "wrap"
+          flexWrap: "wrap",
         }}
       >
         {/* Avatar and Basic Info */}
         <div style={{ flex: "1 1 220px", textAlign: "center" }}>
           <img
-            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2ecc71&color=fff&size=128`}
+            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+              currUser.fname + " " + currUser.lname
+            )}&background=2ecc71&color=fff&size=128`}
             alt="Avatar"
             style={{
               borderRadius: "50%",
@@ -68,103 +110,227 @@ export default function Profile() {
               marginBottom: 16,
               width: 128,
               height: 128,
-              objectFit: "cover"
+              objectFit: "cover",
             }}
           />
-          <h3 style={{ fontWeight: 700, fontSize: "1.4rem", marginBottom: 4 }}>{name}</h3>
-          <div style={{ color: "#27ae60", fontWeight: 500 }}>{location}</div>
-          <div style={{ color: "#888", fontSize: "1rem", marginTop: 8 }}>{email}</div>
+          <h3
+            style={{
+              fontWeight: 700,
+              fontSize: "1.4rem",
+              marginBottom: 4,
+            }}
+          >
+            {currUser.fname} {currUser.lname}
+          </h3>
+          <div style={{ color: "#27ae60", fontWeight: 500 }}>
+            {currUser.address || "Location not set"}
+          </div>
+          <div style={{ color: "#888", fontSize: "1rem", marginTop: 8 }}>
+            {currUser.email}
+          </div>
         </div>
 
         {/* Details/Form */}
         <div style={{ flex: "2 1 400px" }}>
           {edit ? (
-            <form onSubmit={handleSave} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+            <form
+              onSubmit={handleSave}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 24,
+              }}
+            >
               <div>
-                <label>Name</label>
-                <input type="text" value={name} onChange={e => setName(e.target.value)}
-                  className="p-2 rounded" style={{ width: "100%", marginTop: 6, border: "1px solid #ccc" }} required />
+                <label>First Name</label>
+                <input
+                  type="text"
+                  name="fname"
+                  value={currUser.fname}
+                  onChange={handleChange}
+                  className="p-2 rounded"
+                  style={{
+                    width: "100%",
+                    marginTop: 6,
+                    border: "1px solid #ccc",
+                  }}
+                  required
+                />
               </div>
               <div>
-                <label>Email</label>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                  className="p-2 rounded" style={{ width: "100%", marginTop: 6, border: "1px solid #ccc" }} required />
+                <label>Last Name</label>
+                <input
+                  type="text"
+                  name="lname"
+                  value={currUser.lname}
+                  onChange={handleChange}
+                  className="p-2 rounded"
+                  style={{
+                    width: "100%",
+                    marginTop: 6,
+                    border: "1px solid #ccc",
+                  }}
+                  required
+                />
               </div>
               <div>
-                <label>Mobile</label>
-                <input type="tel" value={mobile} onChange={e => setMobile(e.target.value)}
-                  className="p-2 rounded" style={{ width: "100%", marginTop: 6, border: "1px solid #ccc" }} required />
-              </div>
-              <div>
-                <label>Password</label>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)}
-                  className="p-2 rounded" style={{ width: "100%", marginTop: 6, border: "1px solid #ccc" }} required />
-              </div>
-              <div>
-                <label>Aadhaar Card</label>
-                <input type="text" value={aadhar} onChange={e => setAadhar(e.target.value)}
-                  className="p-2 rounded" style={{ width: "100%", marginTop: 6, border: "1px solid #ccc" }} required maxLength={14} placeholder="XXXX-XXXX-XXXX" />
-              </div>
-              <div>
-                <label>Location</label>
-                <input type="text" value={location} onChange={e => setLocation(e.target.value)}
-                  className="p-2 rounded" style={{ width: "100%", marginTop: 6, border: "1px solid #ccc" }} required />
+                <label>Date of Birth</label>
+                <input
+                  type="date"
+                  name="dob"
+                  value={currUser.dob?.split("T")[0] || ""}
+                  onChange={handleChange}
+                  className="p-2 rounded"
+                  style={{
+                    width: "100%",
+                    marginTop: 6,
+                    border: "1px solid #ccc",
+                  }}
+                />
               </div>
               <div>
                 <label>Gender</label>
-                <select value={gender} onChange={e => setGender(e.target.value)}
-                  className="p-2 rounded" style={{ width: "100%", marginTop: 6, border: "1px solid #ccc" }} required>
+                <select
+                  name="gender"
+                  value={currUser.gender}
+                  onChange={handleChange}
+                  className="p-2 rounded"
+                  style={{
+                    width: "100%",
+                    marginTop: 6,
+                    border: "1px solid #ccc",
+                  }}
+                  required
+                >
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
+              <div>
+                <label>Phone</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={currUser.phone}
+                  onChange={handleChange}
+                  className="p-2 rounded"
+                  style={{
+                    width: "100%",
+                    marginTop: 6,
+                    border: "1px solid #ccc",
+                  }}
+                />
+              </div>
+              <div>
+                <label>Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={currUser.address || ""}
+                  onChange={handleChange}
+                  className="p-2 rounded"
+                  style={{
+                    width: "100%",
+                    marginTop: 6,
+                    border: "1px solid #ccc",
+                  }}
+                />
+              </div>
               <div style={{ gridColumn: "1 / -1" }}>
-                <button type="submit" className="btn" style={{
-                  width: "100%",
-                  marginTop: 12,
-                  background: "#2ecc71",
-                  color: "#fff",
-                  fontWeight: 700,
-                  fontSize: "1.1rem",
-                  padding: "12px 0",
-                  borderRadius: 8,
-                  border: "none",
-                  boxShadow: "0 2px 8px rgba(44,62,80,0.07)",
-                  cursor: "pointer"
-                }}>
+                <button
+                  type="submit"
+                  className="btn"
+                  style={{
+                    width: "100%",
+                    marginTop: 12,
+                    background: "#2ecc71",
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: "1.1rem",
+                    padding: "12px 0",
+                    borderRadius: 8,
+                    border: "none",
+                    boxShadow: "0 2px 8px rgba(44,62,80,0.07)",
+                    cursor: "pointer",
+                  }}
+                >
                   Save
                 </button>
               </div>
             </form>
           ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 24,
+              }}
+            >
               <div>
-                <p><strong>Name:</strong> {name}</p>
-                <p><strong>Email:</strong> {email}</p>
-                <p><strong>Aadhaar Card:</strong> {aadhar}</p>
+                <p>
+                  <strong>First Name:</strong> {currUser.fname}
+                </p>
+                <p>
+                  <strong>Last Name:</strong> {currUser.lname}
+                </p>
+                <p>
+                  <strong>Date of Birth:</strong>{" "}
+                  {currUser.dob?.split("T")[0]}
+                </p>
               </div>
               <div>
-                <p><strong>Mobile:</strong> {mobile}</p>
-                <p><strong>Location:</strong> {location}</p>
-                <p><strong>Gender:</strong> {gender}</p>
-                <p><strong>Password:</strong> ******</p>
+                <p>
+                  <strong>Gender:</strong> {currUser.gender}
+                </p>
+                <p>
+                  <strong>Phone:</strong> {currUser.phone}
+                </p>
+                <p>
+                  <strong>Address:</strong> {currUser.address || "N/A"}
+                </p>
+                <p>
+                  <strong>Username:</strong> {currUser.username}
+                </p>
               </div>
               <div style={{ gridColumn: "1 / -1" }}>
-                <button onClick={() => setEdit(true)} className="btn" style={{
-                  width: "100%",
-                  marginTop: 12,
-                  background: "#2ecc71",
-                  color: "#fff",
-                  fontWeight: 700,
-                  fontSize: "1.1rem",
-                  padding: "12px 0",
-                  borderRadius: 8,
-                  border: "none",
-                  boxShadow: "0 2px 8px rgba(44,62,80,0.07)",
-                  cursor: "pointer"
-                }}>
+                <button
+                  onClick={() => setEdit(true)}
+                  className="btn"
+                  style={{
+                    width: "100%",
+                    marginTop: 12,
+                    background: "#2ecc71",
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: "1.1rem",
+                    padding: "12px 0",
+                    borderRadius: 8,
+                    border: "none",
+                    boxShadow: "0 2px 8px rgba(44,62,80,0.07)",
+                    cursor: "pointer",
+                  }}
+                >
                   Edit Profile
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="btn"
+                  style={{
+                    width: "100%",
+                    marginTop: 12,
+                    background: "red",
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: "1.1rem",
+                    padding: "12px 0",
+                    borderRadius: 8,
+                    border: "none",
+                    boxShadow: "0 2px 8px rgba(44,62,80,0.07)",
+                    cursor: "pointer",
+                  }}
+                >
+                  Logout
                 </button>
               </div>
             </div>

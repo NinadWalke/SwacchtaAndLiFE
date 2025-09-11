@@ -93,6 +93,7 @@ app.use(passport.session());
 // Google strategy here
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+passport.use(new LocalStrategy(User.authenticate()));
 
 // --- Routes ---
 // 1. Authentication, Login and Sign Up
@@ -227,45 +228,42 @@ app.post("/auth/sign-up", async (req, res) => {
       password,
       gender,
       dob,
+      address,
       phone,
       aadhar,
     } = req.body;
-
     const role = "user";
 
-    // Find the user by email (must exist after OTP verification)
-    const existingUser = await User.findOne({ email });
-
-    if (!existingUser) {
-      return res
-        .status(404)
-        .json({ message: "Email not found. Please verify OTP first." });
+    // Check if email already exists
+    const existingEmail = await User.findOne({ email: email.trim().toLowerCase() });
+    if (existingEmail) {
+      return res.status(409).json({ message: "Email already registered." });
     }
 
-    if (!existingUser.isOtpVerified) {
-      return res
-        .status(403)
-        .json({ message: "OTP not verified. Please verify before signup." });
+    // Check if username already exists
+    const existingUsername = await User.findOne({ username: username.trim().toLowerCase() });
+    if (existingUsername) {
+      return res.status(409).json({ message: "Username already taken." });
     }
 
-    // Set all user details
-    existingUser.fname = fname;
-    existingUser.lname = lname;
-    existingUser.username = username.trim().toLowerCase();
-    existingUser.gender = gender;
-    existingUser.dob = dob;
-    existingUser.phone = phone;
-    existingUser.aadhar = aadhar;
-    existingUser.role = role;
+    // Create new user
+    const newUser = new User({
+      fname: fname.trim(),
+      lname: lname.trim(),
+      email: email.trim().toLowerCase(),
+      username: username.trim().toLowerCase(),
+      gender,
+      dob,
+      phone: phone.trim(),
+      aadhar: aadhar.trim(),
+      address: address,
+      role,
+    });
 
-    // Hash the password using Passport-local-mongoose
-    await existingUser.setPassword(password);
+    // Hash the password using passport-local-mongoose
+    await newUser.setPassword(password);
 
-    // Clear OTP fields
-    existingUser.otp = undefined;
-    existingUser.otpExpires = undefined;
-
-    await existingUser.save();
+    await newUser.save();
 
     return res.status(201).json({ message: "User successfully registered!" });
   } catch (err) {

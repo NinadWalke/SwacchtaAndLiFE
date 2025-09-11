@@ -17,22 +17,6 @@ export default function Home() {
 
   return (
     <div>
-      {/* Navbar */}
-      <header className="navbar">
-        <h1>Swacchta&Life</h1>
-        <nav>
-          {navLinks.map(link => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className={location.pathname === link.to ? "active" : ""}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-      </header>
-
       {/* Hero Section */}
       <section className="hero">
         <h2>Empowering Clean Cities</h2>
