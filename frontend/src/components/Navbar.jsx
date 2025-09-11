@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 export default function Navbar() {
+  // State Variables
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  // Auth Context
+  const { user } = useAuth();
 
   const navLinks = [
-    { to: "/", label: "Home" },
-    { to: "/login", label: "Login" },
-    { to: "/signup", label: "Signup" },
-    { to: "/otp", label: "OTP" },
-    { to: "/profile", label: "Profile" },
-    { to: "/upload", label: "Upload" },
-    { to: "/admin", label: "Admin" },
-    { to: "/officials", label: "Officials" },
+    { to: "/", label: "Home", displayLink: user ? true : true },
+    { to: "/login", label: "Login", displayLink: user ? false : true },
+    { to: "/signup", label: "Signup", displayLink: user ? false : true },
+    { to: "/profile", label: "Profile", displayLink: user ? true : false },
+    { to: "/upload", label: "Upload", displayLink: user ? true : false },
+    { to: "/admin", label: "Admin", displayLink: user ? true : false },
+    { to: "/officials", label: "Officials", displayLink: user ? true : false },
+
   ];
 
   return (
@@ -26,25 +30,33 @@ export default function Navbar() {
         />
         <h1>Swacchta&Life</h1>
       </div>
-      <nav className="nav-links" style={{ display: menuOpen ? "flex" : "", flexDirection: menuOpen ? "column" : "row" }}>
-        {navLinks.map(link => (
-          <Link
-            key={link.to}
-            to={link.to}
-            className={location.pathname === link.to ? "active" : ""}
-            style={{
-              fontWeight: location.pathname === link.to ? "bold" : "normal",
-              background: location.pathname === link.to ? "#388e3c" : "none",
-              color: location.pathname === link.to ? "#ffd600" : "white",
-              borderRadius: 6,
-              padding: "6px 14px",
-              transition: "background 0.3s, color 0.3s"
-            }}
-            onClick={() => setMenuOpen(false)}
-          >
-            {link.label}
-          </Link>
-        ))}
+      <nav
+        className="nav-links"
+        style={{
+          display: menuOpen ? "flex" : "",
+          flexDirection: menuOpen ? "column" : "row",
+        }}
+      >
+        {navLinks
+          .filter((link) => link.displayLink) // Only keep links where displayLink is true
+          .map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={location.pathname === link.to ? "active" : ""}
+              style={{
+                fontWeight: location.pathname === link.to ? "bold" : "normal",
+                background: location.pathname === link.to ? "#388e3c" : "none",
+                color: location.pathname === link.to ? "#ffd600" : "white",
+                borderRadius: 6,
+                padding: "6px 14px",
+                transition: "background 0.3s, color 0.3s",
+              }}
+              onClick={() => setMenuOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
       </nav>
       {/* Hamburger for mobile */}
       <button
@@ -56,7 +68,7 @@ export default function Navbar() {
           fontSize: 28,
           cursor: "pointer",
           display: "none",
-          marginLeft: 16
+          marginLeft: 16,
         }}
         onClick={() => setMenuOpen(!menuOpen)}
         aria-label="Toggle navigation"
