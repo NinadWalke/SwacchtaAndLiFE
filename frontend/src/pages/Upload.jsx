@@ -93,7 +93,6 @@ export default function Upload() {
       alert("Error uploading image. Please try again.");
     }
   };
-  
 
   return (
     <div style={{

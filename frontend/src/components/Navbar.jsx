@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-
 import { useAuth } from "./AuthContext";
 
 export default function Navbar() {
@@ -18,6 +17,7 @@ export default function Navbar() {
     { to: "/upload", label: "Upload", displayLink: user ? true : false },
     { to: "/admin", label: "Admin", displayLink: user ? true : false },
     { to: "/officials", label: "Officials", displayLink: user ? true : false },
+
   ];
 
   return (

@@ -106,7 +106,7 @@ export default function Login() {
             </button>
           </div>
 
-          {/* Submit */}
+
           <button
             type="submit"
             style={{
@@ -124,7 +124,6 @@ export default function Login() {
             Login
           </button>
         </form>
-
         <div style={{ textAlign: "center", marginTop: 18 }}>
           <span style={{ color: "#555" }}>Don't have an account? </span>
           <Link
