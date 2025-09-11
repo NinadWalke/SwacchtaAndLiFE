@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import Upload from "./pages/Upload";
 import AdminDashboard from "./pages/AdminDashboard";
 import OfficialsDashboard from "./pages/OfficialsDashboard";
+import OfficialsReportDisplay from './pages/OfficialsReportDisplay.jsx';
 
 // Auth Provider
 import { AuthProvider } from "./components/AuthContext";
@@ -18,14 +19,20 @@ function App() {
       <AuthProvider>
         <Navbar />
         <Routes>
+          {/* -- Admin Routes -- */}
+          <Route path="/admin" element={<AdminDashboard />} />
+          {/* -- Authentication --*/}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/otp" element={<Otp />} />
+          {/* -- User Profile --*/}
           <Route path="/profile" element={<Profile />} />
+          {/* -- Core Routes -- */}
           <Route path="/upload" element={<Upload />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          {/* -- Officials Routes -- */}
           <Route path="/officials" element={<OfficialsDashboard />} />
+          <Route path="/officials/report/:id" element={<OfficialsReportDisplay/>}/>
         </Routes>
       </AuthProvider>
     </div>

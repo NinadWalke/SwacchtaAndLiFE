@@ -11,6 +11,7 @@ const reportSchema = new mongoose.Schema({
   location: {
     type: String, 
     required: true,
+    default: "NA"
   },
   time: {
     type: Date,

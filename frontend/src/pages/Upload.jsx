@@ -1,6 +1,10 @@
 import { useState, useRef } from "react";
+import {useNavigate} from 'react-router-dom';
+
+import api from '../utils/axiosConfig';
 
 export default function Upload() {
+  const navigate = useNavigate();
   const [image, setImage] = useState(null);
   const [stream, setStream] = useState(null);
   const [remarks, setRemarks] = useState("");
@@ -49,11 +53,47 @@ export default function Upload() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add upload logic here
-    alert("Image submitted!\nRemarks: " + remarks);
+  
+    if (!image) {
+      alert("Please capture or select an image first!");
+      return;
+    }
+  
+    try {
+      const formData = new FormData();
+  
+      // If the image is a File object (from file input), use it directly
+      if (image instanceof File) {
+        formData.append("image", image);
+      } else {
+        // If image is a Data URL (from capture), convert it to a blob
+        const res = await fetch(image);
+        const blob = await res.blob();
+        formData.append("image", blob, "capture.png");
+      }
+  
+      formData.append("remarks", remarks);
+  
+      const response = await api.post("/reports", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+  
+      if (response.status === 200 || response.status === 201) {
+        alert("Image uploaded successfully!");
+        setImage(null);
+        setRemarks("");
+      }
+      navigate('/');
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Error uploading image. Please try again.");
+    }
   };
+  
 
   return (
     <div style={{

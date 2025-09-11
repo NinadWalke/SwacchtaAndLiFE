@@ -18,6 +18,8 @@ const multer = require("multer");
 // --- Utils ---
 const ExpressError = require("./utils/ExpressError.js");
 const wrapAsync = require("./utils/wrapAsync.js");
+const { storage } = require("./utils/cloudconfig");
+const uploadImgCloudinary = multer({ storage });
 const { cloudinaryConfig } = require("./utils/cloudconfig.js");
 const { extractPublicId } = require("./utils/cloudinaryHelpers.js");
 
@@ -235,13 +237,17 @@ app.post("/auth/sign-up", async (req, res) => {
     const role = "user";
 
     // Check if email already exists
-    const existingEmail = await User.findOne({ email: email.trim().toLowerCase() });
+    const existingEmail = await User.findOne({
+      email: email.trim().toLowerCase(),
+    });
     if (existingEmail) {
       return res.status(409).json({ message: "Email already registered." });
     }
 
     // Check if username already exists
-    const existingUsername = await User.findOne({ username: username.trim().toLowerCase() });
+    const existingUsername = await User.findOne({
+      username: username.trim().toLowerCase(),
+    });
     if (existingUsername) {
       return res.status(409).json({ message: "Username already taken." });
     }
@@ -380,8 +386,32 @@ app.get("/reports", async (req, res) => {
       .json({ message: "Server error while fetching reports" });
   }
 });
-app.post("/reports", async (req, res) => {
-    
+app.post("/reports", uploadImgCloudinary.single("image"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No image uploaded." });
+    }
+    // Get the uploaded Cloudinary URL
+    const imageUrl = req.file.path;
+    // Create a new report
+    const newReport = new Report({
+      reportImg: imageUrl,       // original image
+      reportYoloImg: imageUrl,   // placeholder for ML processed image
+      location: "NA",            // placeholder for now
+      status: "pending",
+      reportOwner: req.user._id, // populate from authenticated user
+    });
+
+    await newReport.save();
+
+    return res.status(201).json({
+      message: "Report created successfully!",
+      report: newReport,
+    });
+  } catch (err) {
+    console.error("Error creating report:", err);
+    return res.status(500).json({ message: "Server error while creating report." });
+  }
 });
 app.get("/reports/:id", async (req, res) => {
   try {
@@ -396,7 +426,30 @@ app.get("/reports/:id", async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 });
-app.post("/reports/:id", async (req, res) => {});
+app.post("/reports/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const report = await Report.findById(id);
+
+    if (!report) return res.status(404).json({ message: "Report not found" });
+
+    // Toggle status: pending -> allotted -> resolved
+    if (report.status === "pending") {
+      report.status = "alloted";
+    } else if (report.status === "alloted") {
+      report.status = "resolved";
+    } else if (report.status === "resolved") {
+      report.status = "pending"; // optional: cycle back to pending
+    }
+
+    await report.save();
+
+    return res.status(200).json({ message: "Status updated", status: report.status });
+  } catch (err) {
+    console.error("Toggle status error:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
 app.delete("/reports/:id", async (req, res) => {
   try {
     const { id } = req.params;
