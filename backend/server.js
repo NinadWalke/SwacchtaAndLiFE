@@ -26,6 +26,7 @@ const { extractPublicId } = require("./utils/cloudinaryHelpers.js");
 // --- Models ---
 const User = require("./schemas/User.js");
 const Report = require("./schemas/Report.js");
+const Event = require('./schemas/Event.js');
 
 // --- Server settings ---
 // Express setup
@@ -386,17 +387,24 @@ app.get("/reports", async (req, res) => {
       .json({ message: "Server error while fetching reports" });
   }
 });
-app.post("/reports", uploadImgCloudinary.single("image"), async (req, res) => {
+const uploadFields = uploadImgCloudinary.fields([
+  { name: "image", maxCount: 1 },
+  { name: "image2", maxCount: 1 },
+]);
+app.post("/reports", uploadFields, async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: "No image uploaded." });
+    if (!req.files || !req.files["image"] || !req.files["image2"]) {
+      return res.status(400).json({ message: "Both images must be uploaded." });
     }
     // Get the uploaded Cloudinary URL
-    const imageUrl = req.file.path;
+    const imageUrl1 = req.files["image"][0].path;
+    const imageUrl2 = req.files["image2"][0].path;
+    console.log(imageUrl1 + " | " + imageUrl2);
+    
     // Create a new report
     const newReport = new Report({
-      reportImg: imageUrl,       // original image
-      reportYoloImg: imageUrl,   // placeholder for ML processed image
+      reportImg: imageUrl1,       // original image
+      reportYoloImg: imageUrl2,   // placeholder for ML processed image
       location: "NA",            // placeholder for now
       remarks: req.body.remarks,
       status: "pending",
@@ -461,6 +469,18 @@ app.delete("/reports/:id", async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 });
+
+// 4. Events Routes
+app.get("/events", async (req, res) => {
+  const events = await Event.find({});
+  res.json(events);
+});
+app.post("/events", async (req, res) => {
+  let {eventName, eventHostedBy, eventDescription, eventDateTime, eventLocation} = req.body;
+});
+app.get("/events/:id", async (req, res) => {});
+app.post("/events/:id", async (req, res) => {});
+app.put("/events/:id", async (req, res) => {});
 
 app.get("/", async (req, res) => {
   console.log(`Backend active!`);

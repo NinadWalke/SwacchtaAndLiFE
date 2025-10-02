@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Event.css';
+import api from '../../../utils/axiosConfig';
 
 function Event() {
+  const [events, setEvents] = useState([]);
   // Temporary mock events
-  const [events] = useState([
+  const [tempEvents] = useState([
     {
       id: 1,
       title: "Beach Cleanup",
@@ -22,6 +24,14 @@ function Event() {
     },
   ]);
 
+  useEffect(() => {
+    const getEvents = async () => {
+      const res = await api.get('/events');
+      console.log(res.data);
+    }
+    getEvents();
+  }, []);
+
   const handleSignUp = (id) => {
     alert(`You signed up for event ID: ${id}`);
     // You can replace this alert with your backend API call
@@ -31,7 +41,7 @@ function Event() {
     <div className="event-container">
       <h1 className="event-title">Upcoming Events</h1>
       <div className="event-list">
-        {events.map((event) => (
+        {tempEvents.map((event) => (
           <div key={event.id} className="event-card">
             <h2>{event.title}</h2>
             <p>{event.description}</p>
