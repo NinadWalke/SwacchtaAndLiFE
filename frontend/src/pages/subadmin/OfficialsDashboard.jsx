@@ -113,6 +113,7 @@ export default function OfficialsDashboard() {
           gap: 32,
         }}
       >
+        <div className="btn" onClick={() => navigate('/officials/create')}>Create Event</div>
         <h2
           style={{
             color: "#1976d2",
@@ -121,7 +122,7 @@ export default function OfficialsDashboard() {
             marginBottom: 8,
           }}
         >
-          Officials Dashboard - City Reports
+          Officials Dashboard - City Reports 
         </h2>
 
         {/* Map Card */}

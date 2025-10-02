@@ -18,8 +18,8 @@ export default function Navbar() {
     { to: "/events", label: "Events", displayLink: user ? true : false },
     { to: "/committee", label: "Committee", displayLink: user ? true : false },
     { to: "/shop", label: "Shop", displayLink: user ? true : false },
-    { to: "/admin", label: "Admin", displayLink: user ? true : false },
     { to: "/officials", label: "Officials", displayLink: user ? true : false },
+    { to: "/admin", label: "Admin", displayLink: user ? true : false },
 
   ];
 

@@ -1,0 +1,15 @@
+numpy<2.0
+pip==24.0
+setuptools==80.9.0
+ultralytics==8.1.13
+fastapi==0.110.0
+uvicorn==0.27.0
+python-multipart==0.0.7
+opencv-python==4.9.0.80
+pillow==10.3.0
+python-dotenv==1.0.1
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.7.1
+torchvision==0.22.1
+ultralytics==8.3.168
+yolov8face==0.0.1
