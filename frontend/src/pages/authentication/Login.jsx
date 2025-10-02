@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import api from '../utils/axiosConfig';
+import api from '../../utils/axiosConfig';
 
-import {useAuth} from '../components/AuthContext';
+import {useAuth} from '../../components/AuthContext';
 
 export default function Login() {
   // Global Context

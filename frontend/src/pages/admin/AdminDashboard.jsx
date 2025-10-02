@@ -12,7 +12,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import api from "../utils/axiosConfig";
+import api from "../../utils/axiosConfig";
 
 const COLORS = ["#fbc02d", "#42a5f5", "#66bb6a"]; // Pending, Allotted, Resolved
 

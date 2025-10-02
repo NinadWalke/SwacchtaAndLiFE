@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import api from "../utils/axiosConfig";
-import { useAuth } from "../components/AuthContext";
+import Navbar from "../../components/Navbar";
+import api from "../../utils/axiosConfig";
+import { useAuth } from "../../components/AuthContext";
 
 export default function Profile() {
   const { logout } = useAuth();
@@ -333,11 +333,6 @@ export default function Profile() {
           )}
         </div>
       </div>
-
-      <footer className="footer">
-        <p>© 2025 Swacchta&Life | Govt. of India</p>
-        <div className="mt-2">Made with ❤️ for a cleaner tomorrow</div>
-      </footer>
     </div>
   );
 }

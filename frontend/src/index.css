@@ -138,9 +138,7 @@ button:hover,
   color: white;
   text-align: center;
   padding: 15px;
-  margin-top: 40px;
   font-size: 0.95rem;
-  border-radius: 12px 12px 0 0;
   box-shadow: 0 -2px 8px rgba(44, 62, 80, 0.07);
 }
 

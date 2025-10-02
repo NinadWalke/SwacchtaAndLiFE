@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../components/AuthContext";
-import api from "../utils/axiosConfig";
+import { useAuth } from "../../components/AuthContext";
+import api from "../../utils/axiosConfig";
 
 export default function Home() {
   const location = useLocation();
@@ -116,10 +116,7 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="footer">
-        <p>© 2025 Swacchta&Life | Govt. of India</p>
-        <div className="mt-2">Made with ❤️ for a cleaner tomorrow</div>
-      </footer>
+      
     </div>
   );
 }
