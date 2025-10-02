@@ -398,6 +398,7 @@ app.post("/reports", uploadImgCloudinary.single("image"), async (req, res) => {
       reportImg: imageUrl,       // original image
       reportYoloImg: imageUrl,   // placeholder for ML processed image
       location: "NA",            // placeholder for now
+      remarks: req.body.remarks,
       status: "pending",
       reportOwner: req.user._id, // populate from authenticated user
     });

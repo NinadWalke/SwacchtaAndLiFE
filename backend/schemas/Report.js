@@ -13,6 +13,10 @@ const reportSchema = new mongoose.Schema({
     required: true,
     default: "NA"
   },
+  remarks: {
+    type: String,
+    default: "NA"
+  },
   time: {
     type: Date,
     default: Date.now,

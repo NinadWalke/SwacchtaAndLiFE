@@ -4,7 +4,7 @@ import api from "../utils/axiosConfig";
 import { useAuth } from "../components/AuthContext";
 
 export default function Profile() {
-  const {logout} = useAuth();
+  const { logout } = useAuth();
   const [edit, setEdit] = useState(false);
   const [currUser, setCurrUser] = useState(null);
 
@@ -46,7 +46,6 @@ export default function Profile() {
       alert("Error logging out. Please try again.");
     }
   };
-  
 
   if (!currUser) return <div>Loading...</div>;
 
@@ -83,7 +82,7 @@ export default function Profile() {
       <div
         className="card"
         style={{
-          maxWidth: 900,
+          maxWidth: 500,
           margin: "40px auto",
           background: "#fff",
           borderRadius: 20,
@@ -91,7 +90,7 @@ export default function Profile() {
           padding: "40px",
           display: "flex",
           gap: "40px",
-          alignItems: "flex-start",
+          alignItems: "center",
           flexWrap: "wrap",
         }}
       >
@@ -273,8 +272,7 @@ export default function Profile() {
                   <strong>Last Name:</strong> {currUser.lname}
                 </p>
                 <p>
-                  <strong>Date of Birth:</strong>{" "}
-                  {currUser.dob?.split("T")[0]}
+                  <strong>Date of Birth:</strong> {currUser.dob?.split("T")[0]}
                 </p>
               </div>
               <div>

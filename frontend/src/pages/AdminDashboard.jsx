@@ -31,7 +31,8 @@ export default function AdminDashboard() {
       try {
         const res = await api.get("/reports");
         const data = res.data.reports || [];
-        setReports(data);
+        const sortedReports = res.data.reports.sort((a, b) => new Date(b.time) - new Date(a.time));
+        setReports(sortedReports);
 
         // Compute counts dynamically
         const pending = data.filter((r) => r.status === "pending").length;
@@ -268,6 +269,7 @@ export default function AdminDashboard() {
               <thead>
                 <tr style={{ borderBottom: "2px solid #ccc" }}>
                   <th style={{ padding: "8px 12px" }}>ID</th>
+                  <th style={{ padding: "8px 12px" }}>Date & Time</th>
                   <th style={{ padding: "8px 12px" }}>Location</th>
                   <th style={{ padding: "8px 12px" }}>Status</th>
                   <th style={{ padding: "8px 12px" }}>Submitted By</th>
@@ -277,6 +279,7 @@ export default function AdminDashboard() {
                 {reports.map((r) => (
                   <tr key={r._id} style={{ borderBottom: "1px solid #eee" }}>
                     <td style={{ padding: "8px 12px" }}>{r._id}</td>
+                    <td style={{ padding: "8px 12px" }}>{new Date(r.time).toLocaleString()}</td>
                     <td style={{ padding: "8px 12px" }}>{r.location}</td>
                     <td style={{ padding: "8px 12px" }}>{r.status}</td>
                     <td style={{ padding: "8px 12px" }}>
