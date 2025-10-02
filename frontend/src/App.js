@@ -1,14 +1,27 @@
 import { Routes, Route } from "react-router-dom";
+
+// Common
 import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Otp from "./pages/Otp";
-import Profile from "./pages/Profile";
-import Upload from "./pages/Upload";
-import AdminDashboard from "./pages/AdminDashboard";
-import OfficialsDashboard from "./pages/OfficialsDashboard";
-import OfficialsReportDisplay from './pages/OfficialsReportDisplay.jsx';
+import Footer from './components/Footer.jsx';
+// Auth
+import Login from "./pages/authentication/Login";
+import Signup from "./pages/authentication/Signup";
+import Otp from "./pages/authentication/Otp";
+// Admin
+import AdminDashboard from "./pages/admin/AdminDashboard";
+// Home
+import Home from "./pages/home/Home";
+// Profile
+import Profile from "./pages/profile/Profile";
+// Services
+import Upload from "./pages/services/report/Upload.jsx";
+import Committee from "./pages/services/committee/Committee.jsx";
+import Event from './pages/services/event/Event.jsx';
+import Shop from './pages/services/shop/Shop.jsx';
+// Subadmin
+import OfficialsDashboard from "./pages/subadmin/OfficialsDashboard";
+import OfficialsReportDisplay from './pages/subadmin/OfficialsReportDisplay.jsx';
+
 
 // Auth Provider
 import { AuthProvider } from "./components/AuthContext";
@@ -30,10 +43,14 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           {/* -- Core Routes -- */}
           <Route path="/upload" element={<Upload />} />
+          <Route path="/committee" element={<Committee />} />
+          <Route path="/events" element={<Event />} />
+          <Route path="/shop" element={<Shop />} />
           {/* -- Officials Routes -- */}
           <Route path="/officials" element={<OfficialsDashboard />} />
           <Route path="/officials/report/:id" element={<OfficialsReportDisplay/>}/>
         </Routes>
+        <Footer/>
       </AuthProvider>
     </div>
   );

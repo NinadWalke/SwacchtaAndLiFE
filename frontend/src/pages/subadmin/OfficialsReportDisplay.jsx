@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import api from '../utils/axiosConfig';
+import api from '../../utils/axiosConfig';
 
 export default function OfficialsReportDisplay() {
     const { id } = useParams();
