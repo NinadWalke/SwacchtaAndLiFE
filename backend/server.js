@@ -26,7 +26,7 @@ const { extractPublicId } = require("./utils/cloudinaryHelpers.js");
 // --- Models ---
 const User = require("./schemas/User.js");
 const Report = require("./schemas/Report.js");
-const Event = require('./schemas/Event.js');
+const Event = require("./schemas/Event.js");
 
 // --- Server settings ---
 // Express setup
@@ -400,12 +400,12 @@ app.post("/reports", uploadFields, async (req, res) => {
     const imageUrl1 = req.files["image"][0].path;
     const imageUrl2 = req.files["image2"][0].path;
     console.log(imageUrl1 + " | " + imageUrl2);
-    
+
     // Create a new report
     const newReport = new Report({
-      reportImg: imageUrl1,       // original image
-      reportYoloImg: imageUrl2,   // placeholder for ML processed image
-      location: "NA",            // placeholder for now
+      reportImg: imageUrl1, // original image
+      reportYoloImg: imageUrl2, // placeholder for ML processed image
+      location: "NA", // placeholder for now
       remarks: req.body.remarks,
       status: "pending",
       reportOwner: req.user._id, // populate from authenticated user
@@ -419,7 +419,9 @@ app.post("/reports", uploadFields, async (req, res) => {
     });
   } catch (err) {
     console.error("Error creating report:", err);
-    return res.status(500).json({ message: "Server error while creating report." });
+    return res
+      .status(500)
+      .json({ message: "Server error while creating report." });
   }
 });
 app.get("/reports/:id", async (req, res) => {
@@ -453,7 +455,9 @@ app.post("/reports/:id", async (req, res) => {
 
     await report.save();
 
-    return res.status(200).json({ message: "Status updated", status: report.status });
+    return res
+      .status(200)
+      .json({ message: "Status updated", status: report.status });
   } catch (err) {
     console.error("Toggle status error:", err);
     return res.status(500).json({ message: "Server error" });
@@ -476,12 +480,84 @@ app.get("/events", async (req, res) => {
   res.json(events);
 });
 app.post("/events", async (req, res) => {
-  let {eventName, eventHostedBy, eventDescription, eventDateTime, eventLocation} = req.body;
-});
-app.get("/events/:id", async (req, res) => {});
-app.post("/events/:id", async (req, res) => {});
-app.put("/events/:id", async (req, res) => {});
+  try {
+    let {
+      eventName,
+      eventHostedBy,
+      eventDescription,
+      eventDateTime,
+      eventLocation,
+    } = req.body;
+    const newEvent = new Event({
+      eventName: eventName,
+      eventHostedBy: eventHostedBy,
+      eventDateTime: eventDateTime,
+      eventDescription: eventDescription,
+      eventLocation: eventLocation,
+    });
+    await newEvent.save();
 
+    return res.status(201).json({
+      message: "Event created successfully!",
+      report: newEvent,
+    });
+  } catch (e) {
+    return res.status(500).json({
+      message: "Unable to create event. Please try again later.",
+    });
+  }
+});
+app.get("/events/:id", async (req, res) => {
+  const { id } = req.params;
+  const currEvent = await Event.findById(id);
+  if (!currEvent) return res.status(404).json({ message: "Event not found!" });
+  return res.status(200).json(currEvent);
+});
+app.post("/events/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const event = await Event.findById(id);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    if (!event.registeredUsers.includes(userId)) {
+      event.registeredUsers.push(userId);
+      await event.save();
+    }
+    res.json({ message: "Registered successfully", event });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+// Update later
+app.put("/events/:id", async (req, res) => {});
+app.post("/events/:id/unregister", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    const event = await Event.findById(id);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    // Remove user from registeredUsers if present
+    const index = event.registeredUsers.indexOf(userId);
+    if (index > -1) {
+      event.registeredUsers.splice(index, 1);
+      await event.save();
+    }
+
+    res.json({ message: "Unregistered successfully", event });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// x. Default Route
 app.get("/", async (req, res) => {
   console.log(`Backend active!`);
 });

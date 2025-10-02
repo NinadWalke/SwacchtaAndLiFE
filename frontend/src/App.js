@@ -21,6 +21,7 @@ import Shop from './pages/services/shop/Shop.jsx';
 // Subadmin
 import OfficialsDashboard from "./pages/subadmin/OfficialsDashboard";
 import OfficialsReportDisplay from './pages/subadmin/OfficialsReportDisplay.jsx';
+import EventForm from "./pages/subadmin/event_form/EventForm.jsx";
 
 
 // Auth Provider
@@ -48,6 +49,7 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           {/* -- Officials Routes -- */}
           <Route path="/officials" element={<OfficialsDashboard />} />
+          <Route path="/officials/create" element={<EventForm/>}/>
           <Route path="/officials/report/:id" element={<OfficialsReportDisplay/>}/>
         </Routes>
         <Footer/>
