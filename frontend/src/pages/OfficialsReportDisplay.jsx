@@ -34,7 +34,7 @@ export default function OfficialsReportDisplay() {
         );
     }
 
-    const { reportImg, reportYoloImg, location, status, time, reportOwner } = currReport;
+    const { reportImg, reportYoloImg, location, remarks, status, time, reportOwner } = currReport;
 
     return (
         <div style={{ minHeight: "100vh", background: "#f0f2f5", padding: "40px 20px", fontFamily: "'Segoe UI', sans-serif" }}>
@@ -92,6 +92,7 @@ export default function OfficialsReportDisplay() {
                                 fontWeight: 600
                             }}>{status.toUpperCase()}</span></p>
                             <p><strong>Location:</strong> {location}</p>
+                            <p><strong>Remarks:</strong> {remarks}</p>
                             <p><strong>Submitted At:</strong> {new Date(time).toLocaleString()}</p>
                         </div>
 

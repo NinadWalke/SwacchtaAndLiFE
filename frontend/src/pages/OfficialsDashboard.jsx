@@ -60,7 +60,8 @@ export default function OfficialsDashboard() {
   useEffect(() => {
     const getReports = async () => {
       const res = await api.get("/reports");
-      setAllReports(res.data.reports);
+      const sortedReports = res.data.reports.sort((a, b) => new Date(b.time) - new Date(a.time));
+      setAllReports(sortedReports);
     };
     getReports();
   }, []);
@@ -202,6 +203,7 @@ export default function OfficialsDashboard() {
               <thead>
                 <tr style={{ borderBottom: "2px solid #ccc" }}>
                   <th style={{ padding: "8px 12px" }}>ID</th>
+                  <th style={{ padding: "8px 12px" }}>Time</th>
                   <th style={{ padding: "8px 12px" }}>Location</th>
                   <th style={{ padding: "8px 12px" }}>Status</th>
                   <th style={{ padding: "8px 12px" }}>Action</th>
@@ -212,6 +214,7 @@ export default function OfficialsDashboard() {
                 {allReports.map((r) => (
                   <tr key={r._id} style={{ borderBottom: "1px solid #eee" }}>
                     <td style={{ padding: "8px 12px" }}>{r._id}</td>
+                    <td style={{ padding: "8px 12px" }}>{new Date(r.time).toLocaleString()}</td>
                     <td style={{ padding: "8px 12px" }}>{r.location}</td>
                     <td style={{ padding: "8px 12px" }}>{r.status}</td>
                     <td style={{ padding: "8px 12px" }}>
