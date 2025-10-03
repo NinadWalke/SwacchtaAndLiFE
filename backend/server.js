@@ -446,8 +446,8 @@ app.post("/reports/:id", async (req, res) => {
 
     // Toggle status: pending -> allotted -> resolved
     if (report.status === "pending") {
-      report.status = "alloted";
-    } else if (report.status === "alloted") {
+      report.status = "allotted";
+    } else if (report.status === "allotted") {
       report.status = "resolved";
     } else if (report.status === "resolved") {
       report.status = "pending"; // optional: cycle back to pending

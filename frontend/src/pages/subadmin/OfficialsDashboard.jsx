@@ -227,7 +227,7 @@ export default function OfficialsDashboard() {
                           background:
                             r.status === "pending"
                               ? "#fbc02d" // yellow for "mark allotted"
-                              : r.status === "alloted"
+                              : r.status === "allotted"
                               ? "#388e3c" // green for "mark resolved"
                               : "#ccc", // grey when resolved and disabled
                           color: "#fff",
@@ -240,7 +240,7 @@ export default function OfficialsDashboard() {
                       >
                         {r.status === "pending"
                           ? "Mark Allotted"
-                          : r.status === "alloted"
+                          : r.status === "allotted"
                           ? "Mark Resolved"
                           : "Resolved"}
                       </button>

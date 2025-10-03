@@ -24,7 +24,7 @@ const reportSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "alloted", "resolved"],
+      enum: ["pending", "allotted", "resolved"],
       default: "pending",
     },
     reportOwner: {
