@@ -71,6 +71,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    committee: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Committee"
+    }
   },
   { timestamps: true }
 );

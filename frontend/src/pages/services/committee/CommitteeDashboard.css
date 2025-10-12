@@ -1,0 +1,122 @@
+/* ---
+  Component Stylesheet for CommitteeDashboard
+  Applying the "Eco-Minimalism" Design System
+--- */
+
+/* 1. THEME & FONT VARIABLES */
+:root {
+    --font-heading: 'Poppins', sans-serif;
+    --font-body: 'Lato', sans-serif;
+    --color-background: #f8f9fa;
+    --color-text: #34495e;
+    --color-primary-green: #0a6847;
+    --color-accent-green: #77b0aa;
+    --color-white: #ffffff;
+    --color-border: #dbe2e9;
+    --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* 2. PAGE & HEADER LAYOUT */
+  .committee-dashboard-page {
+    background-color: var(--color-background);
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  
+  .dashboard-header {
+    margin-bottom: 2rem;
+  }
+  
+  .dashboard-header__title {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: var(--color-primary-green);
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .dashboard-header__subtitle {
+    font-size: 1.2rem;
+    color: #555;
+    margin: 0;
+  }
+  
+  /* 3. STATS CARDS (Consistent with other dashboards) */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .stat-card {
+    background-color: var(--color-white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius, 12px);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  
+  .stat-card__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0.5rem;
+  }
+  
+  .stat-card__value {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+  
+  /* 4. DASHBOARD MODULES (Reusable container) */
+  .dashboard-module {
+    background-color: var(--color-white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius, 12px);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+  }
+  
+  .module-header {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: var(--color-primary-green);
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.75rem;
+  }
+  
+  /* 5. TABLE STYLING (For Members List) */
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .members-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  
+  .members-table th, .members-table td {
+    padding: 12px 15px;
+    text-align: left;
+  }
+  
+  .members-table thead { background-color: #f5f7fa; }
+  .members-table th { font-family: var(--font-heading); font-weight: 600; color: var(--color-text); }
+  .members-table tbody tr { border-bottom: 1px solid var(--color-border); }
+  .members-table tbody tr:hover { background-color: #f0fdf4; }
+  
+  /* 6. LOADING/EMPTY STATES */
+  .loading-state, .empty-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    font-size: 1.5rem;
+    font-family: var(--font-heading);
+    color: var(--color-primary-green);
+  }
