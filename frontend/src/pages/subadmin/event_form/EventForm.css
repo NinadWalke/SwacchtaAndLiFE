@@ -1,79 +1,141 @@
+/* ---
+  Component Stylesheet for EventForm
+  Applying the "Eco-Minimalism" Design System
+--- */
+
+/* 1. THEME & FONT VARIABLES */
 :root {
-    --primary-color: #1b5e20;
-    --primary-hover: #144c19;
-    --bg-color: #f8f9fa;
-    --text-color: #333;
-  }
-  
-  .event-form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 3rem 1rem;
-    background-color: var(--bg-color);
-    min-height: 100vh;
-  }
-  
-  .event-form {
-    background: #fff;
-    padding: 2rem 2.5rem;
-    width: 100%;
-    max-width: 500px;
-    border-radius: 1rem;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .event-form-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: var(--primary-color);
-    margin-bottom: 1.5rem;
-    text-align: center;
-  }
-  
-  .event-form label {
-    font-weight: 500;
-    color: var(--text-color);
-    margin-bottom: 0.4rem;
-    margin-top: 1rem;
-  }
-  
-  .event-form input,
-  .event-form textarea {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    font-family: inherit;
-    resize: none;
-  }
-  
-  .event-form input:focus,
-  .event-form textarea:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.15);
-  }
-  
-  .event-form-btn {
-    margin-top: 2rem;
-    background-color: var(--primary-color);
-    color: #fff;
-    border: none;
-    padding: 0.9rem 1rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .event-form-btn:hover {
-    background-color: var(--primary-hover);
-    transform: translateY(-1px);
-  }
-  
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Lato', sans-serif;
+  --color-background: #f8f9fa;
+  --color-text: #34495e;
+  --color-primary-green: #0a6847;
+  --color-accent-green: #77b0aa;
+  --color-white: #ffffff;
+  --color-border: #dbe2e9;
+  --color-success: #2ecc71;
+  --color-error: #e74c3c;
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.1);
+  --transition-smooth: all 0.3s ease-in-out;
+}
+
+/* 2. PAGE WRAPPER (Consistent with other form pages) */
+.event-form-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2.5rem 1.5rem;
+  background: linear-gradient(135deg, var(--color-background), #eef2f5);
+}
+
+/* 3. FORM CARD */
+.event-form-card {
+  width: 100%;
+  max-width: 550px;
+  background-color: var(--color-white);
+  padding: 2.5rem;
+  border-radius: var(--border-radius, 12px);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
+}
+
+.event-form__header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.event-form__title {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: var(--color-primary-green);
+}
+
+/* 4. FORM STYLES (Reusing established professional styles) */
+.event-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form__group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form__label {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
+
+.form__input,
+.form__textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: var(--transition-smooth);
+}
+
+.form__input:focus,
+.form__textarea:focus {
+  outline: none;
+  border-color: var(--color-accent-green);
+  box-shadow: 0 0 0 3px rgba(119, 176, 170, 0.2);
+}
+
+.form__textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* 5. SUBMIT BUTTON */
+.btn {
+  padding: 14px 24px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  width: 100%;
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.btn--primary {
+  background-color: var(--color-accent-green);
+  color: var(--color-white);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-primary-green);
+}
+
+.btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* 6. FORM MESSAGE (For success/error feedback) */
+.form__message {
+  text-align: center;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  font-weight: 600;
+}
+
+.form__message--success {
+  background-color: #eafaf1;
+  color: var(--color-primary-green);
+}
+
+.form__message--error {
+  background-color: #fbecec;
+  color: var(--color-error);
+}

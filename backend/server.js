@@ -396,17 +396,15 @@ app.post("/reports", uploadFields, async (req, res) => {
     if (!req.files || !req.files["image"] || !req.files["image2"]) {
       return res.status(400).json({ message: "Both images must be uploaded." });
     }
-    // Get the uploaded Cloudinary URL
     const imageUrl1 = req.files["image"][0].path;
     const imageUrl2 = req.files["image2"][0].path;
-    // Create a new report
     const newReport = new Report({
-      reportImg: imageUrl1, // original image
-      reportYoloImg: imageUrl2, // placeholder for ML processed image
-      location: "NA", // placeholder for now
+      reportImg: imageUrl1, 
+      reportYoloImg: imageUrl2,
+      location: "NA", 
       remarks: req.body.remarks,
       status: "pending",
-      reportOwner: req.user._id, // populate from authenticated user
+      reportOwner: req.user._id, 
     });
 
     await newReport.save();
