@@ -9,9 +9,9 @@
     --font-body: 'Lato', sans-serif;
     --color-background: #f8f9fa;
     --color-text: #34495e;
-    --color-primary-green: #ffffff; 
+    --color-primary-green: #0a6847; 
     --color-accent-green: #77b0aa;
-    --color-white: #0a6847; 
+    --color-white: #ffffff; 
     --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
     --transition-smooth: all 0.3s ease-in-out;
   }

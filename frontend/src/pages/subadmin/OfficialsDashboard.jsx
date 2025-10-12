@@ -1,86 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useNavigate } from "react-router-dom";
-
 import api from "../../utils/axiosConfig";
+import "./OfficialsDashboard.css"; // Import the new stylesheet
 
-// Custom marker icons
-const redIcon = new L.Icon({
-  iconUrl:
-    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
-
-const greenIcon = new L.Icon({
-  iconUrl:
-    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+// Custom CSS-based marker icons
+const createMarkerIcon = (status) => {
+  return L.divIcon({
+    className: `marker-pin ${status}`,
+    iconSize: [30, 42],
+    iconAnchor: [15, 42],
+    popupAnchor: [0, -35],
+  });
+};
 
 export default function OfficialsDashboard() {
   const navigate = useNavigate();
   const [allReports, setAllReports] = useState([]);
-  // Dummy data
-  const [reports, setReports] = useState([
-    {
-      id: 1,
-      location: "Sector 10",
-      lat: 28.6139,
-      lng: 77.209,
-      status: "Pending",
-    },
-    {
-      id: 2,
-      location: "Sector 20",
-      lat: 28.62,
-      lng: 77.215,
-      status: "Resolved",
-    },
-    {
-      id: 3,
-      location: "Sector 30",
-      lat: 28.625,
-      lng: 77.22,
-      status: "Pending",
-    },
-  ]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getReports = async () => {
-      const res = await api.get("/reports");
-      const sortedReports = res.data.reports.sort((a, b) => new Date(b.time) - new Date(a.time));
-      setAllReports(sortedReports);
+      try {
+        const res = await api.get("/reports");
+        const sortedReports = res.data.reports.sort((a, b) => new Date(b.time) - new Date(a.time));
+        setAllReports(sortedReports);
+      } catch (error) {
+        console.error("Failed to fetch reports:", error);
+        alert("Could not fetch reports.");
+      } finally {
+        setLoading(false);
+      }
     };
     getReports();
   }, []);
-  // Toggle status function
-  const toggleStatus = (id) => {
-    setReports((prev) =>
-      prev.map((r) =>
-        r.id === id
-          ? { ...r, status: r.status === "Resolved" ? "Pending" : "Resolved" }
-          : r
-      )
-    );
-  };
+
   const toggleStatusDB = async (reportId) => {
     try {
       const res = await api.post(`/reports/${reportId}`);
       const newStatus = res.data.status;
-
-      // Update front-end state to reflect DB change
       setAllReports((prevReports) =>
         prevReports.map((r) =>
           r._id === reportId ? { ...r, status: newStatus } : r
@@ -91,185 +51,100 @@ export default function OfficialsDashboard() {
       alert("Failed to update report status. Try again.");
     }
   };
+  
+  // Memoize stats to avoid recalculating on every render
+  const stats = useMemo(() => {
+    const total = allReports.length;
+    const pending = allReports.filter(r => r.status === 'pending').length;
+    const resolved = allReports.filter(r => r.status === 'resolved').length;
+    return { total, pending, resolved };
+  }, [allReports]);
+
+  // Use real data for the map, filtering for valid coordinates
+  const mapReports = allReports.filter(r => r.latitude && r.longitude);
+
+  if (loading) {
+    return <div className="loading-state">Loading Dashboard...</div>;
+  }
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
-        padding: "40px 0",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1000,
-          margin: "0 auto",
-          padding: 32,
-          background: "#fff",
-          border: "1px solid #ddd",
-          borderRadius: 16,
-          boxShadow: "0 4px 24px rgba(0,0,0,0.10)",
-          display: "flex",
-          flexDirection: "column",
-          gap: 32,
-        }}
-      >
-        <div className="btn" onClick={() => navigate('/officials/create')}>Create Event</div>
-        <h2
-          style={{
-            color: "#1976d2",
-            fontSize: 32,
-            fontWeight: 700,
-            marginBottom: 8,
-          }}
-        >
-          Officials Dashboard - City Reports 
-        </h2>
-
-        {/* Map Card */}
-        <div
-          style={{
-            background: "#e3f2fd",
-            borderRadius: 12,
-            padding: 24,
-            boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
-          }}
-        >
-          <h3 style={{ color: "#1976d2", marginBottom: 16 }}>Reports Map</h3>
-          <MapContainer
-            center={[28.615, 77.21]}
-            zoom={13}
-            style={{
-              height: "400px",
-              width: "100%",
-              marginBottom: "20px",
-              borderRadius: "8px",
-            }}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            />
-            {reports.map((r) => (
-              <Marker
-                key={r.id}
-                position={[r.lat, r.lng]}
-                icon={r.status === "Resolved" ? greenIcon : redIcon}
-              >
-                <Popup>
-                  <strong>{r.location}</strong>
-                  <br />
-                  Status: {r.status}
-                  <br />
-                  <button
-                    onClick={() => toggleStatus(r.id)}
-                    style={{
-                      padding: "6px 12px",
-                      background:
-                        r.status === "Resolved" ? "#fbc02d" : "#388e3c",
-                      color: "#fff",
-                      border: "none",
-                      borderRadius: 4,
-                      cursor: "pointer",
-                      fontWeight: "bold",
-                      marginTop: 8,
-                    }}
-                  >
-                    Mark {r.status === "Resolved" ? "Pending" : "Resolved"}
-                  </button>
-                </Popup>
-              </Marker>
-            ))}
-          </MapContainer>
+    <main className="dashboard-page">
+      <header className="dashboard-header">
+        <h1 className="dashboard-header__title">Officials Dashboard</h1>
+        <button className="btn btn--primary" onClick={() => navigate('/officials/create')}>
+          Create New Event
+        </button>
+      </header>
+      
+      {/* --- STATS CARDS --- */}
+      <section className="stats-grid">
+        <div className="stat-card">
+          <h2 className="stat-card__title">Total Reports</h2>
+          <p className="stat-card__value">{stats.total}</p>
         </div>
+        <div className="stat-card">
+          <h2 className="stat-card__title">Pending Action</h2>
+          <p className="stat-card__value" style={{ color: 'var(--color-pending)' }}>{stats.pending}</p>
+        </div>
+        <div className="stat-card">
+          <h2 className="stat-card__title">Resolved</h2>
+          <p className="stat-card__value" style={{ color: 'var(--color-resolved)' }}>{stats.resolved}</p>
+        </div>
+      </section>
 
-        {/* Table Card */}
-        <div
-          style={{
-            background: "#f5f5f5",
-            borderRadius: 12,
-            padding: 24,
-            boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-          }}
-        >
-          <h3 style={{ color: "#1976d2", marginBottom: 16 }}>Reports List</h3>
-          <div style={{ overflowX: "auto" }}>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                textAlign: "left",
-                fontSize: 16,
-              }}
-            >
-              <thead>
-                <tr style={{ borderBottom: "2px solid #ccc" }}>
-                  <th style={{ padding: "8px 12px" }}>ID</th>
-                  <th style={{ padding: "8px 12px" }}>Time</th>
-                  <th style={{ padding: "8px 12px" }}>Location</th>
-                  <th style={{ padding: "8px 12px" }}>Status</th>
-                  <th style={{ padding: "8px 12px" }}>Action</th>
-                  <th style={{ padding: "8px 12px" }}>Details</th>
+      {/* --- MAP MODULE --- */}
+      <section className="dashboard-module">
+        <h2 className="module-header">Live Reports Map (Thane)</h2>
+        <MapContainer center={[19.2183, 72.9781]} zoom={12} style={{ height: "450px", width: "100%" }}>
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' />
+          {mapReports.map((r) => (
+            <Marker key={r._id} position={[r.latitude, r.longitude]} icon={createMarkerIcon(r.status)}>
+              <Popup>
+                <strong>Report ID: {r._id.slice(-6)}</strong><br />
+                Status: <span className={`status-badge status--${r.status}`}>{r.status}</span><br />
+                <button className="btn btn--secondary" style={{marginTop: '10px'}} onClick={() => navigate(`/officials/report/${r._id}`)}>View Details</button>
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+      </section>
+
+      {/* --- TABLE MODULE --- */}
+      <section className="dashboard-module">
+        <h2 className="module-header">All Reports</h2>
+        <div className="table-container">
+          <table className="reports-table">
+            <thead>
+              <tr>
+                <th>Report ID</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Action</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allReports.map((r) => (
+                <tr key={r._id}>
+                  <td>{r._id.slice(-6)}...</td>
+                  <td>{new Date(r.time).toLocaleString()}</td>
+                  <td><span className={`status-badge status--${r.status}`}>{r.status}</span></td>
+                  <td>
+                    <button className="btn btn--secondary" onClick={() => toggleStatusDB(r._id)} disabled={r.status === "resolved"}>
+                      {r.status === "pending" ? "Mark Allotted" : r.status === "allotted" ? "Mark Resolved" : "Resolved"}
+                    </button>
+                  </td>
+                  <td>
+                    <button className="btn btn--primary" onClick={() => navigate(`/officials/report/${r._id}`)}>
+                      View
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {allReports.map((r) => (
-                  <tr key={r._id} style={{ borderBottom: "1px solid #eee" }}>
-                    <td style={{ padding: "8px 12px" }}>{r._id}</td>
-                    <td style={{ padding: "8px 12px" }}>{new Date(r.time).toLocaleString()}</td>
-                    <td style={{ padding: "8px 12px" }}>{r.location}</td>
-                    <td style={{ padding: "8px 12px" }}>{r.status}</td>
-                    <td style={{ padding: "8px 12px" }}>
-                      <button
-                        onClick={() => toggleStatusDB(r._id)}
-                        disabled={r.status === "resolved"}
-                        style={{
-                          padding: "6px 12px",
-                          background:
-                            r.status === "pending"
-                              ? "#fbc02d" // yellow for "mark allotted"
-                              : r.status === "allotted"
-                              ? "#388e3c" // green for "mark resolved"
-                              : "#ccc", // grey when resolved and disabled
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: 4,
-                          cursor:
-                            r.status === "resolved" ? "not-allowed" : "pointer",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {r.status === "pending"
-                          ? "Mark Allotted"
-                          : r.status === "allotted"
-                          ? "Mark Resolved"
-                          : "Resolved"}
-                      </button>
-                    </td>
-                    <td style={{ padding: "8px 12px" }}>
-                      <button
-                        onClick={() => {
-                          navigate(`/officials/report/${r._id}`);
-                        }}
-                        style={{
-                          padding: "6px 12px",
-                          background: "blue",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: 4,
-                          cursor: "pointer",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        View Report
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

@@ -63,12 +63,6 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          {/* Dedicated Logout Button for better UX */}
-          {user && (
-             <button onClick={logout} className="nav__link nav__logout-btn">
-                Logout
-             </button>
-          )}
         </nav>
 
         {/* Hamburger Toggle for Mobile */}

@@ -1,0 +1,164 @@
+/* ---
+  Component Stylesheet for OfficialsReportDisplay
+  Applying the "Eco-Minimalism" Design System
+--- */
+
+/* 1. THEME & FONT VARIABLES */
+:root {
+    --font-heading: 'Poppins', sans-serif;
+    --font-body: 'Lato', sans-serif;
+    --color-background: #f8f9fa;
+    --color-text: #34495e;
+    --color-primary-green: #0a6847;
+    --color-white: #ffffff;
+    --color-border: #dbe2e9;
+    --color-pending: #f39c12;
+    --color-allotted: #3498db;
+    --color-resolved: #27ae60;
+    --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* 2. PAGE WRAPPER & LAYOUT */
+  .report-display-page {
+    background-color: var(--color-background);
+    min-height: 100vh;
+    padding: 2.5rem 1.5rem;
+  }
+  
+  .report-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: var(--color-white);
+    border-radius: var(--border-radius, 12px);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--color-border);
+    overflow: hidden; /* Important for keeping child border-radius */
+  }
+  
+  /* 3. "BACK TO DASHBOARD" LINK */
+  .back-link {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--color-primary-green);
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .back-link:hover {
+    text-decoration: underline;
+    transform: translateX(-4px);
+  }
+  
+  /* 4. REPORT HEADER */
+  .report-header {
+    background-color: var(--color-primary-green);
+    color: var(--color-white);
+    padding: 1.5rem 2rem;
+  }
+  
+  .report-header__title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 2rem;
+  }
+  
+  .report-header__id {
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+    font-family: monospace;
+  }
+  
+  /* 5. REPORT BODY & GRID */
+  .report-body__grid {
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  
+  /* 6. IMAGE GALLERY SECTION */
+  .report-images {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .image-display {
+    text-align: center;
+  }
+  
+  .image-display__caption {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--color-text);
+    margin-bottom: 0.75rem;
+  }
+  
+  .image-display__img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  
+  /* 7. DETAILS SECTION & INFO BOXES */
+  .report-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .info-box {
+    background-color: var(--color-background);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+  }
+  
+  .info-box__title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    color: var(--color-primary-green);
+    margin-top: 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.75rem;
+  }
+  
+  /* Semantic & readable data list */
+  .info-box dl {
+    margin: 0;
+  }
+  .info-box dt {
+    font-weight: 600;
+    color: #555;
+    margin-top: 0.75rem;
+  }
+  .info-box dd {
+    margin: 0.25rem 0 0 0;
+    color: var(--color-text);
+    word-wrap: break-word; /* Prevents long text from overflowing */
+  }
+  
+  /* Reusing the status badge from dashboards */
+  .status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    color: var(--color-white);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    display: inline-block;
+  }
+  .status--pending { background-color: var(--color-pending); }
+  .status--allotted { background-color: var(--color-allotted); }
+  .status--resolved { background-color: var(--color-resolved); }
+  
+  /* 8. RESPONSIVE DESIGN */
+  @media (max-width: 850px) {
+    .report-body__grid {
+      grid-template-columns: 1fr;
+    }
+  }

@@ -34,9 +34,9 @@ function CommitteeForms() {
           </p>
         </div>
 
-        <div className="form-card__tabs pb-3">
+        <div className="form-card__tabs">
           <button
-            className={`tab-button me-3 ${activeTab === 'register' ? 'active' : ''}`}
+            className={`tab-button ${activeTab === 'register' ? 'active' : ''}`}
             onClick={() => setActiveTab('register')}
           >
             Register
