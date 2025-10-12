@@ -5,9 +5,11 @@ if (process.env.NODE_ENV != "production") {
 const express = require("express");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
 const LocalStrategy = require("passport-local");
 const MongoStore = require("connect-mongo");
 const nodemailer = require("nodemailer");
@@ -23,10 +25,18 @@ const uploadImgCloudinary = multer({ storage });
 const { cloudinaryConfig } = require("./utils/cloudconfig.js");
 const { extractPublicId } = require("./utils/cloudinaryHelpers.js");
 
+// -- Middlewares --
+const { verifyToken } = require("./utils/middlewares.js");
+
 // --- Models ---
 const User = require("./schemas/User.js");
 const Report = require("./schemas/Report.js");
 const Event = require("./schemas/Event.js");
+const Committee = require("./schemas/Committee.js");
+
+// -- ENV Requirements --
+const SESSION_SECRET = process.env.SESSION_SECRET || "your_session_secret_here";
+const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key_here";
 
 // --- Server settings ---
 // Express setup
@@ -55,7 +65,7 @@ async function main() {
 const store = MongoStore.create({
   mongoUrl: dbURI,
   crypto: {
-    secret: process.env.SESSION_SECRET,
+    secret: SESSION_SECRET,
   },
   touchAfter: 24 * 3600, // Interval (in seconds) between session updates    (Update information after 23 hours)
 });
@@ -66,7 +76,7 @@ store.on("error", (err) => {
 // Session Setup
 // Session Code
 const sessionOptions = {
-  secret: process.env.SESSION_SECRET,
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   // Cookie options below
@@ -399,12 +409,12 @@ app.post("/reports", uploadFields, async (req, res) => {
     const imageUrl1 = req.files["image"][0].path;
     const imageUrl2 = req.files["image2"][0].path;
     const newReport = new Report({
-      reportImg: imageUrl1, 
+      reportImg: imageUrl1,
       reportYoloImg: imageUrl2,
-      location: "NA", 
+      location: "NA",
       remarks: req.body.remarks,
       status: "pending",
-      reportOwner: req.user._id, 
+      reportOwner: req.user._id,
     });
 
     await newReport.save();
@@ -551,6 +561,112 @@ app.post("/events/:id/unregister", async (req, res) => {
     console.error(err);
     res.status(500).json({ message: "Server error" });
   }
+});
+
+// 5. Committees Routes
+app.post("/committees/register", async (req, res) => {
+  try {
+    const { committeeName, leaderEmail, password, confirmPassword } = req.body;
+    if (!committeeName || !leaderEmail || !password || !confirmPassword) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+    const existingCommittee = await Committee.findOne({ leaderEmail });
+    if (existingCommittee) {
+      return res
+        .status(400)
+        .json({ message: "Committee leader already registered" });
+    }
+    const committee = new Committee({
+      committeeName,
+      leaderEmail,
+      password,
+    });
+    const dbUser = await User.findById(req.user._id);
+    if(!dbUser) {
+      res.status(401).json({message: "Committee Leader undefined"});
+      return;
+    }
+    committee.members.push(dbUser._id);
+    dbUser.committee = committee._id;
+    await committee.save();
+    await dbUser.save();
+
+    const token = jwt.sign(
+      {
+        id: committee._id,
+        leaderEmail: committee.leaderEmail,
+        committeeName: committee.committeeName,
+      },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.status(201).json({
+      message: "Committee registered successfully",
+      committee: {
+        id: committee._id,
+        committeeName: committee.committeeName,
+        leaderEmail: committee.leaderEmail,
+      },
+      token,
+    });
+  } catch (err) {
+    console.error("Committee Registration Error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+app.post("/committees/login", async (req, res) => {
+  try {
+    const { leaderEmail, password } = req.body;
+
+    if (!leaderEmail || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
+    }
+
+    const committee = await Committee.findOne({ leaderEmail }).select(
+      "+password"
+    );
+    if (!committee) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    const isMatch = await bcrypt.compare(password, committee.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    const token = jwt.sign(
+      {
+        id: committee._id,
+        leaderEmail: committee.leaderEmail,
+        committeeName: committee.committeeName,
+      },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.status(200).json({
+      message: "Login successful",
+      committee: {
+        id: committee._id,
+        committeeName: committee.committeeName,
+        leaderEmail: committee.leaderEmail,
+      },
+      token,
+    });
+  } catch (err) {
+    console.error("Committee Login Error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+app.get("/committee", verifyToken, async (req, res) => {
+  const committee = await Committee.findById(req.user.committeeId);
+  res.json({ committee: committee });
 });
 
 // x. Default Route

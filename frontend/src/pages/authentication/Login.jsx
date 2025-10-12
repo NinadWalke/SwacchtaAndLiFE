@@ -1,143 +1,95 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import api from '../../utils/axiosConfig';
-
-import {useAuth} from '../../components/AuthContext';
+import { useAuth } from '../../components/AuthContext';
+// Import the new stylesheet
+import './Login.css';
 
 export default function Login() {
-  // Global Context
   const { login } = useAuth();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setMessage(null);
     try {
       const res = await api.post("/auth/login", { username, password });
       login(res.data.user);
-      alert(res.data.message || "Login successful!");
-      navigate("/");
+      setMessage({ type: 'success', text: res.data.message || "Login successful! Redirecting..." });
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
     } catch (err) {
-      console.error(err);
-      const errorMsg = err.response?.data?.message || "Login failed. Try again!";
-      alert(errorMsg);
+      const errorMsg = err.response?.data?.message || "Login failed. Please check your credentials.";
+      setMessage({ type: 'error', text: errorMsg });
+      setIsSubmitting(false);
     }
   };
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 350,
-          width: "100%",
-          padding: 24,
-          background: "#fff",
-          border: "1px solid #ddd",
-          borderRadius: 12,
-          boxShadow: "0 4px 16px rgba(0,0,0,0.10)",
-        }}
-      >
-        <h2 style={{ textAlign: "center", color: "#1976d2" }}>Login</h2>
-        <form onSubmit={handleSubmit}>
-          {/* Username */}
-          <label htmlFor="email">Username</label>
-          <input
-            id="username"
-            type="username"
-            placeholder="Enter your username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            style={{
-              width: "100%",
-              padding: 8,
-              margin: "8px 0",
-              borderRadius: 4,
-              border: "1px solid #ccc",
-            }}
-            required
-          />
 
-          {/* Password */}
-          <label htmlFor="password">Password</label>
-          <div style={{ position: "relative" }}>
+  return (
+    <main className="auth-page">
+      <div className="form-card">
+        <header className="form-card__header">
+          <h1 className="form-card__title">Welcome Back</h1>
+          <p className="form-card__subtitle">Log in to continue to Swacchta&Life.</p>
+        </header>
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form__group">
+            <label className="form__label" htmlFor="username">Username</label>
+            <input
+              id="username"
+              type="text" // Corrected from "username"
+              className="form__input"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form__group">
+            <label className="form__label" htmlFor="password">Password</label>
             <input
               id="password"
               type={showPassword ? "text" : "password"}
+              className="form__input form__input--password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{
-                width: "100%",
-                padding: 8,
-                margin: "8px 0",
-                borderRadius: 4,
-                border: "1px solid #ccc",
-                paddingRight: 60,
-              }}
               required
             />
             <button
               type="button"
+              className="password-toggle-btn"
               onClick={() => setShowPassword((prev) => !prev)}
-              style={{
-                position: "absolute",
-                right: 10,
-                top: "50%",
-                transform: "translateY(-50%)",
-                background: "transparent",
-                border: "none",
-                color: "#1976d2",
-                cursor: "pointer",
-                fontWeight: "bold",
-              }}
             >
               {showPassword ? "Hide" : "Show"}
             </button>
           </div>
 
-
-          <button
-            type="submit"
-            style={{
-              width: "100%",
-              padding: 10,
-              background: "#1976d2",
-              color: "#fff",
-              border: "none",
-              borderRadius: 4,
-              marginTop: 12,
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            Login
+          <button type="submit" className="btn btn--primary" disabled={isSubmitting}>
+            {isSubmitting ? 'Logging in...' : 'Login'}
           </button>
         </form>
-        <div style={{ textAlign: "center", marginTop: 18 }}>
-          <span style={{ color: "#555" }}>Don't have an account? </span>
-          <Link
-            to="/signup"
-            style={{
-              color: "#1976d2",
-              fontWeight: "bold",
-              textDecoration: "none",
-            }}
-          >
-            Sign Up
-          </Link>
-        </div>
+
+        {message && (
+          <div className={`form__message form__message--${message.type}`}>
+            {message.text}
+          </div>
+        )}
+
+        <footer className="form-card__footer">
+          <span>Don't have an account? </span>
+          <Link to="/signup">Sign Up</Link>
+        </footer>
       </div>
-    </div>
+    </main>
   );
 }

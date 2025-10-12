@@ -16,9 +16,9 @@ function Footer() {
           </p>
           {/* Suggestion: Replace text with actual SVG icons for social media */}
           <ul className="footer__social-list">
-            <li><a href="#" className="footer__social-link" aria-label="Facebook">FB</a></li>
-            <li><a href="#" className="footer__social-link" aria-label="Twitter">TW</a></li>
-            <li><a href="#" className="footer__social-link" aria-label="Instagram">IG</a></li>
+            <li><a href="/" className="footer__social-link" aria-label="Facebook">FB</a></li>
+            <li><a href="/" className="footer__social-link" aria-label="Twitter">TW</a></li>
+            <li><a href="/" className="footer__social-link" aria-label="Instagram">IG</a></li>
           </ul>
         </div>
 

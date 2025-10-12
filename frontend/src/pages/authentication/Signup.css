@@ -1,0 +1,154 @@
+/* ---
+  Component Stylesheet for Signup Page
+  Applying the "Eco-Minimalism" Design System
+--- */
+
+/* 1. THEME & FONT VARIABLES */
+:root {
+    --font-heading: 'Poppins', sans-serif;
+    --font-body: 'Lato', sans-serif;
+    --color-background: #f8f9fa;
+    --color-text: #34495e;
+    --color-primary-green: #0a6847;
+    --color-accent-green: #77b0aa;
+    --color-white: #ffffff;
+    --color-border: #dbe2e9;
+    --color-success: #27ae60;
+    --color-error: #e74c3c;
+    --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* 2. PAGE WRAPPER (Shared with Login page) */
+  .auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 3rem 1.5rem;
+    background: linear-gradient(135deg, var(--color-background), #eef2f5);
+  }
+  
+  /* 3. FORM CARD (Slightly wider for the grid) */
+  .form-card {
+    width: 100%;
+    max-width: 700px;
+    background-color: var(--color-white);
+    padding: 2.5rem;
+    border-radius: var(--border-radius, 12px);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--color-border);
+  }
+  
+  .form-card__header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .form-card__title {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    color: var(--color-primary-green);
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-card__subtitle {
+    color: #555;
+    font-size: 1rem;
+  }
+  
+  /* 4. SIGNUP FORM GRID LAYOUT */
+  .auth-form--signup {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem 1.5rem; /* row-gap column-gap */
+  }
+  
+  .form__group--full-width {
+    grid-column: 1 / -1; /* Makes an element span both columns */
+  }
+  
+  /* 5. FORM STYLES (Identical to other forms) */
+  .form__group {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  .form__label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+  }
+  
+  .form__input, .form__select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .form__input:focus, .form__select:focus {
+    outline: none;
+    border-color: var(--color-accent-green);
+    box-shadow: 0 0 0 3px rgba(119, 176, 170, 0.2);
+  }
+  
+  /* 6. PASSWORD TOGGLE (Identical to Login) */
+  .password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    top: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--color-accent-green);
+  }
+  
+  .form__input--password {
+    padding-right: 60px;
+  }
+  
+  /* 7. SUBMIT BUTTON & FOOTER (Identical to Login) */
+  .btn {
+    padding: 14px 24px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+  }
+  .btn--primary { background-color: var(--color-accent-green); color: var(--color-white); }
+  .btn--primary:hover { background-color: var(--color-primary-green); }
+  .btn:disabled { background-color: #ccc; cursor: not-allowed; }
+  
+  .form-card__footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: #555;
+    grid-column: 1 / -1;
+  }
+  .form-card__footer a { color: var(--color-primary-green); font-weight: 600; text-decoration: none; }
+  .form-card__footer a:hover { text-decoration: underline; }
+  
+  /* 8. FORM MESSAGE (Identical to Login) */
+  .form__message { text-align: center; padding: 0.75rem; border-radius: 8px; margin-top: 1rem; font-weight: 600; }
+  .form__message--success { background-color: #eafaf1; color: var(--color-primary-green); }
+  .form__message--error { background-color: #fbecec; color: var(--color-error); }
+  
+  /* 9. RESPONSIVE DESIGN */
+  @media (max-width: 600px) {
+    .auth-form--signup {
+      grid-template-columns: 1fr; /* Stack to a single column on mobile */
+    }
+  }

@@ -1,27 +1,21 @@
 import { useState } from "react";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from '../../utils/axiosConfig';
+// Import the new stylesheet
+import './Signup.css';
 
 export default function Signup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fname: "",
-    lname: "",
-    dob: "",
-    gender: "",
-    address: "",
-    phone: "",
-    aadhar: "",
-    email: "",
-    username: "",
-    password: "",
-    confirmPassword: "",
-    profileImg: "",
+    fname: "", lname: "", dob: "", gender: "", address: "", phone: "",
+    aadhar: "", email: "", username: "", password: "", confirmPassword: "",
     role: "user",
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,272 +24,115 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    setMessage(null);
+
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      setMessage({ type: 'error', text: "Passwords do not match!" });
       return;
     }
-  
+    
+    setIsSubmitting(true);
     try {
+      // Destructure only the fields needed for the API call
+      const { fname, lname, email, username, password, address, gender, dob, phone, aadhar } = formData;
       const res = await api.post("/auth/sign-up", {
-        fname: formData.fname,
-        lname: formData.lname,
-        email: formData.email,
-        username: formData.username?.trim().toLowerCase(),
-        password: formData.password,
-        address: formData.address,
-        gender: formData.gender,
-        dob: formData.dob,
-        phone: formData.phone,
-        aadhar: formData.aadhar,
+        fname, lname, email, username: username?.trim().toLowerCase(), password,
+        address, gender, dob, phone, aadhar,
       });
-  
-      alert(res.data.message || "Signup successful!");
-      navigate("/login");
+
+      setMessage({ type: 'success', text: res.data.message || "Signup successful! Redirecting to login..." });
+      setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      console.error(err);
-      const errorMsg = err.response?.data?.message || "Signup failed. Try again!";
-      alert(errorMsg);
+      const errorMsg = err.response?.data?.message || "Signup failed. Please try again.";
+      setMessage({ type: 'error', text: errorMsg });
+      setIsSubmitting(false);
     }
   };
   
+  // Set max attribute for DOB input to today's date
+  const today = new Date('2025-10-12T23:21:51Z').toISOString().split('T')[0];
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #c8e6c9 0%, #81c784 100%)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        className="mt-5 mb-5"
-        style={{
-          maxWidth: 700,
-          width: "100%",
-          padding: 24,
-          background: "#fff",
-          borderRadius: 12,
-          boxShadow: "0 4px 16px rgba(0,0,0,0.10)",
-        }}
-      >
-        <h2 style={{ textAlign: "center", color: "#388e3c" }}>Sign Up</h2>
-        <form onSubmit={handleSubmit}>
-          {/* First Name */}
-          <label htmlFor="fname">First Name</label>
-          <input
-            id="fname"
-            name="fname"
-            type="text"
-            placeholder="Enter your first name"
-            value={formData.fname}
-            onChange={handleChange}
-            required
-            style={inputStyle}
-          />
+    <main className="auth-page">
+      <div className="form-card">
+        <header className="form-card__header">
+          <h1 className="form-card__title">Create Your Account</h1>
+          <p className="form-card__subtitle">Join the movement for a cleaner tomorrow.</p>
+        </header>
 
-          {/* Last Name */}
-          <label htmlFor="lname">Last Name</label>
-          <input
-            id="lname"
-            name="lname"
-            type="text"
-            placeholder="Enter your last name"
-            value={formData.lname}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-          {/* Username */}
-          <label htmlFor="fname">Username</label>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            placeholder="Enter your username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-            style={inputStyle}
-          />
-
-          {/* Date of Birth */}
-          <label htmlFor="dob">Date of Birth</label>
-          <input
-            id="dob"
-            name="dob"
-            type="date"
-            value={formData.dob}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-
-          {/* Gender */}
-          <label htmlFor="gender">Gender</label>
-          <select
-            id="gender"
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            style={inputStyle}
-          >
-            <option value="">Select gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-
-          {/* Address */}
-          <label htmlFor="address">Address</label>
-          <input
-            id="address"
-            name="address"
-            type="text"
-            placeholder="Enter your address"
-            value={formData.address}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-
-          {/* Phone */}
-          <label htmlFor="phone">Phone</label>
-          <input
-            id="phone"
-            name="phone"
-            type="tel"
-            placeholder="10-digit Indian phone"
-            pattern="[6-9]\d{9}"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            style={inputStyle}
-          />
-
-          {/* Aadhar */}
-          <label htmlFor="aadhar">Aadhar</label>
-          <input
-            id="aadhar"
-            name="aadhar"
-            type="text"
-            placeholder="12-digit Aadhar"
-            minLength={12}
-            maxLength={12}
-            value={formData.aadhar}
-            onChange={handleChange}
-            required
-            style={inputStyle}
-          />
-
-          {/* Email */}
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            style={inputStyle}
-          />
-
-          {/* Password */}
-          <label htmlFor="password">Password</label>
-          <div style={{ position: "relative" }}>
-            <input
-              id="password"
-              name="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              style={{ ...inputStyle, paddingRight: 60 }}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              style={toggleButtonStyle}
-            >
-              {showPassword ? "Hide" : "Show"}
-            </button>
+        <form onSubmit={handleSubmit} className="auth-form--signup">
+          <div className="form__group">
+            <label className="form__label" htmlFor="fname">First Name</label>
+            <input className="form__input" id="fname" name="fname" type="text" placeholder="e.g., Jane" value={formData.fname} onChange={handleChange} required />
+          </div>
+          <div className="form__group">
+            <label className="form__label" htmlFor="lname">Last Name</label>
+            <input className="form__input" id="lname" name="lname" type="text" placeholder="e.g., Doe" value={formData.lname} onChange={handleChange} required />
           </div>
 
-          {/* Confirm Password */}
-          <label htmlFor="confirmPassword">Confirm Password</label>
-          <div style={{ position: "relative" }}>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type={showConfirm ? "text" : "password"}
-              placeholder="Confirm your password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              style={{ ...inputStyle, paddingRight: 60 }}
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirm((prev) => !prev)}
-              style={toggleButtonStyle}
-            >
-              {showConfirm ? "Hide" : "Show"}
-            </button>
+          <div className="form__group form__group--full-width">
+            <label className="form__label" htmlFor="username">Username</label>
+            <input className="form__input" id="username" name="username" type="text" placeholder="Choose a unique username" value={formData.username} onChange={handleChange} required />
           </div>
-
           
-          <button type="submit" style={buttonStyle}>
-            Sign Up
-          </button>
+          <div className="form__group">
+            <label className="form__label" htmlFor="dob">Date of Birth</label>
+            <input className="form__input" id="dob" name="dob" type="date" value={formData.dob} onChange={handleChange} max={today} required />
+          </div>
+          <div className="form__group">
+            <label className="form__label" htmlFor="gender">Gender</label>
+            <select className="form__select" id="gender" name="gender" value={formData.gender} onChange={handleChange} required>
+              <option value="" disabled>Select gender...</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div className="form__group form__group--full-width">
+            <label className="form__label" htmlFor="address">Address</label>
+            <input className="form__input" id="address" name="address" type="text" placeholder="e.g., 123 Green Earth Society, Thane" value={formData.address} onChange={handleChange} required />
+          </div>
+
+          <div className="form__group">
+            <label className="form__label" htmlFor="phone">Phone</label>
+            <input className="form__input" id="phone" name="phone" type="tel" placeholder="10-digit mobile number" pattern="[6-9]\d{9}" value={formData.phone} onChange={handleChange} required />
+          </div>
+          <div className="form__group">
+            <label className="form__label" htmlFor="aadhar">Aadhar Number</label>
+            <input className="form__input" id="aadhar" name="aadhar" type="text" placeholder="12-digit Aadhar number" minLength={12} maxLength={12} value={formData.aadhar} onChange={handleChange} required />
+          </div>
+          
+          <div className="form__group form__group--full-width">
+            <label className="form__label" htmlFor="email">Email</label>
+            <input className="form__input" id="email" name="email" type="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} required />
+          </div>
+
+          <div className="form__group">
+            <label className="form__label" htmlFor="password">Password</label>
+            <input className="form__input form__input--password" id="password" name="password" type={showPassword ? "text" : "password"} placeholder="••••••••" value={formData.password} onChange={handleChange} required />
+            <button type="button" className="password-toggle-btn" onClick={() => setShowPassword(p => !p)}>{showPassword ? "Hide" : "Show"}</button>
+          </div>
+          <div className="form__group">
+            <label className="form__label" htmlFor="confirmPassword">Confirm Password</label>
+            <input className="form__input form__input--password" id="confirmPassword" name="confirmPassword" type={showConfirm ? "text" : "password"} placeholder="••••••••" value={formData.confirmPassword} onChange={handleChange} required />
+            <button type="button" className="password-toggle-btn" onClick={() => setShowConfirm(p => !p)}>{showConfirm ? "Hide" : "Show"}</button>
+          </div>
+
+          <div className="form__group--full-width">
+            <button type="submit" className="btn btn--primary" disabled={isSubmitting}>
+              {isSubmitting ? 'Creating Account...' : 'Sign Up'}
+            </button>
+          </div>
         </form>
 
-        <div style={{ textAlign: "center", marginTop: 18 }}>
-          <span style={{ color: "#555" }}>Already have an account? </span>
-          <Link
-            to="/login"
-            style={{
-              color: "#388e3c",
-              fontWeight: "bold",
-              textDecoration: "none",
-            }}
-          >
-            Login
-          </Link>
-        </div>
+        {message && <div className={`form__message form__message--${message.type}`}>{message.text}</div>}
+
+        <footer className="form-card__footer">
+          <span>Already have an account? </span>
+          <Link to="/login">Login</Link>
+        </footer>
       </div>
-    </div>
+    </main>
   );
 }
-
-const inputStyle = {
-  width: "100%",
-  padding: 8,
-  margin: "8px 0",
-  borderRadius: 4,
-  border: "1px solid #ccc",
-};
-
-const buttonStyle = {
-  width: "100%",
-  padding: 10,
-  background: "#388e3c",
-  color: "#fff",
-  border: "none",
-  borderRadius: 4,
-  marginTop: 12,
-  cursor: "pointer",
-  fontWeight: "bold",
-};
-
-const toggleButtonStyle = {
-  position: "absolute",
-  right: 10,
-  top: "50%",
-  transform: "translateY(-50%)",
-  background: "transparent",
-  border: "none",
-  color: "#388e3c",
-  cursor: "pointer",
-  fontWeight: "bold",
-};

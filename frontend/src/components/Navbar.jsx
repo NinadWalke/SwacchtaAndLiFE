@@ -6,7 +6,7 @@ import "./Navbar.css";
 
 export default function Navbar() {
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Close mobile menu on route change
