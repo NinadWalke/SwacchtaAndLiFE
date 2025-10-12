@@ -15,7 +15,7 @@ import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 // Services
 import Upload from "./pages/services/report/Upload.jsx";
-import Committee from "./pages/services/committee/Committee.jsx";
+import CommitteeForms from "./pages/services/committee/CommitteeForms.jsx";
 import Event from './pages/services/event/Event.jsx';
 import Shop from './pages/services/shop/Shop.jsx';
 // Subadmin
@@ -44,7 +44,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           {/* -- Core Routes -- */}
           <Route path="/upload" element={<Upload />} />
-          <Route path="/committee" element={<Committee />} />
+          <Route path="/committee" element={<CommitteeForms />} />
           <Route path="/events" element={<Event />} />
           <Route path="/shop" element={<Shop />} />
           {/* -- Officials Routes -- */}

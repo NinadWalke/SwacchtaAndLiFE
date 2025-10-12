@@ -1,122 +1,96 @@
-import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
+import React from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../components/AuthContext";
-import api from "../../utils/axiosConfig";
+// Import the new stylesheet
+import "./Home.css";
 
 export default function Home() {
-  const location = useLocation();
-  const [currUser, setCurrUser] = useState(null);
-  useEffect(() => {
-    async function getUser() {
-      const res = await api.get("/auth/check");
-      if (res.data.authenticated) setCurrUser(res.data.user);
-      else setCurrUser(null);
-    }
-    getUser();
-  }, []);
+  const { user } = useAuth();
+
   return (
-    <div>
-      {/* Hero Section */}
-      <section className="hero">
-        <h2>Empowering Clean Cities</h2>
-        <p>
-          Swacchta&Life is a smart waste management platform that leverages
-          machine learning and citizen participation for sustainable urban
-          cleanliness. Join us in building a cleaner, greener future.
-        </p>
-        {!currUser ? (
-          <div
-            style={{ display: "flex", justifyContent: "center", gap: "20px" }}
-          >
-            <Link to="/signup" className="btn">
-              Sign Up Free
-            </Link>
-            <Link
-              to="/login"
-              className="btn"
-              style={{
-                background: "#fff",
-                color: "#2ecc71",
-                border: "2px solid #2ecc71",
-              }}
-            >
-              Login
-            </Link>
+    // Semantic main tag for the page content
+    <main className="home-page">
+      {/* --- HERO SECTION --- */}
+      <section className="home__hero">
+        <div className="home__hero-content">
+          {/* SEO Improvement: Using h1 for the primary page title */}
+          <h1 className="home__hero-title">Empowering Clean Cities</h1>
+          <p className="home__hero-subtitle">
+            Swacchta&Life is a smart waste management platform that leverages
+            machine learning and citizen participation for sustainable urban
+            cleanliness. Join us in building a cleaner, greener future.
+          </p>
+          
+          {/* Cleaned up button container */}
+          <div className="home__hero-actions">
+            {!user ? (
+              <>
+                <Link to="/signup" className="btn btn--primary">
+                  Sign Up Free
+                </Link>
+                <Link to="/login" className="btn btn--secondary">
+                  Login
+                </Link>
+              </>
+            ) : (
+              <Link to="/upload" className="btn btn--secondary">
+                Upload Garbage Location
+              </Link>
+            )}
           </div>
-        ) : (
-          <div
-            style={{ display: "flex", justifyContent: "center", gap: "20px" }}
-          >
-            <Link
-              to="/upload"
-              className="btn"
-              style={{
-                background: "#fff",
-                color: "#2ecc71",
-                border: "2px solid #2ecc71",
-              }}
-            >
-              Upload
-            </Link>
-          </div>
-        )}
+        </div>
       </section>
 
-      {/* Features Section */}
-      <div className="card" style={{ maxWidth: 1200, margin: "40px auto" }}>
-        <div
-          style={{
-            display: "flex",
-            gap: "32px",
-            flexWrap: "wrap",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            className="card"
-            style={{ flex: "1 1 300px", textAlign: "center" }}
-          >
-            <div style={{ fontSize: "2.5rem", color: "#388e3c" }}>🌱</div>
-            <h3 style={{ fontWeight: 700, marginBottom: 8 }}>
-              Eco-Friendly Solutions
-            </h3>
-            <p>
+      {/* --- FEATURES SECTION --- */}
+      <section id="features" className="home__features">
+        {/* Professionalism: A dedicated header for the section provides context. */}
+        <div className="section-header">
+          <h2>A Modern Approach to Waste Management</h2>
+          <p>
+            We combine technology and community action to create a powerful,
+            transparent, and effective cleanliness solution.
+          </p>
+        </div>
+
+        {/* Cleaned up grid container */}
+        <div className="home__features-grid">
+          {/* Card 1 */}
+          <div className="feature-card">
+            {/* Suggestion: Replace emojis with a consistent SVG icon set for a more professional look */}
+            <div className="feature-card__icon">🌱</div>
+            <h3 className="feature-card__title">Eco-Friendly Solutions</h3>
+            <p className="feature-card__text">
               Promoting sustainable waste management practices for a healthier
               environment.
             </p>
           </div>
-          <div
-            className="card"
-            style={{ flex: "1 1 300px", textAlign: "center" }}
-          >
-            <div style={{ fontSize: "2.5rem", color: "#388e3c" }}>🤖</div>
-            <h3 style={{ fontWeight: 700, marginBottom: 8 }}>
-              AI Powered Insights
-            </h3>
-            <p>
+
+          {/* Card 2 */}
+          <div className="feature-card">
+            <div className="feature-card__icon">🤖</div>
+            <h3 className="feature-card__title">AI-Powered Insights</h3>
+            <p className="feature-card__text">
               Utilize machine learning to optimize waste collection and
               recycling processes.
             </p>
           </div>
-          <div
-            className="card"
-            style={{ flex: "1 1 300px", textAlign: "center" }}
-          >
-            <div style={{ fontSize: "2.5rem", color: "#388e3c" }}>👥</div>
-            <h3 style={{ fontWeight: 700, marginBottom: 8 }}>
-              Citizen Engagement
-            </h3>
-            <p>
+
+          {/* Card 3 */}
+          <div className="feature-card">
+            <div className="feature-card__icon">👥</div>
+            <h3 className="feature-card__title">Citizen Engagement</h3>
+            <p className="feature-card__text">
               Empower communities to participate and contribute to urban
               cleanliness initiatives.
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Footer */}
-      
-    </div>
+      {/* --- FOOTER --- */}
+      <footer className="home__footer">
+        <p>&copy; {new Date().getFullYear()} Swacchta&Life. All Rights Reserved.</p>
+      </footer>
+    </main>
   );
 }

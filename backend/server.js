@@ -399,8 +399,6 @@ app.post("/reports", uploadFields, async (req, res) => {
     // Get the uploaded Cloudinary URL
     const imageUrl1 = req.files["image"][0].path;
     const imageUrl2 = req.files["image2"][0].path;
-    console.log(imageUrl1 + " | " + imageUrl2);
-
     // Create a new report
     const newReport = new Report({
       reportImg: imageUrl1, // original image

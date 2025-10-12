@@ -1,103 +1,87 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+// Import the new stylesheet
+import "./Navbar.css";
 
 export default function Navbar() {
-  // State Variables
   const location = useLocation();
+  const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
-  // Auth Context
-  const { user } = useAuth();
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
+
+  // Define navigation links in a structured way
   const navLinks = [
-    { to: "/", label: "Home", displayLink: user ? true : true },
-    { to: "/login", label: "Login", displayLink: user ? false : true },
-    { to: "/signup", label: "Signup", displayLink: user ? false : true },
-    { to: "/profile", label: "Profile", displayLink: user ? true : false },
-    { to: "/upload", label: "Upload", displayLink: user ? true : false },
-    { to: "/events", label: "Events", displayLink: user ? true : false },
-    { to: "/committee", label: "Committee", displayLink: user ? true : false },
-    { to: "/shop", label: "Shop", displayLink: user ? true : false },
-    { to: "/officials", label: "Officials", displayLink: user ? true : false },
-    { to: "/admin", label: "Admin", displayLink: user ? true : false },
-
+    // Note: It's generally better to have fewer top-level links.
+    // Consider a dropdown for user-specific items.
+    { to: "/", label: "Home", type: "always" },
+    { to: "/login", label: "Login", type: "guest" },
+    { to: "/signup", label: "Signup", type: "guest" },
+    { to: "/profile", label: "Profile", type: "user" },
+    { to: "/upload", label: "Upload", type: "user" },
+    // Grouping other links for potential future dropdown
+    { to: "/events", label: "Events", type: "user" },
+    { to: "/committee", label: "Committee", type: "user" },
+    { to: "/shop", label: "Shop", type: "user" },
+    { to: "/officials", label: "Officials", type: "user" },
+    { to: "/admin", label: "Admin", type: "user" }, // Consider role-based access for this
   ];
+
+  const filteredLinks = navLinks.filter(link => {
+    if (link.type === "always") return true;
+    if (user && link.type === "user") return true;
+    if (!user && link.type === "guest") return true;
+    return false;
+  });
 
   return (
     <header className="navbar">
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <img
-          src="https://img.icons8.com/color/48/000000/recycle.png"
-          alt="Logo"
-          style={{ width: 40, height: 40, marginRight: 8 }}
-        />
-        <h1>Swacchta&Life</h1>
-      </div>
-      <nav
-        className="nav-links"
-        style={{
-          display: menuOpen ? "flex" : "",
-          flexDirection: menuOpen ? "column" : "row",
-        }}
-      >
-        {navLinks
-          .filter((link) => link.displayLink) // Only keep links where displayLink is true
-          .map((link) => (
+      <div className="navbar__container">
+        {/* Brand/Logo - links to home */}
+        <Link to="/" className="navbar__brand">
+          {/* Suggestion: Host your own SVG logo for better performance and quality */}
+          <img
+            src="https://img.icons8.com/color/48/000000/recycle.png"
+            alt="Swacchta&Life Logo"
+            className="brand__logo"
+          />
+          <h1 className="brand__title">Swacchta&Life</h1>
+        </Link>
+
+        {/* Navigation Links */}
+        <nav className={`navbar__nav ${menuOpen ? "navbar__nav--open" : ""}`}>
+          {filteredLinks.map((link) => (
             <Link
               key={link.to}
               to={link.to}
-              className={location.pathname === link.to ? "active" : ""}
-              style={{
-                fontWeight: location.pathname === link.to ? "bold" : "normal",
-                background: location.pathname === link.to ? "#388e3c" : "none",
-                color: location.pathname === link.to ? "#ffd600" : "white",
-                borderRadius: 6,
-                padding: "6px 14px",
-                transition: "background 0.3s, color 0.3s",
-              }}
-              onClick={() => setMenuOpen(false)}
+              className={`nav__link ${location.pathname === link.to ? "active" : ""}`}
             >
               {link.label}
             </Link>
           ))}
-      </nav>
-      {/* Hamburger for mobile */}
-      <button
-        className="navbar-toggle"
-        style={{
-          background: "none",
-          border: "none",
-          color: "white",
-          fontSize: 28,
-          cursor: "pointer",
-          display: "none",
-          marginLeft: 16,
-        }}
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-label="Toggle navigation"
-      >
-        ☰
-      </button>
-      <style>
-        {`
-          @media (max-width: 700px) {
-            .nav-links {
-              display: ${menuOpen ? "flex" : "none"};
-              flex-direction: column;
-              position: absolute;
-              top: 60px;
-              left: 0;
-              width: 100%;
-              background: #1b5e20;
-              padding: 16px 0;
-              z-index: 99;
-            }
-            .navbar-toggle {
-              display: block;
-            }
-          }
-        `}
-      </style>
+          {/* Dedicated Logout Button for better UX */}
+          {user && (
+             <button onClick={logout} className="nav__link nav__logout-btn">
+                Logout
+             </button>
+          )}
+        </nav>
+
+        {/* Hamburger Toggle for Mobile */}
+        <button
+          className={`navbar__toggle ${menuOpen ? "navbar__toggle--open" : ""}`}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle navigation"
+        >
+          <span className="hamburger__line hamburger__line--1"></span>
+          <span className="hamburger__line hamburger__line--2"></span>
+          <span className="hamburger__line hamburger__line--3"></span>
+        </button>
+      </div>
     </header>
   );
 }

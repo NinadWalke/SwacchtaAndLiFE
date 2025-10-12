@@ -1,0 +1,194 @@
+/* ---
+  Component Stylesheet for Home Page
+  Design Transformation by Gemini AI
+  Theme: Eco-Minimalism for "Swacchta&Life"
+--- */
+
+/* 1. FONT IMPORT */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap');
+
+/* 2. CSS VARIABLES (THEME DEFINITION)
+   - Professionalism: Centralizing theme properties makes the design consistent
+     and easy to modify in the future.
+*/
+:root {
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Lato', sans-serif;
+
+  --color-background: #f8f9fa;
+  --color-text: #34495e;
+  --color-primary-green: #0a6847; /* Deeper, more corporate green */
+  --color-accent-green: #77b0aa;   /* Brighter, modern green for actions */
+  --color-highlight-bg: #f0fdf4;
+  --color-white: #ffffff;
+  --color-border: #e0e0e0;
+
+  --border-radius: 12px;
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.1);
+  --transition-smooth: all 0.3s ease-in-out;
+}
+
+/* 3. PAGE CONTAINER */
+.home-page {
+  width: 100%;
+  overflow-x: hidden; /* Prevents horizontal scroll */
+}
+
+/* 4. HERO SECTION STYLES
+   - Visual Appeal: A soft gradient background and centered, well-spaced
+     typography create an impactful and modern first impression.
+*/
+.home__hero {
+  background: linear-gradient(135deg, var(--color-highlight-bg), var(--color-white));
+  text-align: center;
+  padding: 6rem 1.5rem;
+}
+
+.home__hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.home__hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 5vw, 3.5rem); /* Responsive font size */
+  color: var(--color-primary-green);
+  margin-bottom: 1rem;
+}
+
+.home__hero-subtitle {
+  font-size: 1.2rem;
+  line-height: 1.7;
+  color: var(--color-text);
+  margin-bottom: 2.5rem;
+}
+
+.home__hero-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap; /* Allows buttons to stack on smaller screens */
+}
+
+/* 5. REUSABLE BUTTON STYLES
+   - UX Enhancement: Clear, consistent button styles with interactive
+     hover states guide the user and improve usability.
+*/
+.btn {
+  display: inline-block;
+  padding: 14px 32px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+.btn--primary {
+  background-color: var(--color-accent-green);
+  color: var(--color-white);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-primary-green);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn--secondary {
+  background-color: var(--color-white);
+  color: var(--color-accent-green);
+  border-color: var(--color-accent-green);
+}
+
+.btn--secondary:hover {
+  background-color: var(--color-accent-green);
+  color: var(--color-white);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+/* 6. FEATURES SECTION
+   - Professionalism: A dedicated section header and a clean grid layout
+     present information in a structured, easy-to-digest format.
+*/
+.home__features {
+  padding: 5rem 1.5rem;
+  background-color: var(--color-white);
+}
+
+.section-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 4rem auto;
+}
+
+.section-header h2 {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  color: var(--color-primary-green);
+  margin-bottom: 0.5rem;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.home__features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 7. FEATURE CARD STYLES
+   - Thematic Relevance: The clean design with green accents reinforces the
+     eco-tech theme. The hover effect adds a modern, interactive feel.
+*/
+.feature-card {
+  background-color: var(--color-background);
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  text-align: center;
+  transition: var(--transition-smooth);
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-accent-green);
+}
+
+.feature-card__icon {
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  color: var(--color-primary-green);
+}
+
+.feature-card__title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-text);
+}
+
+.feature-card__text {
+  line-height: 1.6;
+}
+
+/* 8. FOOTER STYLES */
+.home__footer {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background-color: #eef2f5;
+  border-top: 1px solid var(--color-border);
+  color: #6c757d;
+}

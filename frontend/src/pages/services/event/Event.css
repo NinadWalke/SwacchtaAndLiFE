@@ -1,57 +1,184 @@
-.event-container {
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-    color: white;
-  }
-  
-  .event-title {
-    text-align: center;
-    margin-bottom: 30px;
-    color: black;
-  }
-  
-  .event-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .event-card {
-    background: #2ecc71;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease;
-  }
-  
-  .event-card:hover {
-    transform: translateY(-5px);
-  }
-  
-  .event-card h2 {
-    margin-bottom: 10px;
-  }
-  
-  .event-card p {
-    margin: 5px 0;
-  }
-  
-  .event-card button {
-    margin-top: 10px;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    background: white;
-    color: #2ecc71;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .event-card button:hover {
-    background: #27ae60;
-    color: white;
-  }
-  
+/* ---
+  Component Stylesheet for Events Page
+  Applying the "Eco-Minimalism" Design System
+--- */
+
+/* 1. THEME & FONT VARIABLES */
+:root {
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Lato', sans-serif;
+  --color-background: #f8f9fa;
+  --color-text: #34495e;
+  --color-primary-green: #0a6847;
+  --color-accent-green: #77b0aa;
+  --color-white: #ffffff;
+  --color-border: #dbe2e9;
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.1);
+  --transition-smooth: all 0.3s ease-in-out;
+}
+
+/* 2. PAGE STRUCTURE & HEADER */
+.events-page {
+  background-color: var(--color-background);
+  min-height: 100vh;
+}
+
+.events-page__header {
+  background: linear-gradient(135deg, var(--color-highlight-bg), var(--color-white));
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+
+.events-page__title {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+  color: var(--color-primary-green);
+  margin-bottom: 0.5rem;
+}
+
+.events-page__subtitle {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  color: #555;
+}
+
+.events-page__container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 0;
+}
+
+/* 3. RESPONSIVE EVENTS GRID */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+/* 4. EVENT CARD REDESIGN
+   - Visual Appeal: A multi-part card with an image, prominent date, and
+     clear content separation is far more engaging and professional.
+*/
+.event-card {
+  background-color: var(--color-white);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  border: 1px solid var(--color-border);
+  overflow: hidden; /* Ensures content respects the border radius */
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition-smooth);
+}
+
+.event-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-md);
+}
+
+.event-card__image-container {
+  height: 200px;
+  background-color: var(--color-accent-green);
+  /* Suggestion: Replace with background-image: url(...) from event data */
+  background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2070');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.event-card__date {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: var(--color-white);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.date__day {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-primary-green);
+  line-height: 1;
+}
+
+.date__month {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.event-card__content {
+  padding: 1.5rem;
+  flex-grow: 1; /* Allows content to fill space, pushing footer down */
+}
+
+.event-card__title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--color-text);
+  margin: 0 0 1rem 0;
+}
+
+.event-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.meta__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.event-card__description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--footer-text);
+}
+
+.event-card__footer {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--color-border);
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+}
+
+.footer__attendees {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* 5. BUTTONS & LOADING/EMPTY STATES */
+.btn {
+  padding: 10px 24px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+.btn--primary { background-color: var(--color-accent-green); color: var(--color-white); }
+.btn--primary:hover { background-color: var(--color-primary-green); }
+.btn--secondary { background-color: var(--color-white); color: var(--color-accent-green); border-color: var(--color-accent-green); }
+.btn--secondary:hover { background-color: var(--color-accent-green); color: var(--color-white); }
+
+.loading-state, .empty-state {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #777;
+  padding: 3rem;
+}

@@ -5,6 +5,7 @@ import { useAuth } from "../../../components/AuthContext";
 
 function Event() {
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true); // Added loading state
   const { user } = useAuth();
 
   useEffect(() => {
@@ -14,6 +15,8 @@ function Event() {
         setEvents(res.data);
       } catch (e) {
         alert(e.message);
+      } finally {
+        setLoading(false); // Stop loading regardless of outcome
       }
     };
     getEvents();
@@ -28,8 +31,10 @@ function Event() {
       );
     } catch (e) {
       console.log("Error: " + e.message);
+      alert("Failed to register. Please try again.");
     }
   };
+
   const handleUnregister = async (id) => {
     try {
       const res = await api.post(`/events/${id}/unregister`);
@@ -39,52 +44,81 @@ function Event() {
       );
     } catch (e) {
       console.log("Error: " + e.message);
+      alert("Failed to unregister. Please try again.");
     }
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString('default', { month: 'short' });
+    const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return { day, month, time };
+  };
+
   return (
-    <div className="event-container">
-      <h1 className="event-title">Upcoming Events</h1>
-      <div className="event-list">
-        {events.map((event) => (
-          <div key={event._id} className="event-card">
-            <h2>{event.eventName}</h2>
-            <h6>
-              <strong>Hosted by: </strong>
-              {event.eventHostedBy}
-            </h6>
-            <p>{event.eventDescription}</p>
-            <p>
-              <strong>Date:</strong>{" "}
-              {new Date(event.eventDateTime).toLocaleString()}
-            </p>
-            <p>
-              <strong>Location:</strong> {event.eventLocation}
-            </p>
-            <p>
-              <strong>Registered Users: </strong> {event.registeredUsers.length}
-            </p>
-            <div className="text-center">
-              {event.registeredUsers.includes(user._id) ? (
-                <button
-                  className="event-signup-btn"
-                  onClick={() => handleUnregister(event._id)}
-                >
-                  Unregister
-                </button>
-              ) : (
-                <button
-                  className="event-signup-btn"
-                  onClick={() => handleSignUp(event._id)}
-                >
-                  Sign Up
-                </button>
-              )}
-            </div>
+    <main className="events-page">
+      <header className="events-page__header">
+        <h1 className="events-page__title">Community Events</h1>
+        <p className="events-page__subtitle">
+          Join fellow citizens in making our community cleaner and greener. Find a local event and sign up today!
+        </p>
+      </header>
+      
+      <div className="events-page__container">
+        {loading ? (
+          <div className="loading-state">Loading events...</div>
+        ) : events.length > 0 ? (
+          <div className="events-grid">
+            {events.map((event) => {
+              const { day, month, time } = formatDate(event.eventDateTime);
+              const isRegistered = user && event.registeredUsers.includes(user._id);
+
+              return (
+                <div key={event._id} className="event-card">
+                  <div className="event-card__image-container">
+                    <div className="event-card__date">
+                      <span className="date__day">{day}</span>
+                      <span className="date__month">{month}</span>
+                    </div>
+                  </div>
+
+                  <div className="event-card__content">
+                    <h2 className="event-card__title">{event.eventName}</h2>
+                    <div className="event-card__meta">
+                      {/* Suggestion: Replace text with SVG icons */}
+                      <span className="meta__item">📍 {event.eventLocation}</span>
+                      <span className="meta__item">👤 Hosted by: {event.eventHostedBy}</span>
+                      <span className="meta__item">🕒 {time}</span>
+                    </div>
+                    <p className="event-card__description">{event.eventDescription}</p>
+                  </div>
+                  
+                  <div className="event-card__footer">
+                    <span className="footer__attendees text-center me-3">
+                      {event.registeredUsers.length} Registered
+                    </span>
+                    {isRegistered ? (
+                      <button className="btn btn--secondary" onClick={() => handleUnregister(event._id)}>
+                        Unregister
+                      </button>
+                    ) : (
+                      <button className="btn btn--primary" onClick={() => handleSignUp(event._id)}>
+                        Sign Up
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        ))}
+        ) : (
+          <div className="empty-state">
+            There are no upcoming events at the moment. Please check back later!
+          </div>
+        )}
       </div>
-    </div>
+    </main>
   );
 }
 
