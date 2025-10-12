@@ -151,3 +151,45 @@
   background-color: var(--color-primary-green);
   transform: translateY(-2px);
 }
+
+/* ---
+  Styles for Logged-In State (Add to CommitteeForms.css)
+--- */
+
+/* 7. LOGGED-IN CARD STYLES */
+.committee-logged-in {
+  text-align: center;
+}
+
+.logged-in__title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--color-primary-green);
+  margin-bottom: 0.5rem;
+}
+
+.logged-in__subtitle {
+  color: var(--color-text);
+  margin-bottom: 2rem;
+  word-wrap: break-word; /* Prevents long names/emails from overflowing */
+}
+
+.logged-in__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* 8. NEW BUTTON STYLE (Danger Outline) */
+.btn--danger-outline {
+  background-color: transparent;
+  color: var(--color-error, #e74c3c);
+  border: 2px solid var(--color-error, #e74c3c);
+}
+
+.btn--danger-outline:hover {
+  background-color: var(--color-error, #e74c3c);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}

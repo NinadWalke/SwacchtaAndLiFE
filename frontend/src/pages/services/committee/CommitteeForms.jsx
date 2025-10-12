@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./CommitteeForms.css";
 import api from "../../../utils/axiosConfig";
-import {useCommitteeAuth} from '../../../components/CommitteeAuthContext';
+import {Link} from "react-router-dom"
+import { useCommitteeAuth } from "../../../components/CommitteeAuthContext";
 
 // Renamed component function
 function CommitteeForms() {
@@ -39,7 +40,7 @@ function CommitteeForms() {
     e.preventDefault();
     try {
       const res = await api.post("/committees/login", committeeLoginFormData);
-      
+
       console.log(res);
       login(res.data.token, res.data.committee);
       alert("Logged in to your committee successfully!");
@@ -64,11 +65,35 @@ function CommitteeForms() {
     });
   };
   if (isAuthenticated) {
+    // This JSX provides a professional "session active" card
     return (
-      <div className="committee-logged-in">
-        <h2>You're already logged in as {committee.committeeName || committee.email}</h2>
-        <button onClick={() => logout()}>Logout</button>
-      </div>
+      <main className="committee-page">
+        <div className="form-card committee-logged-in">
+          <header className="form-card__header">
+            <h1 className="logged-in__title">Session Active</h1>
+          </header>
+
+          <p className="logged-in__subtitle">
+            You are logged in as <br />
+            <strong>{committee.committeeName || committee.email}</strong>
+          </p>
+
+          <div className="logged-in__actions">
+            {/* New button linking to the dashboard */}
+            <Link to="/committee/dashboard" className="btn btn--primary">
+              Go to Dashboard
+            </Link>
+
+            {/* Restyled Logout button */}
+            <button
+              onClick={() => logout()}
+              className="btn btn--danger-outline"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </main>
     );
   }
   return (
