@@ -117,6 +117,16 @@ app.get("/auth/check", async (req, res) => {
     res.status(201).json({ authenticated: false, user: null });
   }
 });
+app.get("/auth/users", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  }
+  catch (e) {
+    console.log(e);
+    res.json({error: e.message});
+  }
+})
 app.post("/auth/send-otp", async (req, res) => {
   const {
     fname,
@@ -416,7 +426,11 @@ app.post("/reports", uploadFields, async (req, res) => {
       status: "pending",
       reportOwner: req.user._id,
     });
-
+    const user = req.user;
+    user.reports.push(newReport);
+    // give points to the user
+    user.points += 15; // 15 points per report
+    await user.save();
     await newReport.save();
 
     return res.status(201).json({

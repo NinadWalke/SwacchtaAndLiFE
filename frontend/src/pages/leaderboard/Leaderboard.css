@@ -1,0 +1,224 @@
+/* --- Root Variables & Global Setup --- */
+:root {
+    --color-primary-green: #0a6847;
+    --color-accent-green: #77b0aa;
+    
+    /* Neutrals */
+    --color-text-dark: #333;
+    --color-text-light: #ffffff;
+    --color-background-light: #f7fafc;
+    --color-border-light: #e2e8f0;
+    --color-shadow: rgba(0, 0, 0, 0.05);
+    --color-hover-light: #f9f9f9;
+  }
+  
+  /* --- Base & Layout --- */
+  .leaderboard-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    background-color: var(--color-background-light);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .leaderboard-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    max-width: 600px;
+  }
+  
+  /* --- Typography --- */
+  .leaderboard-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-primary-green);
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .leaderboard-subtitle {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.5;
+  }
+  
+  /* --- Loading, Error, & Empty States --- */
+  .loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem;
+    font-size: 1.2rem;
+    color: var(--color-text-dark);
+  }
+  
+  .loader {
+    border: 5px solid var(--color-border-light);
+    border-top: 5px solid var(--color-primary-green);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .error-message,
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--color-text-light);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--color-shadow);
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .error-message {
+    color: #c53030; /* Red */
+    background-color: #fff5f5;
+    border: 1px solid #fc8181;
+  }
+  
+  .empty-state h2 {
+    color: var(--color-primary-green);
+    margin-top: 0;
+  }
+  
+  /* --- Leaderboard Table --- */
+  .leaderboard-table-container {
+    width: 100%;
+    max-width: 800px;
+    background-color: var(--color-text-light);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--color-shadow);
+    overflow: hidden; /* Ensures border-radius clips the table */
+    border: 1px solid var(--color-border-light);
+  }
+  
+  .leaderboard-table {
+    width: 100%;
+    border-collapse: collapse; /* Clean, modern lines */
+  }
+  
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 0.8rem 1rem; /* Mobile-first padding */
+    text-align: left;
+    vertical-align: middle;
+  }
+  
+  /* Table Header */
+  .leaderboard-table thead {
+    background-color: var(--color-primary-green);
+    color: var(--color-text-light);
+  }
+  
+  .leaderboard-table th {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  /* Table Body */
+  .leaderboard-table tbody tr {
+    border-bottom: 1px solid var(--color-border-light);
+    transition: background-color 0.2s ease;
+  }
+  
+  .leaderboard-table tbody tr:last-child {
+    border-bottom: none; /* Remove border from last item */
+  }
+  
+  .leaderboard-table tbody tr:hover {
+    background-color: var(--color-hover-light);
+  }
+  
+  /* Column-Specific Styles */
+  .header-rank,
+  .rank-cell {
+    width: 80px;
+    text-align: center;
+  }
+  
+  .header-score,
+  .score-cell {
+    width: 120px;
+    text-align: right;
+    font-weight: 700;
+    color: var(--color-primary-white);
+    font-size: 1.1rem;
+  }
+  
+  .user-cell {
+    font-weight: 500;
+    color: var(--color-text-dark);
+    /* Prevent long names from breaking layout */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px; /* Adjust as needed */
+  }
+  
+  /* Top 3 Highlighting */
+  .rank-cell {
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  /* Add medal emoji using CSS pseudo-elements */
+  .rank-cell.rank-1::after {
+    content: '🥇';
+    font-size: 1.25rem;
+  }
+  .rank-cell.rank-2::after {
+    content: '🥈';
+    font-size: 1.25rem;
+  }
+  .rank-cell.rank-3::after {
+    content: '🥉';
+    font-size: 1.25rem;
+  }
+  
+  /* --- Responsive Breakpoints (Mobile-First) --- */
+  @media (min-width: 768px) {
+    .leaderboard-container {
+      padding: 3rem 2rem;
+    }
+  
+    .leaderboard-title {
+      font-size: 2.75rem;
+    }
+  
+    .leaderboard-subtitle {
+      font-size: 1.25rem;
+    }
+  
+    .leaderboard-table th,
+    .leaderboard-table td {
+      padding: 1.25rem 1.5rem; /* More spacing on desktop */
+    }
+  
+    .leaderboard-table th {
+      font-size: 0.85rem;
+    }
+  
+    .user-cell {
+      font-size: 1.05rem;
+      max-width: none; /* Allow more space for names */
+    }
+  }
+  
+  

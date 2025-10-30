@@ -192,3 +192,135 @@
   border-top: 1px solid var(--color-border);
   color: #6c757d;
 }
+
+/* ---------- Training ------------ */
+/* --- Root Variables (Add if not already in home.css) --- */
+:root {
+  --color-primary-green: #0a6847;
+  --color-accent-green: #77b0aa;
+  
+  /* Neutrals */
+  --color-text-dark: #333;
+  --color-text-light: #ffffff;
+  --color-background-light: #f7fafc;
+  --color-border-light: #e2e8f0;
+  --color-shadow: rgba(0, 0, 0, 0.05);
+}
+
+/* ===============================================
+  Training / Green Practices Section
+===============================================
+*/
+
+/* --- Section Layout --- */
+.training-features-section {
+  width: 100%;
+  padding: 4rem 1rem; /* Generous padding for a "feature" section */
+  background-color: var(--color-background-light); /* Light bg to separate from other content */
+}
+
+.training-content-wrapper {
+  width: 100%;
+  max-width: 1200px; /* Standard max-width for desktop */
+  margin: 0 auto; /* Center the content */
+}
+
+/* --- Section Header --- */
+.training-header {
+  text-align: center;
+  margin-bottom: 3rem; /* Space between header and grid */
+}
+
+.training-header-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--color-primary-green);
+  margin: 0 0 0.75rem 0;
+}
+
+.training-header-subtitle {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.6;
+  max-width: 700px; /* Keeps the subtitle readable */
+  margin: 0 auto;
+}
+
+/* --- Practices Grid --- */
+.training-grid {
+  display: grid;
+  gap: 1.5rem; /* Gap for mobile (single column) */
+  /* Mobile-first: default is 1 column */
+}
+
+/* --- Practice Card --- */
+.training-card {
+  background-color: var(--color-text-light);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid var(--color-border-light);
+  box-shadow: 0 4px 15px var(--color-shadow);
+  text-align: center; /* Center text for mobile */
+  transition: 
+    transform 0.3s ease, 
+    box-shadow 0.3s ease;
+}
+
+.training-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Card Content */
+.training-card-icon {
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 1.25rem;
+}
+
+.training-card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-text-dark);
+  margin: 0 0 0.5rem 0;
+}
+
+.training-card-text {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* --- Responsive Breakpoints (Mobile-First) --- */
+
+/* Tablet: 2x2 Grid */
+@media (min-width: 768px) {
+  .training-features-section {
+    padding: 5rem 2rem;
+  }
+
+  .training-header-title {
+    font-size: 2.75rem;
+  }
+
+  .training-header-subtitle {
+    font-size: 1.15rem;
+  }
+
+  .training-grid {
+    grid-template-columns: 1fr 1fr; /* 2 columns */
+    gap: 2rem;
+  }
+}
+
+/* Desktop: 4-Column Grid */
+@media (min-width: 1024px) {
+  .training-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  }
+
+  .training-card {
+    /* Align text left for better readability in columns */
+    text-align: left; 
+  }
+}

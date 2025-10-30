@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin", "official"],
+      enum: ["user", "admin", "official", "osp"],
       default: "user",
     },
     profileImg: {
@@ -61,6 +61,10 @@ const userSchema = new mongoose.Schema(
         ref: "Report",
       },
     ],
+    points: {
+      type: Number,
+      default: 0
+    },
     otp: {
       type: String,
     },
