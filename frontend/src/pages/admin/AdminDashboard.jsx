@@ -127,7 +127,7 @@ export default function AdminDashboard() {
                   <tr key={r._id}>
                     <td>{r._id.slice(-8)}...</td>
                     <td>{new Date(r.time).toLocaleString()}</td>
-                    <td>{r.location || "N/A"}</td>
+                    <td>{"N/A"}</td>
                     <td><span className={`status-badge status--${r.status}`}>{r.status}</span></td>
                     <td>{r.reportOwner?.username || "N/A"}</td>
                   </tr>

@@ -407,6 +407,11 @@ app.get("/reports", async (req, res) => {
       .json({ message: "Server error while fetching reports" });
   }
 });
+app.get("/my-reports", async(req, res) => {
+  const user = await User.findById(req.user._id).populate("reports");
+  const userReports = user.reports;
+  res.json(userReports);
+});
 const uploadFields = uploadImgCloudinary.fields([
   { name: "image", maxCount: 1 },
   { name: "image2", maxCount: 1 },

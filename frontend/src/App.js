@@ -16,6 +16,8 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import Home from "./pages/home/Home";
 // Profile
 import Profile from "./pages/profile/Profile";
+import MyReports from "./pages/profile/MyReports.jsx";
+
 // Services
 import Upload from "./pages/services/report/Upload.jsx";
 // Leaderboard
@@ -51,6 +53,7 @@ function App() {
             <Route path="/otp" element={<Otp />} />
             {/* -- User Profile --*/}
             <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/reports" element={<MyReports />} />
             {/* -- Core Routes -- */}
             <Route path="/upload" element={<Upload />} />
             {/* -- Leaderboard Routes -- */}

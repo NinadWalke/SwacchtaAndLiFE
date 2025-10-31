@@ -1,12 +1,79 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/AuthContext";
+import api from "../../utils/axiosConfig";
 // Import the new stylesheet
 import "./Home.css";
 
-export default function Home() {
-  const { user } = useAuth();
+// Public maps
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+// Custom CSS-based marker icons
+const createMarkerIcon = (status) => {
+  return L.divIcon({
+    className: `marker-pin ${status}`,
+    iconSize: [30, 42],
+    iconAnchor: [15, 42],
+    popupAnchor: [0, -35],
+  });
+};
 
+export default function Home() {
+  const navigate = useNavigate();
+  const [allReports, setAllReports] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [location, setLocation] = useState({ latitude: null, longitude: null }); // state for user location
+  const { user } = useAuth();
+  useEffect(() => {
+    const getReports = async () => {
+      try {
+        const res = await api.get("/reports");
+        const sortedReports = res.data.reports.sort(
+          (a, b) => new Date(b.time) - new Date(a.time)
+        );
+        setAllReports(sortedReports);
+      } catch (error) {
+        console.error("Failed to fetch reports:", error);
+        alert("Could not fetch reports.");
+      }
+    };
+    const getEvents = async () => {
+      try {
+        const res = await api.get("/events");
+        const filteredReports = res.data.filter(
+          (e) =>
+            e?.eventLocationData?.coordinates &&
+            Array.isArray(e.eventLocationData.coordinates) &&
+            e.eventLocationData.coordinates.length === 2 &&
+            typeof e.eventLocationData.coordinates[0] === "number" &&
+            typeof e.eventLocationData.coordinates[1] === "number"
+        );
+        setEvents(filteredReports);
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
+        alert("Could not fetch events.");
+      }
+    };
+    const getUserLocation = async () => {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setLocation({
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude,
+          });
+        },
+        (err) => {
+          console.log("Location permission denied: ", err);
+          alert("Location is required to report garbage.");
+        },
+        { enableHighAccuracy: true }
+      );
+    };
+    getReports();
+    getEvents();
+    getUserLocation();
+  }, []);
   return (
     // Semantic main tag for the page content
     <main className="home-page">
@@ -40,7 +107,91 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* --- MAP MODULE --- */}
+      <section className="dashboard-module">
+        <h2 className="module-header">Live Reports Map</h2>
+        {location.latitude && location.longitude && (
+          <MapContainer
+            center={[location.latitude, location.longitude]}
+            zoom={14}
+            style={{ height: "450px", width: "100%" }}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            />
+            {allReports.map((r) => (
+              <Marker
+                key={r._id}
+                position={[
+                  r.location.coordinates[1],
+                  r.location.coordinates[0],
+                ]}
+                icon={createMarkerIcon(r.status)}
+              >
+                <Popup>
+                  <strong>Report ID: {r._id.slice(-6)}</strong>
+                  <br />
+                  Status:{" "}
+                  <span className={`status-badge status--${r.status}`}>
+                    {r.status}
+                  </span>
+                </Popup>
+              </Marker>
+            ))}
+            {events.map((ev) => (
+              <Marker
+                key={ev._id}
+                position={[
+                  ev.eventLocationData.coordinates[1],
+                  ev.eventLocationData.coordinates[0],
+                ]}
+                icon={createMarkerIcon("event")}
+              >
+                <Popup>
+                  <div style={{ minWidth: "180px" }}>
+                    <strong>{ev.eventName}</strong>
+                    <br />
+                    <span>
+                      <strong>Hosted By:</strong> {ev.eventHostedBy}
+                    </span>
+                    <br />
+                    <span>
+                      <strong>Date:</strong>{" "}
+                      {new Date(ev.eventDateTime).toLocaleDateString("en-IN", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
+                    <br />
+                    <span>
+                      <strong>Time:</strong>{" "}
+                      {new Date(ev.eventDateTime).toLocaleTimeString("en-IN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                    <br />
+                    <span>
+                      <strong>Attendees:</strong> {ev.registeredUsers.length}
+                    </span>
+                    <br />
 
+                    <button
+                      className="btn btn--secondary"
+                      style={{ marginTop: "10px" }}
+                      onClick={() => navigate(`/officials/event/${ev._id}`)}
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
+        )}
+      </section>
       {/* --- FEATURES SECTION --- */}
       <section id="features" className="home__features">
         {/* Professionalism: A dedicated header for the section provides context. */}
@@ -147,7 +298,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
+
       {/* --- FOOTER --- */}
       <footer className="home__footer">
         <p>
