@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.16.2",
     "axios": "^1.11.0",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",

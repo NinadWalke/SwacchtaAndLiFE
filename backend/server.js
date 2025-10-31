@@ -24,6 +24,7 @@ const { storage } = require("./utils/cloudconfig");
 const uploadImgCloudinary = multer({ storage });
 const { cloudinaryConfig } = require("./utils/cloudconfig.js");
 const { extractPublicId } = require("./utils/cloudinaryHelpers.js");
+const geocodeAddress = require("./utils/mapboxConfig.js");
 
 // -- Middlewares --
 const { verifyToken } = require("./utils/middlewares.js");
@@ -121,12 +122,11 @@ app.get("/auth/users", async (req, res) => {
   try {
     const users = await User.find();
     res.json(users);
-  }
-  catch (e) {
+  } catch (e) {
     console.log(e);
-    res.json({error: e.message});
+    res.json({ error: e.message });
   }
-})
+});
 app.post("/auth/send-otp", async (req, res) => {
   const {
     fname,
@@ -416,20 +416,33 @@ app.post("/reports", uploadFields, async (req, res) => {
     if (!req.files || !req.files["image"] || !req.files["image2"]) {
       return res.status(400).json({ message: "Both images must be uploaded." });
     }
+
     const imageUrl1 = req.files["image"][0].path;
     const imageUrl2 = req.files["image2"][0].path;
+
+    const { latitude, longitude, remarks } = req.body;
+
+    if (!latitude || !longitude) {
+      return res.status(400).json({ message: "Location coordinates required" });
+    }
+
     const newReport = new Report({
       reportImg: imageUrl1,
       reportYoloImg: imageUrl2,
-      location: "NA",
-      remarks: req.body.remarks,
+      remarks,
       status: "pending",
       reportOwner: req.user._id,
+
+      location: {
+        type: "Point",
+        coordinates: [Number(longitude), Number(latitude)], // GeoJSON order
+      },
     });
+
     const user = req.user;
     user.reports.push(newReport);
-    // give points to the user
-    user.points += 15; // 15 points per report
+    user.points += 15; // +15 points per report
+
     await user.save();
     await newReport.save();
 
@@ -437,13 +450,15 @@ app.post("/reports", uploadFields, async (req, res) => {
       message: "Report created successfully!",
       report: newReport,
     });
+
   } catch (err) {
     console.error("Error creating report:", err);
-    return res
-      .status(500)
-      .json({ message: "Server error while creating report." });
+    return res.status(500).json({
+      message: "Server error while creating report.",
+    });
   }
 });
+
 app.get("/reports/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -508,12 +523,18 @@ app.post("/events", async (req, res) => {
       eventDateTime,
       eventLocation,
     } = req.body;
+    const loc = await geocodeAddress(eventLocation);
     const newEvent = new Event({
       eventName: eventName,
       eventHostedBy: eventHostedBy,
       eventDateTime: eventDateTime,
       eventDescription: eventDescription,
       eventLocation: eventLocation,
+      eventLocationData: {
+        type: "Point",
+        coordinates: [loc.longitude, loc.latitude],
+        address: loc.placeName,
+      },
     });
     await newEvent.save();
 
@@ -599,8 +620,8 @@ app.post("/committees/register", async (req, res) => {
       password,
     });
     const dbUser = await User.findById(req.user._id);
-    if(!dbUser) {
-      res.status(401).json({message: "Committee Leader undefined"});
+    if (!dbUser) {
+      res.status(401).json({ message: "Committee Leader undefined" });
       return;
     }
     committee.members.push(dbUser._id);

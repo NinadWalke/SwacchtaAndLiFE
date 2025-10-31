@@ -10,9 +10,15 @@ const reportSchema = new mongoose.Schema(
       type: String,
     },
     location: {
-      type: String,
-      required: true,
-      default: "NA",
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point",
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        required: true,
+      },
     },
     remarks: {
       type: String,
