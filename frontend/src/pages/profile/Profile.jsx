@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "../../utils/axiosConfig";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/AuthContext";
 // Import the new stylesheet for this component
 import "./Profile.css";
 
 export default function Profile() {
+  const navigate = useNavigate();
   const { logout } = useAuth();
   const [edit, setEdit] = useState(false);
   const [currUser, setCurrUser] = useState(null);
@@ -267,6 +269,12 @@ export default function Profile() {
                   className="btn btn--primary"
                 >
                   Edit Profile
+                </button>
+                <button
+                  onClick={() => navigate("/profile/reports")}
+                  className="btn btn--primary"
+                >
+                  My Reports
                 </button>
                 <button
                   onClick={handleLogout}

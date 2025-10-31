@@ -12,7 +12,11 @@ function Event() {
     const getEvents = async () => {
       try {
         const res = await api.get("/events");
-        setEvents(res.data);
+        const allEvents = res.data;
+        allEvents.sort(
+          (e1, e2) => new Date(e1.eventDateTime) - new Date(e2.eventDateTime)
+        );
+        setEvents(allEvents);
       } catch (e) {
         alert(e.message);
       } finally {
@@ -51,8 +55,11 @@ function Event() {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'short' });
-    const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const month = date.toLocaleString("default", { month: "short" });
+    const time = date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
     return { day, month, time };
   };
 
@@ -61,10 +68,11 @@ function Event() {
       <header className="events-page__header">
         <h1 className="events-page__title">Community Events</h1>
         <p className="events-page__subtitle">
-          Join fellow citizens in making our community cleaner and greener. Find a local event and sign up today!
+          Join fellow citizens in making our community cleaner and greener. Find
+          a local event and sign up today!
         </p>
       </header>
-      
+
       <div className="events-page__container">
         {loading ? (
           <div className="loading-state">Loading events...</div>
@@ -72,7 +80,8 @@ function Event() {
           <div className="events-grid">
             {events.map((event) => {
               const { day, month, time } = formatDate(event.eventDateTime);
-              const isRegistered = user && event.registeredUsers.includes(user._id);
+              const isRegistered =
+                user && event.registeredUsers.includes(user._id);
 
               return (
                 <div key={event._id} className="event-card">
@@ -86,24 +95,47 @@ function Event() {
                   <div className="event-card__content">
                     <h2 className="event-card__title">{event.eventName}</h2>
                     <div className="event-card__meta">
-                      {/* Suggestion: Replace text with SVG icons */}
-                      <span className="meta__item">📍 {event.eventLocation}</span>
-                      <span className="meta__item">👤 Hosted by: {event.eventHostedBy}</span>
+                      <span className="meta__item">
+                        📍{" "}
+                        {event?.eventLocationData?.coordinates?.length === 2 ? (
+                          <a
+                            href={`https://www.google.com/maps?q=${event.eventLocationData.coordinates[1]},${event.eventLocationData.coordinates[0]}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {event.eventLocation}
+                          </a>
+                        ) : (
+                          event.eventLocation || "Location not available"
+                        )}
+                      </span>
+
+                      <span className="meta__item">
+                        👤 Hosted by: {event.eventHostedBy}
+                      </span>
                       <span className="meta__item">🕒 {time}</span>
                     </div>
-                    <p className="event-card__description">{event.eventDescription}</p>
+                    <p className="event-card__description">
+                      {event.eventDescription}
+                    </p>
                   </div>
-                  
+
                   <div className="event-card__footer">
                     <span className="footer__attendees text-center me-3">
                       {event.registeredUsers.length} Registered
                     </span>
                     {isRegistered ? (
-                      <button className="btn btn--secondary" onClick={() => handleUnregister(event._id)}>
+                      <button
+                        className="btn btn--secondary"
+                        onClick={() => handleUnregister(event._id)}
+                      >
                         Unregister
                       </button>
                     ) : (
-                      <button className="btn btn--primary" onClick={() => handleSignUp(event._id)}>
+                      <button
+                        className="btn btn--primary"
+                        onClick={() => handleSignUp(event._id)}
+                      >
                         Sign Up
                       </button>
                     )}

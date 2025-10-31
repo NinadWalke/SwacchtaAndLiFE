@@ -1,0 +1,189 @@
+/* Styles for MyReports Component */
+@import '../../index.css'; /* Access root variables */
+
+.aspirely-myreports-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 2.5rem;
+    box-sizing: border-box;
+}
+
+.aspirely-myreports-title {
+    font-size: 2.25rem;
+    font-weight: 600;
+    color: var(--color-primary-green);
+    margin-bottom: 2rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* --- Helper States (Loading/Error/Empty) --- */
+.aspirely-reports-helper-text {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #666;
+    padding: 3rem 1rem;
+    background-color: #fcfcfc;
+    border-radius: 12px;
+    border: 1px dashed #ddd;
+    margin-top: 1rem;
+}
+
+.aspirely-reports-error {
+    color: #D9534F; /* Error red */
+    background-color: #fdf7f7;
+    border-color: #f5c6cb;
+}
+
+/* --- Reports Grid --- */
+.aspirely-reports-grid {
+    display: grid;
+    /* Creates responsive columns: 
+       - 1 column on small screens (< 700px)
+       - 2 columns on medium screens
+       - 3 columns on large screens
+    */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.75rem; /* Space between cards */
+}
+
+/* --- Report Card --- */
+.aspirely-report-card {
+    background: #ffffff;
+    border: 1px solid #e7e7e7;
+    border-radius: 16px; /* Softer, modern border radius */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden; /* Ensures image respects border radius */
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease-in-out;
+}
+
+.aspirely-report-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.aspirely-report-card-img {
+    width: 100%;
+    height: 200px; /* Fixed height for image uniformity */
+    object-fit: cover; /* Ensures image covers the area, no distortion */
+    border-bottom: 1px solid #eee;
+}
+
+.aspirely-report-card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Makes card content fill remaining space */
+}
+
+.aspirely-report-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.aspirely-report-card-date {
+    font-size: 0.85rem;
+    color: #757575;
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+}
+
+.aspirely-report-card-remarks {
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.5;
+    margin: 0 0 1.5rem 0;
+    flex-grow: 1; /* Pushes footer to the bottom */
+}
+
+.aspirely-report-card-footer {
+    display: flex;
+    justify-content: flex-end; /* Aligns buttons to the right */
+    gap: 0.75rem; /* Space between buttons */
+}
+
+/* --- Status Badge (from schema) --- */
+.aspirely-report-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    border-radius: 16px;
+    text-transform: capitalize;
+    letter-spacing: 0.5px;
+}
+
+.aspirely-report-status-pending {
+    background-color: #fff8e1; /* Light yellow */
+    color: #f59e0b; /* Amber */
+}
+
+.aspirely-report-status-allotted {
+    background-color: #e0f7fa; /* Light cyan */
+    color: #00838f; /* Dark cyan */
+}
+
+.aspirely-report-status-resolved {
+    background-color: #e6f6f1; /* Light primary green */
+    color: var(--color-primary-green);
+}
+
+.aspirely-report-status-default {
+    background-color: #f0f0f0; /* Light grey */
+    color: #555;
+}
+
+
+/* --- Re-usable Buttons --- */
+/* (You can move these to a global button.css if you make one) */
+
+.aspirely-btn-primary,
+.aspirely-btn-secondary {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.6rem 1.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent;
+}
+
+/* Primary Button (Solid) */
+.aspirely-btn-primary {
+    background-color: var(--color-accent-green);
+    color: #ffffff;
+    border-color: var(--color-accent-green);
+}
+
+.aspirely-btn-primary:hover {
+    background-color: #6aaa9e; /* Slightly darker accent */
+    border-color: #6aaa9e;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Secondary Button (Outline) */
+.aspirely-btn-secondary {
+    background-color: #ffffff;
+    color: var(--color-accent-green);
+    border: 1px solid var(--color-accent-green);
+}
+
+.aspirely-btn-secondary:hover {
+    background-color: #f0fbf9; /* Very light accent */
+    color: var(--color-primary-green);
+    border-color: var(--color-primary-green);
+}
+
+/* Focus States for Accessibility */
+.aspirely-btn-primary:focus-visible,
+.aspirely-btn-secondary:focus-visible {
+    outline: 2px solid var(--color-primary-green);
+    outline-offset: 2px;
+}

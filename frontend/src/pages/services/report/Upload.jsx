@@ -11,6 +11,7 @@ export default function Upload() {
   const [stream, setStream] = useState(null);
   const [remarks, setRemarks] = useState("");
   const [activeTab, setActiveTab] = useState("camera"); // State for tabs
+  const [location, setLocation] = useState({ latitude: null, longitude: null }); // state for user location
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -61,7 +62,7 @@ export default function Upload() {
       stopCamera(); // Ensure camera is off if user uploads
     }
   };
-  
+
   // (handleSubmit and helper functions remain the same)
   function dataURLtoBlob(dataURL) {
     const [metadata, base64Data] = dataURL.split(",");
@@ -81,7 +82,7 @@ export default function Upload() {
       if (imageUrl.startsWith("data:")) {
         blob = dataURLtoBlob(imageUrl);
       } else {
-        blob = await fetch(imageUrl).then(res => res.blob());
+        blob = await fetch(imageUrl).then((res) => res.blob());
       }
       const formData = new FormData();
       formData.append("file", blob, "captured-image.jpeg");
@@ -94,24 +95,18 @@ export default function Upload() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!image) {
-      alert("Please capture or select an image first!");
-      return;
-    }
-    const modifiedImageUrl = await validateImageWithYolo(image);
-    if (!modifiedImageUrl) {
-      alert("Garbage not detected or failed to process image.");
-      return;
-    }
+  const submitReport = async (lat, lng, modifiedImageUrl) => {
     try {
-      const ogBlob = await fetch(image).then(res => res.blob());
-      const modifiedBlob = await fetch(modifiedImageUrl).then(res => res.blob());
+      const ogBlob = await fetch(image).then((res) => res.blob());
+      const modifiedBlob = await fetch(modifiedImageUrl).then((res) =>
+        res.blob()
+      );
       const formData = new FormData();
       formData.append("image", ogBlob, "capture.png");
       formData.append("image2", modifiedBlob, "capture-2.png");
       formData.append("remarks", remarks);
+      formData.append("latitude", lat);
+      formData.append("longitude", lng);
 
       const response = await api.post("/reports", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -127,6 +122,32 @@ export default function Upload() {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!image) {
+      alert("Please capture or select an image first!");
+      return;
+    }
+    const modifiedImageUrl = await validateImageWithYolo(image);
+    if (!modifiedImageUrl) {
+      alert("Garbage not detected or failed to process image.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocation({
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
+        });
+        submitReport(pos.coords.latitude, pos.coords.longitude, modifiedImageUrl);  // main submit function transferred to submitReport
+      },
+      (err) => {
+        console.log("Location permission denied: ", err);
+        alert("Location is required to report garbage.");
+      },
+      { enableHighAccuracy: true }
+    );
+  };
 
   return (
     <main className="upload-page">
@@ -137,35 +158,72 @@ export default function Upload() {
 
         {/* --- TABS --- */}
         <div className="upload__tabs">
-          <button onClick={() => setActiveTab("camera")} className={`upload__tab-button ${activeTab === 'camera' ? 'active' : ''}`}>
+          <button
+            onClick={() => setActiveTab("camera")}
+            className={`upload__tab-button ${
+              activeTab === "camera" ? "active" : ""
+            }`}
+          >
             Use Camera
           </button>
-          <button onClick={() => setActiveTab("upload")} className={`upload__tab-button ${activeTab === 'upload' ? 'active' : ''}`}>
+          <button
+            onClick={() => setActiveTab("upload")}
+            className={`upload__tab-button ${
+              activeTab === "upload" ? "active" : ""
+            }`}
+          >
             Upload File
           </button>
         </div>
 
         {/* --- TAB CONTENT: CAMERA --- */}
-        {activeTab === 'camera' && (
+        {activeTab === "camera" && (
           <div className="upload__content-panel">
-            <video ref={videoRef} autoPlay playsInline className="camera-view__video" style={{ display: stream ? 'block' : 'none' }}/>
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              className="camera-view__video"
+              style={{ display: stream ? "block" : "none" }}
+            />
             <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
             <div className="camera-controls">
-              {!stream && <button onClick={startCamera} className="btn btn--primary">Start Camera</button>}
-              {stream && <button onClick={capturePhoto} className="btn btn--capture">Capture</button>}
-              {stream && <button onClick={stopCamera} className="btn btn--danger">Stop Camera</button>}
+              {!stream && (
+                <button onClick={startCamera} className="btn btn--primary">
+                  Start Camera
+                </button>
+              )}
+              {stream && (
+                <button onClick={capturePhoto} className="btn btn--capture">
+                  Capture
+                </button>
+              )}
+              {stream && (
+                <button onClick={stopCamera} className="btn btn--danger">
+                  Stop Camera
+                </button>
+              )}
             </div>
           </div>
         )}
-        
+
         {/* --- TAB CONTENT: FILE UPLOAD --- */}
-        {activeTab === 'upload' && (
+        {activeTab === "upload" && (
           <div className="upload__content-panel">
             <div className="file-upload-view">
-              <label htmlFor="file-upload" className="btn btn--primary file-input__label">
+              <label
+                htmlFor="file-upload"
+                className="btn btn--primary file-input__label"
+              >
                 Choose an Image
               </label>
-              <input id="file-upload" type="file" accept="image/*" onChange={handleFileChange} className="file-input__native" />
+              <input
+                id="file-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="file-input__native"
+              />
             </div>
           </div>
         )}
@@ -188,7 +246,11 @@ export default function Upload() {
               className="form__textarea"
             ></textarea>
             <div className="upload__submit-container">
-              <button type="submit" className="btn btn--primary" style={{ width: '100%', padding: '14px' }}>
+              <button
+                type="submit"
+                className="btn btn--primary"
+                style={{ width: "100%", padding: "14px" }}
+              >
                 Submit Report
               </button>
             </div>
