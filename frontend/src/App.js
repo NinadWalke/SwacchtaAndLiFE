@@ -3,7 +3,9 @@ import { Routes, Route } from "react-router-dom";
 // Common
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer.jsx";
+import NotFound from './components/NotFound.jsx';
 import { CommitteeAuthProvider } from "./components/CommitteeAuthContext.jsx";
+
 // Auth
 import Login from "./pages/authentication/Login";
 import Signup from "./pages/authentication/Signup";
@@ -16,6 +18,8 @@ import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 // Services
 import Upload from "./pages/services/report/Upload.jsx";
+// Leaderboard
+import Leaderboard from "./pages/leaderboard/Leaderboard.jsx";
 
 // Committee Section
 import CommitteeForms from "./pages/services/committee/CommitteeForms.jsx";
@@ -49,6 +53,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             {/* -- Core Routes -- */}
             <Route path="/upload" element={<Upload />} />
+            {/* -- Leaderboard Routes -- */}
+            <Route path="/leaderboard" element={<Leaderboard />} />
             {/* - Committee Routes - */}
             <Route path="/committee" element={<CommitteeForms />} />
             <Route
@@ -64,6 +70,7 @@ function App() {
               path="/officials/report/:id"
               element={<OfficialsReportDisplay />}
             />
+            <Route path="*" element={<NotFound/>}/>
           </Routes>
           <Footer />
         </CommitteeAuthProvider>

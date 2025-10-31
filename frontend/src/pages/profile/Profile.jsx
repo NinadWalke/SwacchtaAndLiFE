@@ -52,6 +52,42 @@ export default function Profile() {
     }
   };
 
+  // getting user level based on points
+  const getUserLevel = (points) => {
+    if (points >= 1000) {
+      return {
+        level: "Platinum Protector",
+        badge: "✨",
+        privilege: "Special recognition, merchandise rewards",
+      };
+    } else if (points >= 500) {
+      return {
+        level: "Civic Hero",
+        badge: "🦸",
+        privilege: "Leaderboard visibility",
+      };
+    } else if (points >= 200) {
+      return {
+        level: "Eco Guardian",
+        badge: "🌍",
+        privilege: "Early access to challenges",
+      };
+    } else if (points >= 50) {
+      return {
+        level: "Clean City Advocate",
+        badge: "🧹",
+        privilege: "Highlighted profile",
+      };
+    } else {
+      return {
+        level: "Green Starter",
+        badge: "🌱",
+        privilege: "Basic profile",
+      };
+    }
+  };
+  const { level, badge, privilege } = getUserLevel(currUser?.points);
+
   // Improved loading state
   if (!currUser) {
     return <div className="profile-loading">Loading Account...</div>;
@@ -78,6 +114,14 @@ export default function Profile() {
           <h2 className="profile-avatar__name">
             {currUser.fname} {currUser.lname}
           </h2>
+          <div className="profile-level">
+            <span className="profile-level__badge">{badge}</span>
+            <span className="profile-level__text">{level}</span>
+          </div>
+
+          <p className="profile-privilege">{privilege}</p>
+
+          <p className="profile-avatar__points">{currUser.points} Points</p>
           <p className="profile-avatar__location">
             {currUser.address || "Location not set"}
           </p>
@@ -90,38 +134,98 @@ export default function Profile() {
             <form onSubmit={handleSave} className="profile-form">
               <div className="profile-form__grid">
                 <div className="form__group">
-                  <label className="form__label" htmlFor="fname">First Name</label>
-                  <input id="fname" type="text" name="fname" value={currUser.fname} onChange={handleChange} className="form__input" required />
+                  <label className="form__label" htmlFor="fname">
+                    First Name
+                  </label>
+                  <input
+                    id="fname"
+                    type="text"
+                    name="fname"
+                    value={currUser.fname}
+                    onChange={handleChange}
+                    className="form__input"
+                    required
+                  />
                 </div>
                 <div className="form__group">
-                  <label className="form__label" htmlFor="lname">Last Name</label>
-                  <input id="lname" type="text" name="lname" value={currUser.lname} onChange={handleChange} className="form__input" required />
+                  <label className="form__label" htmlFor="lname">
+                    Last Name
+                  </label>
+                  <input
+                    id="lname"
+                    type="text"
+                    name="lname"
+                    value={currUser.lname}
+                    onChange={handleChange}
+                    className="form__input"
+                    required
+                  />
                 </div>
                 <div className="form__group">
-                  <label className="form__label" htmlFor="dob">Date of Birth</label>
-                  <input id="dob" type="date" name="dob" value={currUser.dob?.split("T")[0] || ""} onChange={handleChange} className="form__input" />
+                  <label className="form__label" htmlFor="dob">
+                    Date of Birth
+                  </label>
+                  <input
+                    id="dob"
+                    type="date"
+                    name="dob"
+                    value={currUser.dob?.split("T")[0] || ""}
+                    onChange={handleChange}
+                    className="form__input"
+                  />
                 </div>
                 <div className="form__group">
-                  <label className="form__label" htmlFor="gender">Gender</label>
-                  <select id="gender" name="gender" value={currUser.gender} onChange={handleChange} className="form__select" required >
+                  <label className="form__label" htmlFor="gender">
+                    Gender
+                  </label>
+                  <select
+                    id="gender"
+                    name="gender"
+                    value={currUser.gender}
+                    onChange={handleChange}
+                    className="form__select"
+                    required
+                  >
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Other">Other</option>
                   </select>
                 </div>
                 <div className="form__group form__group--full-width">
-                  <label className="form__label" htmlFor="phone">Phone</label>
-                  <input id="phone" type="tel" name="phone" value={currUser.phone || ""} onChange={handleChange} className="form__input" />
+                  <label className="form__label" htmlFor="phone">
+                    Phone
+                  </label>
+                  <input
+                    id="phone"
+                    type="tel"
+                    name="phone"
+                    value={currUser.phone || ""}
+                    onChange={handleChange}
+                    className="form__input"
+                  />
                 </div>
                 <div className="form__group form__group--full-width">
-                  <label className="form__label" htmlFor="address">Address</label>
-                  <input id="address" type="text" name="address" value={currUser.address || ""} onChange={handleChange} className="form__input" />
+                  <label className="form__label" htmlFor="address">
+                    Address
+                  </label>
+                  <input
+                    id="address"
+                    type="text"
+                    name="address"
+                    value={currUser.address || ""}
+                    onChange={handleChange}
+                    className="form__input"
+                  />
                 </div>
                 <div className="profile-actions">
                   <button type="submit" className="btn btn--primary">
                     Save Changes
                   </button>
-                  <button type="button" onClick={() => setEdit(false)} className="btn btn--secondary">
+                  <button
+                    type="button"
+                    onClick={() => setEdit(false)}
+                    className="btn btn--secondary"
+                  >
                     Cancel
                   </button>
                 </div>
@@ -130,19 +234,44 @@ export default function Profile() {
           ) : (
             <div>
               <div className="profile-display__grid">
-                <div className="profile-display__item"><strong>First Name</strong> <span>{currUser.fname}</span></div>
-                <div className="profile-display__item"><strong>Last Name</strong> <span>{currUser.lname}</span></div>
-                <div className="profile-display__item"><strong>Date of Birth</strong> <span>{currUser.dob?.split("T")[0] || 'N/A'}</span></div>
-                <div className="profile-display__item"><strong>Gender</strong> <span>{currUser.gender}</span></div>
-                <div className="profile-display__item"><strong>Phone</strong> <span>{currUser.phone || 'N/A'}</span></div>
-                <div className="profile-display__item"><strong>Address</strong> <span>{currUser.address || 'N/A'}</span></div>
-                <div className="profile-display__item"><strong>Username</strong> <span>{currUser.username}</span></div>
+                <div className="profile-display__item">
+                  <strong>First Name</strong> <span>{currUser.fname}</span>
+                </div>
+                <div className="profile-display__item">
+                  <strong>Last Name</strong> <span>{currUser.lname}</span>
+                </div>
+                <div className="profile-display__item">
+                  <strong>Date of Birth</strong>{" "}
+                  <span>{currUser.dob?.split("T")[0] || "N/A"}</span>
+                </div>
+                <div className="profile-display__item">
+                  <strong>Gender</strong> <span>{currUser.gender}</span>
+                </div>
+                <div className="profile-display__item">
+                  <strong>Phone</strong> <span>{currUser.phone || "N/A"}</span>
+                </div>
+                <div className="profile-display__item">
+                  <strong>Address</strong>{" "}
+                  <span>{currUser.address || "N/A"}</span>
+                </div>
+                <div className="profile-display__item">
+                  <strong>Username</strong> <span>{currUser.username}</span>
+                </div>
+                <div className="profile-display__item">
+                  <strong>Points</strong> <span>{currUser.points}</span>
+                </div>
               </div>
               <div className="profile-actions">
-                <button onClick={() => setEdit(true)} className="btn btn--primary">
+                <button
+                  onClick={() => setEdit(true)}
+                  className="btn btn--primary"
+                >
                   Edit Profile
                 </button>
-                <button onClick={handleLogout} className="btn btn--danger-outline">
+                <button
+                  onClick={handleLogout}
+                  className="btn btn--danger-outline"
+                >
                   Logout
                 </button>
               </div>

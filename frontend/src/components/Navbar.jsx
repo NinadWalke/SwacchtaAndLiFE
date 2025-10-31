@@ -23,6 +23,7 @@ export default function Navbar() {
     { to: "/signup", label: "Signup", type: "guest" },
     { to: "/profile", label: "Profile", type: "user" },
     { to: "/upload", label: "Upload", type: "user" },
+    { to: "/leaderboard", label: "Leaderboard", type: "user" },
     // Grouping other links for potential future dropdown
     { to: "/events", label: "Events", type: "user" },
     { to: "/committee", label: "Committee", type: "user" },

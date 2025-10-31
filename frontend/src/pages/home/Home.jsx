@@ -20,7 +20,7 @@ export default function Home() {
             machine learning and citizen participation for sustainable urban
             cleanliness. Join us in building a cleaner, greener future.
           </p>
-          
+
           {/* Cleaned up button container */}
           <div className="home__hero-actions">
             {!user ? (
@@ -87,9 +87,72 @@ export default function Home() {
         </div>
       </section>
 
+      <section id="training" className="training-features-section">
+        <div className="training-content-wrapper">
+          {/* --- Section Header --- */}
+          <header className="training-header">
+            <h2 className="training-header-title">Start Your Green Journey</h2>
+            <p className="training-header-subtitle">
+              Simple changes in your daily routine can make a massive
+              difference. Here are some key practices to help our community and
+              planet thrive.
+            </p>
+          </header>
+
+          {/* --- Practices Grid --- */}
+          <div className="training-grid">
+            {/* Practice Card 1: Reduce */}
+            <article className="training-card">
+              <div className="training-card-icon">♻️</div>
+              <h3 className="training-card-title">1. Reduce & Refuse</h3>
+              <p className="training-card-text">
+                The best way to manage waste is to not create it. Refuse
+                single-use plastics like straws, bags, and cutlery. Opt for
+                reusable water bottles, coffee cups, and shopping bags.
+              </p>
+            </article>
+
+            {/* Practice Card 2: Reuse */}
+            <article className="training-card">
+              <div className="training-card-icon">🔄</div>
+              <h3 className="training-card-title">2. Reuse & Repurpose</h3>
+              <p className="training-card-text">
+                Before you toss it, think: can this be used again? Glass jars
+                make great storage containers. Old clothes can become cleaning
+                rags. Get creative and give items a second life.
+              </p>
+            </article>
+
+            {/* Practice Card 3: Recycle */}
+            <article className="training-card">
+              <div className="training-card-icon">🚮</div>
+              <h3 className="training-card-title">3. Recycle Correctly</h3>
+              <p className="training-card-text">
+                Recycling is powerful, but only when done right. Learn your
+                local rules. Clean your recyclables and avoid
+                "wish-cycling"—when in doubt, throw it out in the general waste.
+              </p>
+            </article>
+
+            {/* Practice Card 4: Report (Ties to app) */}
+            <article className="training-card">
+              <div className="training-card-icon">📱</div>
+              <h3 className="training-card-title">4. Report & Act</h3>
+              <p className="training-card-text">
+                Be the eyes of your community. When you see illegal dumping,
+                overflowing bins, or litter, use this app to report it. Your
+                action helps keep our public spaces clean.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      
       {/* --- FOOTER --- */}
       <footer className="home__footer">
-        <p>&copy; {new Date().getFullYear()} Swacchta&Life. All Rights Reserved.</p>
+        <p>
+          &copy; {new Date().getFullYear()} Swacchta&Life. All Rights Reserved.
+        </p>
       </footer>
     </main>
   );

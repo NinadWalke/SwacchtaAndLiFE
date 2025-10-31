@@ -116,6 +116,32 @@
     margin-bottom: 0.5rem;
   }
   
+  .profile-avatar__points {
+    color: var(--color-accent-green);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Points */
+  .profile-level {
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .profile-level__badge {
+    font-size: 1.5rem;
+  }
+  
+  .profile-level__text {
+    font-weight: 600;
+  }
+  
+  .profile-privilege {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+  
+  
   .profile-avatar__email {
     color: #777;
     font-size: 0.9rem;

@@ -1,0 +1,107 @@
+/* --- Root Variables & Global Setup --- */
+:root {
+    --color-primary-green: #0a6847;
+    --color-accent-green: #77b0aa;
+    
+    /* Neutrals */
+    --color-text-dark: #333;
+    --color-text-light: #ffffff;
+    --color-background-light: #f9f9f9;
+  }
+  
+  /* Basic Reset */
+  html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  
+  /* --- Page Layout --- */
+  .not-found-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--color-background-light);
+    color: var(--color-text-dark);
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .not-found-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+  }
+  
+  /* --- Typography & Content --- */
+  .not-found-code {
+    font-size: 8rem; /* Mobile-first size */
+    font-weight: 900;
+    line-height: 1;
+    color: var(--color-primary-green);
+    text-shadow: 3px 3px 0px rgba(119, 176, 170, 0.3); /* Subtle shadow using accent */
+  }
+  
+  .not-found-title {
+    font-size: 1.75rem; /* Mobile-first size */
+    font-weight: 700;
+    margin: 1rem 0;
+    color: var(--color-text-dark);
+  }
+  
+  .not-found-message {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  
+  /* --- Components: Button --- */
+  .not-found-home-link {
+    display: inline-block;
+    padding: 0.8rem 1.75rem;
+    background-color: var(--color-primary-green);
+    color: var(--color-text-light);
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 
+      background-color 0.3s ease, 
+      transform 0.3s ease, 
+      box-shadow 0.3s ease;
+  }
+  
+  /* --- States: Hover & Focus --- */
+  .not-found-home-link:hover,
+  .not-found-home-link:focus-visible {
+    background-color: #085a3c; /* Darker shade of primary green */
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .not-found-home-link:focus-visible {
+    outline: 3px solid var(--color-accent-green);
+    outline-offset: 3px;
+  }
+  
+  /* --- Responsive Breakpoints (Mobile-First) --- */
+  @media (min-width: 768px) {
+    .not-found-code {
+      font-size: 12rem; /* Larger text for desktop */
+    }
+  
+    .not-found-title {
+      font-size: 2.5rem; /* Larger text for desktop */
+    }
+  
+    .not-found-message {
+      font-size: 1.15rem;
+    }
+  }
