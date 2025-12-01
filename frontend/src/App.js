@@ -27,7 +27,12 @@ import Leaderboard from "./pages/leaderboard/Leaderboard.jsx";
 import CommitteeForms from "./pages/services/committee/CommitteeForms.jsx";
 import CommitteeDashboard from "./pages/services/committee/CommitteeDashboard.jsx";
 
+// Event section
 import Event from "./pages/services/event/Event.jsx";
+import EventDetail from './pages/services/event/EventDetail.jsx';
+import EventSignUpForm from "./pages/services/event/EventSignUpForm.jsx";
+
+// Ecommerce
 import Shop from "./pages/services/shop/Shop.jsx";
 // Subadmin
 import OfficialsDashboard from "./pages/subadmin/OfficialsDashboard";
@@ -65,6 +70,8 @@ function App() {
               element={<CommitteeDashboard />}
             />
             <Route path="/events" element={<Event />} />
+            <Route path="/events/:id" element={<EventDetail />} />
+            <Route path="/events/:id/signup" element={<EventSignUpForm />} />
             <Route path="/shop" element={<Shop />} />
             {/* -- Officials Routes -- */}
             <Route path="/officials" element={<OfficialsDashboard />} />
