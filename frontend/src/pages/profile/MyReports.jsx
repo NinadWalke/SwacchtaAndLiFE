@@ -14,7 +14,7 @@ function MyReports() {
             setError(null);
             try {
                 // This is your API call
-                const res = await api.get('/my-reports');
+                const res = await api.get('/reports/my-reports');
                 setReports(res.data);
             } catch (err) {
                 console.error("Failed to fetch reports:", err);

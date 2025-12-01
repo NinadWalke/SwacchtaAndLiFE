@@ -40,8 +40,8 @@ function CommitteeForms() {
     e.preventDefault();
     try {
       const res = await api.post("/committees/login", committeeLoginFormData);
-
       console.log(res);
+      alert('wait');
       login(res.data.token, res.data.committee);
       alert("Logged in to your committee successfully!");
       window.location.href = "/committee/dashboard";
