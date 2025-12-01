@@ -19,7 +19,7 @@ export function CommitteeAuthProvider({ children }) {
         });
 
         api
-          .get("/committee")
+          .get("/committees/committee")
           .then((res) => setCommittee(res.data.committee))
           .catch(() => logout());
       } catch (err) {

@@ -9,7 +9,7 @@ export default function CommitteeDashboard() {
   useEffect(() => {
     const getCommitteeData = async () => {
       try {
-        const res = await api.get("/committee");
+        const res = await api.get("/committees/committee");
         // NOTE: For the members table to work, your backend must .populate('members')
         // on this API endpoint to send the full user objects, not just their IDs.
         setCurrCommittee(res.data.committee);
