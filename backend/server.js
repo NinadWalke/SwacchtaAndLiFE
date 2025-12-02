@@ -52,9 +52,6 @@ async function main() {
 // Store code
 const store = MongoStore.create({
   mongoUrl: dbURI,
-  crypto: {
-    secret: SESSION_SECRET,
-  },
   touchAfter: 24 * 3600, // Interval (in seconds) between session updates    (Update information after 23 hours)
 });
 store.on("error", (err) => {
@@ -111,11 +108,6 @@ app.get("/", async (req, res) => {
 // -- Error handling routes --
 app.use((req, res, next) => {
   next(new ExpressError(404, "API not found!"));
-});
-
-app.use((err, req, res, next) => {
-  let { status = 500, message = "Something went wrong..." } = err;
-  res.status(status).json({ message: message });
 });
 
 app.listen(port, () => {
