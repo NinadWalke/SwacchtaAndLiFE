@@ -148,7 +148,8 @@ exports.signUp = async (req, res) => {
   } = req.body;
 
   const role = "user";
-
+  console.log("login invoked!");
+  
   // Check email existence
   const existingEmail = await User.findOne({
     email: email.trim().toLowerCase(),
