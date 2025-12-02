@@ -6,14 +6,7 @@ const { storage } = require("../utils/cloudconfig");
 const uploadImgCloudinary = multer({ storage });
 
 // Controllers
-const {
-  getAllReports,
-  getMyReports,
-  createReport,
-  getReportById,
-  updateReportStatus,
-  deleteReport,
-} = require("../controllers/reports.controller");
+const reportsController = require("../controllers/reports.controller");
 
 // Upload middleware
 const uploadFields = uploadImgCloudinary.fields([
@@ -21,22 +14,29 @@ const uploadFields = uploadImgCloudinary.fields([
   { name: "image2", maxCount: 1 },
 ]);
 
+// -- /reports --
 // Get all reports
-router.get("/", wrapAsync(getAllReports));
+router.get("/", wrapAsync(reportsController.getAllReports));
 
 // Get reports created by logged-in user
-router.get("/my-reports", wrapAsync(getMyReports));
+router.get("/my-reports", wrapAsync(reportsController.getMyReports));
 
 // Create a new report (with images)
-router.post("/", uploadFields, wrapAsync(createReport));
+router.post("/", uploadFields, wrapAsync(reportsController.createReport));
 
 // Get report by ID
-router.get("/:id", wrapAsync(getReportById));
+router.get("/:id", wrapAsync(reportsController.getReportById));
 
 // Toggle report status
-router.post("/:id", wrapAsync(updateReportStatus));
+router.post("/:id", wrapAsync(reportsController.updateReportStatus));
+
+// Allot report to a car
+router.post("/:id/assign-report", wrapAsync(reportsController.allotReportToCar));
+
+// Mark the report as resolved by the OSP
+router.post("/:id/mark-resolved", wrapAsync(reportsController.markReportResolved));
 
 // Delete a report
-router.delete("/:id", wrapAsync(deleteReport));
+router.delete("/:id", wrapAsync(reportsController.deleteReport));
 
 module.exports = router;

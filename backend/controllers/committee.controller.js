@@ -7,6 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 // Register a new committee
 exports.registerCommittee = async (req, res) => {
+  // update this with a ton of fields.
   const { committeeName, leaderEmail, password, confirmPassword } = req.body;
 
   if (!committeeName || !leaderEmail || !password || !confirmPassword) {
@@ -54,8 +55,9 @@ exports.registerCommittee = async (req, res) => {
     { expiresIn: "7d" }
   );
 
+  // twilio integration here too
   return res.status(201).json({
-    message: "Committee registered successfully",
+    message: "Committee registered successfully. We'll get back to you soon!",
     committee: {
       id: committee._id,
       committeeName: committee.committeeName,

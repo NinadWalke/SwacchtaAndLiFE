@@ -16,7 +16,9 @@ exports.createEvent = async (req, res) => {
       eventDescription,
       eventDateTime,
       eventLocation,
-    } = req.body;
+    } = req.body;    
+    const {eventType, } = req.body;
+
 
     // Geocode the address
     const loc = await geocodeAddress(eventLocation);

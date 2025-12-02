@@ -2,6 +2,10 @@ const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync");
 
+const multer = require('multer');
+const { storage } = require("../utils/cloudconfig");
+const uploadImgCloudinary = multer({ storage });
+
 // Controllers
 const {
   getAllEvents,
@@ -11,6 +15,12 @@ const {
   updateEvent,
   unregisterFromEvent,
 } = require("../controllers/events.controller");
+
+// Upload middleware
+const uploadFields = uploadImgCloudinary.fields([
+  { name: "image", maxCount: 1 },
+  { name: "image2", maxCount: 1 },
+]);
 
 // Get all events
 router.get("/", wrapAsync(getAllEvents));

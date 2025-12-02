@@ -103,6 +103,14 @@ exports.updateReportStatus = async (req, res) => {
   });
 };
 
+exports.allotReportToCar = async (req, res) => {
+  // twilio integrated here
+}
+
+exports.markReportResolved = async (req, res) => {
+  // twilio integrated here
+}
+
 // Delete a report
 exports.deleteReport = async (req, res) => {
   const { id } = req.params;
