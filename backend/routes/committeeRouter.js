@@ -17,12 +17,12 @@ router.post("/approve", wrapAsync(committeeController.approveCommitteee));
 router.post("/reject", wrapAsync(committeeController.rejectCommittee));
 
 // Register a new committee
-router.post("/register", wrapAsync(registerCommittee));
+router.post("/register", wrapAsync(committeeController.registerCommittee));
 
 // Committee login
-router.post("/login", wrapAsync(loginCommittee));
+router.post("/login", wrapAsync(committeeController.loginCommittee));
 
 // Get committee details (protected)
-router.get("/committee", verifyToken, wrapAsync(getCommitteeProfile));
+router.get("/committee", verifyToken, wrapAsync(committeeController.getCommitteeProfile));
 
 module.exports = router;
