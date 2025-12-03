@@ -27,7 +27,11 @@ const committeeSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', 
       }
-    ],    
+    ],  
+    isCommitteeVerified: {
+      type: Boolean,
+      required: true
+    }  
   },
   { timestamps: true }
 );

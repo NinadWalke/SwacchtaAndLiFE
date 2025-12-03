@@ -103,6 +103,29 @@ exports.updateReportStatus = async (req, res) => {
   });
 };
 
+exports.getAllCars = async(req, res) => {
+  // collect cars from db
+  // res.json()
+}
+
+exports.allotReportToCar = async (req, res) => {
+  const { id, cid } = req.params;
+  // collect car from database
+  // allot report to car
+  // change report status
+  // car.save(), report.save()
+  // twilio integrated here
+};
+
+exports.markReportResolved = async (req, res) => {
+  const { id, cid } = req.params;
+  // collect car from database
+  // remove report from car
+  // change report status
+  // car.save(), report.save()
+  // twilio integrated here
+};
+
 // Delete a report
 exports.deleteReport = async (req, res) => {
   const { id } = req.params;
