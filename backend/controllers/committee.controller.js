@@ -5,10 +5,32 @@ const bcrypt = require("bcrypt");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+exports.getAllCommittees = async (req, res) => {
+  const allCommittees = await Committee.find();
+  res.json(allCommittees);
+};
+
+exports.approveCommitteee = async (req, res) => {
+  const { cid } = req.params;
+  const committeeToBeApproved = await Committee.findById(cid);
+  committeeToBeApproved.isCommitteeVerified = true;
+  committeeToBeApproved.save();
+  res.json({ approvedCommittee: committeeToBeApproved });
+};
+
+exports.rejectCommittee = async (req, res) => {
+  const { cid } = req.params;
+  const committeeToBeRejected = await Committee.findById(cid);
+  committeeToBeRejected.isCommitteeVerified = false;
+  committeeToBeRejected.save();
+  res.json({ approvedCommittee: committeeToBeRejected });
+};
+
 // Register a new committee
 exports.registerCommittee = async (req, res) => {
   // update this with a ton of fields.
   const { committeeName, leaderEmail, password, confirmPassword } = req.body;
+  const committeeData = req.body; // multi-part from data
 
   if (!committeeName || !leaderEmail || !password || !confirmPassword) {
     return res.status(400).json({ message: "All fields are required" });
@@ -25,11 +47,13 @@ exports.registerCommittee = async (req, res) => {
     });
   }
 
+  let isCommitteeVerified = false; // set committee to not verified
   // Create committee
   const committee = new Committee({
     committeeName,
     leaderEmail,
     password,
+    isCommitteeVerified,
   });
 
   // Attach logged-in user as the first committee member
@@ -44,16 +68,9 @@ exports.registerCommittee = async (req, res) => {
   await committee.save();
   await dbUser.save();
 
-  // JWT token for committee
-  const token = jwt.sign(
-    {
-      id: committee._id,
-      leaderEmail: committee.leaderEmail,
-      committeeName: committee.committeeName,
-    },
-    JWT_SECRET,
-    { expiresIn: "7d" }
-  );
+  // -- instead of sending token below, we send twilio sms and mail both --
+  // twilio logic here
+  // nodemailer logic here
 
   // twilio integration here too
   return res.status(201).json({
@@ -63,7 +80,6 @@ exports.registerCommittee = async (req, res) => {
       committeeName: committee.committeeName,
       leaderEmail: committee.leaderEmail,
     },
-    token,
   });
 };
 

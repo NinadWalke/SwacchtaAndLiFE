@@ -30,11 +30,14 @@ router.get("/:id", wrapAsync(reportsController.getReportById));
 // Toggle report status
 router.post("/:id", wrapAsync(reportsController.updateReportStatus));
 
+// Collect all cars to choose from
+router.get("/:id/cars" , wrapAsync(reportsController.getAllCars));
+
 // Allot report to a car
-router.post("/:id/assign-report", wrapAsync(reportsController.allotReportToCar));
+router.post("/:id/assign-report/:cid", wrapAsync(reportsController.allotReportToCar));
 
 // Mark the report as resolved by the OSP
-router.post("/:id/mark-resolved", wrapAsync(reportsController.markReportResolved));
+router.post("/:id/mark-resolved/:cid", wrapAsync(reportsController.markReportResolved));
 
 // Delete a report
 router.delete("/:id", wrapAsync(reportsController.deleteReport));

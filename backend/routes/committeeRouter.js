@@ -5,11 +5,16 @@ const wrapAsync = require("../utils/wrapAsync");
 const { verifyToken } = require("../utils/middlewares.js");
 
 // Controllers
-const {
-  registerCommittee,
-  loginCommittee,
-  getCommitteeProfile,
-} = require("../controllers/committee.controller");
+const committeeController = require("../controllers/committee.controller");
+
+// Collect all committees, sort them on the basis of scores in the frontend for the leaderboard
+router.get("/", wrapAsync(committeeController.getAllCommittees));
+
+// Approve a committee
+router.post("/approve", wrapAsync(committeeController.approveCommitteee));
+
+// Reject a committee
+router.post("/reject", wrapAsync(committeeController.rejectCommittee));
 
 // Register a new committee
 router.post("/register", wrapAsync(registerCommittee));

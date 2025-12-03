@@ -78,6 +78,11 @@ const userSchema = new mongoose.Schema(
     committee: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Committee"
+    },
+    greencoins: {
+      type: Number,
+      required: true,
+      default: 0
     }
   },
   { timestamps: true }
