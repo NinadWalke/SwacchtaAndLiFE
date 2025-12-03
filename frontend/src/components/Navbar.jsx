@@ -46,11 +46,11 @@ export default function Navbar() {
         <Link to="/" className="navbar__brand">
           {/* Suggestion: Host your own SVG logo for better performance and quality */}
           <img
-            src="https://img.icons8.com/color/48/000000/recycle.png"
+            src="Logo.png"
             alt="Swacchta&Life Logo"
             className="brand__logo"
           />
-          <h1 className="brand__title">Swacchta&Life</h1>
+          {/* <h1 className="brand__title">Green Sathi</h1> */}
         </Link>
 
         {/* Navigation Links */}

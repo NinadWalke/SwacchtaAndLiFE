@@ -8,6 +8,7 @@ function Shop() {
   const [pageMode, setPageMode] = useState("products");   // "products" | "details" | "cart" | "checkout"
   const [selectedProduct, setSelectedProduct] = useState(null); // object for details view
   const [cartItems, setCartItems] = useState([]); // array of products added to cart
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const items = [
     { id: 1, name: "Compost Bin", price: "₹2,000", description: "Eco-friendly compost bin.", img: "/assets/compost_bin.png", category: "collection" },
@@ -99,50 +100,62 @@ return (
   <div className="shop-page">
     {/* Header Section */}
     <div className="shop-header">
-      <div className="shop-header-content">
-        <div className="header-top">
-          <div className="header-text">
-            <h1 className="shop-title">Eco Shop</h1>
-            <p className="shop-subtitle">Essential tools for waste collection and hygiene</p>
-          </div>
+    <div className="shop-header-content">
+      
+      {/* Note: .header-top removed as requested since Cart moved and Title was commented out */}
 
-          <div className="cart-button" onClick={() => setPageMode("cart")}>
-            <span className="cart-icon">🛒</span>
-            <span className="cart-text">Cart ({cartItems.length})</span>
-          </div>
-
+      {/* Search, Filter, and Cart Bar */}
+      <div className="search-filter-bar">
+        
+        {/* 1. Search Input */}
+        <div className="search-wrapper">
+          <span className="search-icon"><i className="fa-solid fa-magnifying-glass"></i></span>
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
         </div>
 
-        {/* Search and Filter Bar */}
-        <div className="search-filter-bar">
-          <div className="search-wrapper">
-            <span className="search-icon">🔍</span>
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
-            />
-          </div>
+        {/* 2. Categories (Responsive Wrapper) */}
+        <div className="filters-wrapper">
+            {/* Mobile Toggle Button */}
+            <button 
+                className="mobile-filter-toggle"
+                onClick={() => setShowMobileFilters(!showMobileFilters)}
+            >
+                <i className="fa-solid fa-sliders"></i>
+            </button>
 
-          <div className="category-filters">
+            {/* Category List (Dropdown on mobile, Row on desktop) */}
+            <div className={`category-filters ${showMobileFilters ? 'show-dropdown' : ''}`}>
             {categories.map(cat => (
-              <button
+                <button
                 key={cat.id}
                 onClick={() => {
-                  setSelectedCategory(cat.id);
-                  setPageMode("products");   // ← add this
+                    setSelectedCategory(cat.id);
+                    setPageMode("products");
+                    setShowMobileFilters(false); // Close dropdown on selection
                 }}
                 className={`category-btn ${selectedCategory === cat.id ? 'active' : ''}`}
-              >
+                >
                 {cat.label}
-              </button>
+                </button>
             ))}
-          </div>
+            </div>
         </div>
+
+        {/* 3. Cart Button (Moved Here) */}
+        <div className="cart-button" onClick={() => setPageMode("cart")}>
+          <span className="cart-icon"><i className="fa-solid fa-cart-shopping"></i></span>
+          <span className="cart-text">Cart ({cartItems.length})</span>
+        </div>
+
       </div>
     </div>
+  </div>
 
     {/* CHANGE #1 — Product Grid wrapped in condition */}
       {pageMode === "products" && (
@@ -181,7 +194,7 @@ return (
                         </>
                       ) : (
                         <>
-                          <span className="btn-icon">🛒</span>
+                          <span className="btn-icon"><i class="fa-solid fa-cart-shopping"></i></span>
                           Add to Cart
                         </>
                       )}
@@ -196,31 +209,41 @@ return (
 
     {/* CHANGE #3 — Details Page */}
           {pageMode === "details" && selectedProduct && (
-        <div className="details-page">
-          <button className="back-button" onClick={() => setPageMode("products")}>
-            <span className="back-icon">←</span> Back
-          </button>
-          <img src={selectedProduct.img} className="details-image" />
+  <div className="details-page">
+    {/* Back Button (Absolute Position) */}
+    <button className="back-button" onClick={() => setPageMode("products")}>
+      <span className="back-icon"><i className="fa-solid fa-arrow-left"></i></span>
+    </button>
 
-          <h2 className="details-name">{selectedProduct.name}</h2>
-          <p className="details-description">{selectedProduct.description}</p>
-          <p className="details-price">{selectedProduct.price}</p>
+    {/* Image Section (Left) */}
+    <div className="image-container">
+        <img src={selectedProduct.img} alt={selectedProduct.name} className="details-image" />
+    </div>
 
-          <button
-            className="add-to-cart-btn"
-            onClick={() => handleAddToCart(selectedProduct.id)}
-          >
-            Add to Cart
-          </button>
-        </div>
-      )}
+    {/* Text Content Section (Right) */}
+    <div className="details-content">
+      <div>
+      <h2 className="details-name">{selectedProduct.name}</h2>
+      <p className="details-description">{selectedProduct.description}</p>
+      <p className="details-price">{selectedProduct.price}</p>
+      </div>
+    
+      <button
+        className="add-to-cart-btn"
+        onClick={() => handleAddToCart(selectedProduct.id)}
+      >
+        Add to Cart
+      </button>
+    </div>
+  </div>
+)}
 
 
       {pageMode === "cart" && ( //Cart page
     <div className="cart-page">
 
       <button className="back-button" onClick={() => setPageMode("products")}>
-        <span className="back-icon">←</span> Back
+        <span className="back-icon"><i class="fa-solid fa-arrow-left"></i></span>
       </button>
 
 
@@ -239,14 +262,14 @@ return (
 
           {/* Quantity Controls */}
             <div className="quantity-controls">
-              <button onClick={() => handleDecreaseQuantity(item.product.id)}>-</button>
+              <button onClick={() => handleDecreaseQuantity(item.product.id)}><i class="fa-solid fa-minus"></i></button>
               <span>{item.quantity}</span>
-              <button onClick={() => handleIncreaseQuantity(item.product.id)}>+</button>
+              <button onClick={() => handleIncreaseQuantity(item.product.id)}><i class="fa-solid fa-plus"></i></button>
               <button 
                 className="remove-btn" 
                 onClick={() => handleRemoveFromCart(item.product.id)}
               >
-              🗑️
+              <i class="fa-regular fa-trash-can"></i>
               </button>
             </div>
 
@@ -268,33 +291,47 @@ return (
   </div>
 )}
 
-{pageMode === "checkout" && ( //checkout component
+{pageMode === "checkout" && (
   <div className="checkout-page">
     <button className="back-button" onClick={() => setPageMode("cart")}>
-      <span className="back-icon">←</span> Back to Cart
+      <span className="back-icon"><i className="fa-solid fa-arrow-left"></i></span> Back to Cart
     </button>
 
     <h2>Checkout</h2>
 
     {cartItems.length === 0 ? (
-      <p>Your cart is empty.</p>
+      <div className="empty-cart-message">Your cart is empty.</div>
     ) : (
-      <ul className="checkout-list">
-        {cartItems.map((item, index) => (
-          <li key={index} className="checkout-item">
-            <img src={item.product.img} alt={item.product.name} className="checkout-item-img" />
-            <span>{item.product.name}</span> - <span>{item.product.price} x {item.quantity}</span>
-          </li>
-        ))}
-      </ul>
+      <>
+        <ul className="checkout-list">
+          {cartItems.map((item, index) => (
+            <li key={index} className="checkout-item">
+              <div className="checkout-item-left">
+                <img src={item.product.img} alt={item.product.name} className="checkout-item-img" />
+                <div className="checkout-item-info">
+                    <span className="checkout-item-name">{item.product.name}</span>
+                    <span className="checkout-item-qty">Qty: {item.quantity}</span>
+                </div>
+              </div>
+              <span className="checkout-item-price">{item.product.price}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="checkout-summary">
+            <div className="checkout-total">
+            Total: <i className="fa-solid fa-indian-rupee-sign"></i> 
+            {cartItems.reduce((sum, item) => {
+                // Fix: Removes commas and currency symbols before parsing
+                const numericPrice = parseFloat(item.product.price.replace(/[^0-9.]/g, "")); 
+                return sum + (numericPrice * item.quantity);
+            }, 0).toLocaleString('en-IN')} {/* Adds commas back to the total */}
+            </div>
+
+            <button className="pay-btn">Pay Now</button>
+        </div>
+      </>
     )}
-
-    <div className="checkout-total">
-      Total: $
-      {cartItems.reduce((sum, item) => sum + parseFloat(item.product.price.slice(1)) * item.quantity, 0)}
-    </div>
-
-    <button className="pay-btn">Pay Now</button>
   </div>
 )}
 
@@ -306,7 +343,7 @@ return (
             <div className="footer-item">
               <div className="footer-icon">🚚</div>
               <h3 className="footer-title">Free Shipping</h3>
-              <p className="footer-text">On orders over $50</p>
+              <p className="footer-text">On orders over <i class="fa-solid fa-indian-rupee-sign"></i>500</p>
             </div>
             <div className="footer-item">
               <div className="footer-icon">♻️</div>
