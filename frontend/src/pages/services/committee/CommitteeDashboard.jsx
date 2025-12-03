@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../utils/axiosConfig";
-import "./CommitteeDashboard.css"; // Import the new stylesheet
+import "./CommitteeDashboard.css";
 
 export default function CommitteeDashboard() {
   const [currCommittee, setCurrCommittee] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showAddMemberModal, setShowAddMemberModal] = useState(false);
+  const [newMember, setNewMember] = useState({
+    fname: "",
+    lname: "",
+    email: "",
+    role: "member",
+  });
 
   useEffect(() => {
     const getCommitteeData = async () => {
       try {
         const res = await api.get("/committees/committee");
-        // NOTE: For the members table to work, your backend must .populate('members')
-        // on this API endpoint to send the full user objects, not just their IDs.
         setCurrCommittee(res.data.committee);
       } catch (e) {
         console.error("Failed to fetch committee data:", e);
@@ -21,6 +26,31 @@ export default function CommitteeDashboard() {
     };
     getCommitteeData();
   }, []);
+
+  const handleAddMember = async (e) => {
+    e.preventDefault();
+    if (!newMember.fname || !newMember.lname || !newMember.email) {
+      alert("Please fill in all fields");
+      return;
+    }
+    try {
+      const res = await api.post("/committees/add-member", newMember);
+      setCurrCommittee(res.data.committee);
+      setNewMember({ fname: "", lname: "", email: "", role: "member" });
+      setShowAddMemberModal(false);
+      alert("Member added successfully!");
+    } catch (e) {
+      console.error("Error adding member:", e);
+      alert(e.response?.data?.message || "Failed to add member");
+    }
+  };
+
+  const handleMemberInputChange = (e) => {
+    setNewMember({
+      ...newMember,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   if (loading) {
     return <div className="loading-state">Loading Dashboard...</div>;
@@ -57,14 +87,106 @@ export default function CommitteeDashboard() {
         </div>
         <div className="stat-card">
           <h2 className="stat-card__title">Active Tasks</h2>
-          <p className="stat-card__value">0</p> 
-          {/* Placeholder for future functionality */}
+          <p className="stat-card__value">0</p>
         </div>
       </section>
 
       {/* --- MEMBERS LIST MODULE --- */}
       <section className="dashboard-module">
-        <h2 className="module-header">Members List</h2>
+        <div className="module-header-wrapper">
+          <h2 className="module-header">Members List</h2>
+          <button
+            className="btn btn--primary btn-add-member"
+            onClick={() => setShowAddMemberModal(true)}
+          >
+            + Add Member
+          </button>
+        </div>
+
+        {/* Add Member Modal */}
+        {showAddMemberModal && (
+          <div className="modal-overlay" onClick={() => setShowAddMemberModal(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>Add New Member</h2>
+                <button
+                  className="modal-close"
+                  onClick={() => setShowAddMemberModal(false)}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <form onSubmit={handleAddMember} className="member-form">
+                <div className="form__group">
+                  <label className="form__label">First Name</label>
+                  <input
+                    className="form__input"
+                    name="fname"
+                    type="text"
+                    placeholder="First name"
+                    onChange={handleMemberInputChange}
+                    value={newMember.fname}
+                    required
+                  />
+                </div>
+
+                <div className="form__group">
+                  <label className="form__label">Last Name</label>
+                  <input
+                    className="form__input"
+                    name="lname"
+                    type="text"
+                    placeholder="Last name"
+                    onChange={handleMemberInputChange}
+                    value={newMember.lname}
+                    required
+                  />
+                </div>
+
+                <div className="form__group">
+                  <label className="form__label">Email Address</label>
+                  <input
+                    className="form__input"
+                    name="email"
+                    type="email"
+                    placeholder="member@example.com"
+                    onChange={handleMemberInputChange}
+                    value={newMember.email}
+                    required
+                  />
+                </div>
+
+                <div className="form__group">
+                  <label className="form__label">Role</label>
+                  <select
+                    className="form__input"
+                    name="role"
+                    onChange={handleMemberInputChange}
+                    value={newMember.role}
+                  >
+                    <option value="member">Member</option>
+                    <option value="leader">Leader</option>
+                  </select>
+                </div>
+
+                <div className="form__actions">
+                  <button type="submit" className="btn btn--primary">
+                    Add Member
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn--secondary"
+                    onClick={() => setShowAddMemberModal(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
         <div className="table-container">
           <table className="members-table">
             <thead>
@@ -93,8 +215,8 @@ export default function CommitteeDashboard() {
         </div>
       </section>
 
-       {/* --- ASSIGNED TASKS/REPORTS MODULE (Placeholder for future development) --- */}
-       <section className="dashboard-module">
+      {/* --- ASSIGNED TASKS/REPORTS MODULE --- */}
+      <section className="dashboard-module">
         <h2 className="module-header">Assigned Tasks</h2>
         <div className="empty-state" style={{minHeight: 'auto', padding: '2rem'}}>
           Task assignment functionality is coming soon.
