@@ -32,6 +32,9 @@ import Event from "./pages/services/event/Event.jsx";
 import EventDetail from './pages/services/event/EventDetail.jsx';
 import EventSignUpForm from "./pages/services/event/EventSignUpForm.jsx";
 
+//Training
+import Training from "./pages/services/training/training.jsx";
+
 // Ecommerce
 import Shop from "./pages/services/shop/Shop.jsx";
 // Subadmin
@@ -80,6 +83,7 @@ function App() {
               path="/officials/report/:id"
               element={<OfficialsReportDisplay />}
             />
+            <Route path="/training" element={<Training />} />
             <Route path="*" element={<NotFound/>}/>
           </Routes>
           <Footer />
