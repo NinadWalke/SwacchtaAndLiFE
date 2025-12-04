@@ -1,349 +1,225 @@
-import React, { useState } from 'react';
-import './Shop.css';
+import React, { useEffect, useState } from "react";
+import api from "../../../utils/axiosConfig";
+import { useAuth } from "../../../components/AuthContext";
+import "./Shop.css";
+import {loadRazorpay} from '../../../utils/loadRazorpay';
+
+import SearchFilterBar from "./components/SearchFilterBar";
+import Products from "./components/Products";
+import ProductDetail from "./components/ProductDetail";
+import Cart from "./components/Cart";
+import Checkout from "./components/Checkout";
+
+import { items } from "./components/shopData";
 
 function Shop() {
-  const [addedItems, setAddedItems] = useState(new Set());
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [pageMode, setPageMode] = useState("products");   // "products" | "details" | "cart" | "checkout"
-  const [selectedProduct, setSelectedProduct] = useState(null); // object for details view
-  const [cartItems, setCartItems] = useState([]); // array of products added to cart
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [pageMode, setPageMode] = useState("products");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const { user } = useAuth();
 
-  const items = [
-    { id: 1, name: "Compost Bin", price: "₹2,000", description: "Eco-friendly compost bin.", img: "/assets/compost_bin.png", category: "collection" },
-    { id: 2, name: "Recycling Bags", price: "₹250", description: "Reusable recycling bags.", img: "/assets/recycle_bins.png", category: "collection" },
-    { id: 3, name: "Gloves", price: "₹350", description: "Durable gloves for cleanups.", img: "/assets/gloves.png", category: "safety" },
-    { id: 4, name: "Trash Picker", price: "₹1,200", description: "Ergonomic trash picker.", img: "/assets/trash_collector.png", category: "collection" },
-    { id: 5, name: "Recyclable Bin", price: "₹2,400", description: "Separate bin for recyclables.", img: "/assets/recyclable_bins.png", category: "collection" },
-    { id: 6, name: "Safety Vest", price: "₹960", description: "Reflective safety vest.", img: "/assets/vests.png", category: "safety" },
-    { id: 7, name: "Face Mask", price: "₹349", description: "Breathable face mask.", img: "/assets/masks.png", category: "hygiene" },
-    { id: 8, name: "Hand Sanitizer", price: "₹100", description: "Portable hand sanitizer.", img: "/assets/sanitiser.png", category: "hygiene" },
-    { id: 9, name: "Water Bottle", price: "₹100", description: "Reusable water bottle.", img: "/assets/bottle.png", category: "essentials" },
-    { id: 10, name: "Eco Bag", price: "₹560", description: "Reusable shopping bag.", img: "/assets/bags.png", category: "essentials" },
-  ];
+  useEffect(() => {
+    const getUserAndCart = async () => {
+      const userCart = await api.get("/shop/user-cart");
+      setCartItems(userCart.data);
+    };
+    getUserAndCart();
+  }, []);
 
-  const categories = [
-    { id: 'all', label: 'All Products' },
-    { id: 'collection', label: 'Collection Tools' },
-    { id: 'safety', label: 'Safety Gear' },
-    { id: 'hygiene', label: 'Hygiene' },
-    { id: 'essentials', label: 'Essentials' }
-  ];
+  const handleAddToCart = async (id) => {
+    try {
+      const product = items.find((i) => i.id === id);
+      if (!product) return;
 
-  const handleAddToCart = (id) => {
-  const product = items.find(i => i.id === id);
-  if (!product) return;
-
-  setCartItems(prev => {
-    const existingIndex = prev.findIndex(item => item.product.id === id);
-    if (existingIndex !== -1) {
-      // Item already in cart, increment quantity
-      const updated = [...prev];
-      updated[existingIndex].quantity += 1;
-      return updated;
-    } else {
-      // Add new item with quantity 1
-      return [...prev, { product, quantity: 1 }];
+      const res = await api.post(`/shop/${id}/add-to-cart`, {
+        userId: user._id,
+        item: {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          description: product.description,
+          img: product.img,
+          category: product.category,
+          quantity: 1,
+        },
+      });
+      console.log(res.data.cart);
+      setCartItems(res.data.cart);
+    } catch (err) {
+      console.error("Add to cart error:", err);
     }
-  });
-  
-  // optional: temporary "added" state
-  setAddedItems(prev => new Set([...prev, id]));
-  setTimeout(() => {
-    setAddedItems(prev => {
-      const newSet = new Set(prev);
-      newSet.delete(id);
-      return newSet;
+  };
+
+  const handleIncreaseQuantity = async (id) => {
+    try {
+      const res = await api.patch(`/shop/${id}/increase-qty`, {
+        userId: user._id,
+        itemId: id,
+      });
+
+      setCartItems(res.data.cart);
+    } catch (err) {
+      console.error("Increase qty error:", err);
+    }
+  };
+
+  const handleDecreaseQuantity = async (id) => {
+    try {
+      const res = await api.patch(`/shop/${id}/decrease-qty`, {
+        userId: user._id,
+        itemId: id,
+      });
+
+      setCartItems(res.data.cart);
+    } catch (err) {
+      console.error("Decrease qty error:", err);
+    }
+  };
+
+  const handleRemoveFromCart = async (id) => {
+    try {
+      const res = await api.post(`/shop/${id}/remove-from-cart`, {
+        userId: user._id,
+        itemId: id,
+      });
+
+      setCartItems(res.data.cart);
+    } catch (err) {
+      console.error("Remove from cart error:", err);
+    }
+  };
+
+  const handleCheckout = async () => {
+    const isLoaded = await loadRazorpay();
+    if (!isLoaded) {
+      alert("Razorpay SDK failed to load");
+      return;
+    }
+    const res = await api.post("/shop/create-rzp-order", {
+      orderedBy: user._id,
+      items: cartItems.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        description: item.description,
+        category: item.category,
+        img: item.img,
+      })),
+      shippingAddress: "Default Address",
     });
-  }, 2000);
-};
 
-  // Place this just after handleAddToCart function
+    const { razorpayOrder, order } = res.data;
 
-  const handleIncreaseQuantity = (id) => {
-    setCartItems(prev =>
-      prev.map(item =>
-        item.product.id === id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      )
-    );
+    const options = {
+      key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+      amount: razorpayOrder.amount,
+      currency: "INR",
+      name: "GreenSathi Shop",
+      description: "Order Payment",
+      order_id: razorpayOrder.id,
+
+      handler: async (response) => {
+        const verify = await api.post("/shop/verify-rzp-payment", {
+          orderId: order._id,
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+        });
+
+        if (verify.data.success) {
+          alert("Payment successful!");
+          await api.delete('/shop/empty-cart'); // empty user cart
+          setCartItems([]);
+          setPageMode("products");
+        }
+      },
+
+      prefill: {
+        name: user?.name,
+        email: user?.email,
+      },
+
+      theme: {
+        color: "#0a6847",
+      },
+    };
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
   };
 
-  const handleDecreaseQuantity = (id) => {
-    setCartItems(prev =>
-      prev
-        .map(item =>
-          item.product.id === id
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
-        )
-        .filter(item => item.quantity > 0) // remove item if quantity reaches 0
-    );
-  };
-
-  const handleRemoveFromCart = (id) => {
-    setCartItems(prev => prev.filter(item => item.product.id !== id));
-  };
-
-
-
-  const filteredItems = items.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
+  const filteredItems = items.filter((item) => {
+    const matchesSearch =
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" || item.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-return (
-  <div className="shop-page">
-    {/* Header Section */}
-    <div className="shop-header">
-    <div className="shop-header-content">
-      
-      {/* Note: .header-top removed as requested since Cart moved and Title was commented out */}
+  return (
+    <div className="shop-page">
+      {/* 🔍 Search + Filters + Cart Button */}
+      <SearchFilterBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        setPageMode={setPageMode}
+        showMobileFilters={showMobileFilters}
+        setShowMobileFilters={setShowMobileFilters}
+        cartCount={cartItems.length || 0}
+      />
 
-      {/* Search, Filter, and Cart Bar */}
-      <div className="search-filter-bar">
-        
-        {/* 1. Search Input */}
-        <div className="search-wrapper">
-          <span className="search-icon"><i className="fa-solid fa-magnifying-glass"></i></span>
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
-          />
-        </div>
-
-        {/* 2. Categories (Responsive Wrapper) */}
-        <div className="filters-wrapper">
-            {/* Mobile Toggle Button */}
-            <button 
-                className="mobile-filter-toggle"
-                onClick={() => setShowMobileFilters(!showMobileFilters)}
-            >
-                <i className="fa-solid fa-sliders"></i>
-            </button>
-
-            {/* Category List (Dropdown on mobile, Row on desktop) */}
-            <div className={`category-filters ${showMobileFilters ? 'show-dropdown' : ''}`}>
-            {categories.map(cat => (
-                <button
-                key={cat.id}
-                onClick={() => {
-                    setSelectedCategory(cat.id);
-                    setPageMode("products");
-                    setShowMobileFilters(false); // Close dropdown on selection
-                }}
-                className={`category-btn ${selectedCategory === cat.id ? 'active' : ''}`}
-                >
-                {cat.label}
-                </button>
-            ))}
-            </div>
-        </div>
-
-        {/* 3. Cart Button (Moved Here) */}
-        <div className="cart-button" onClick={() => setPageMode("cart")}>
-          <span className="cart-icon"><i className="fa-solid fa-cart-shopping"></i></span>
-          <span className="cart-text">Cart ({cartItems.length})</span>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-    {/* CHANGE #1 — Product Grid wrapped in condition */}
+      {/* 🛒 Products Page */}
       {pageMode === "products" && (
-        <div className="products-section">
-          {filteredItems.length === 0 ? (
-            <div className="empty-state">
-              <p>No products found matching your criteria</p>
-            </div>
-          ) : (
-            <div className="products-grid">
-              {filteredItems.map(item => (
-                <div
-                  key={item.id}
-                  className="product-card"
-                  onClick={() => { setSelectedProduct(item); setPageMode("details"); }}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="product-image-wrapper">
-                    <img src={item.img} alt={item.name} className="product-image" />
-                    <div className="product-price-badge">{item.price}</div>
-                  </div>
-
-                  <div className="product-info">
-                    <h3 className="product-name">{item.name}</h3>
-                    <p className="product-description">{item.description}</p>
-
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handleAddToCart(item.id); }}
-                      disabled={addedItems.has(item.id)}
-                      className={`add-to-cart-btn ${addedItems.has(item.id) ? 'added' : ''}`}
-                    >
-                      {addedItems.has(item.id) ? (
-                        <>
-                          <span className="btn-icon">✓</span>
-                          Added to Cart
-                        </>
-                      ) : (
-                        <>
-                          <span className="btn-icon"><i class="fa-solid fa-cart-shopping"></i></span>
-                          Add to Cart
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <Products
+          filteredItems={filteredItems}
+          cartItems={cartItems}
+          handleAddToCart={handleAddToCart}
+          setSelectedProduct={setSelectedProduct}
+          setPageMode={setPageMode}
+        />
       )}
 
-    {/* CHANGE #3 — Details Page */}
-          {pageMode === "details" && selectedProduct && (
-  <div className="details-page">
-    {/* Back Button (Absolute Position) */}
-    <button className="back-button" onClick={() => setPageMode("products")}>
-      <span className="back-icon"><i className="fa-solid fa-arrow-left"></i></span>
-    </button>
-
-    {/* Image Section (Left) */}
-    <div className="image-container">
-        <img src={selectedProduct.img} alt={selectedProduct.name} className="details-image" />
-    </div>
-
-    {/* Text Content Section (Right) */}
-    <div className="details-content">
-      <div>
-      <h2 className="details-name">{selectedProduct.name}</h2>
-      <p className="details-description">{selectedProduct.description}</p>
-      <p className="details-price">{selectedProduct.price}</p>
-      </div>
-    
-      <button
-        className="add-to-cart-btn"
-        onClick={() => handleAddToCart(selectedProduct.id)}
-      >
-        Add to Cart
-      </button>
-    </div>
-  </div>
-)}
-
-
-      {pageMode === "cart" && ( //Cart page
-    <div className="cart-page">
-
-      <button className="back-button" onClick={() => setPageMode("products")}>
-        <span className="back-icon"><i class="fa-solid fa-arrow-left"></i></span>
-      </button>
-
-
-      <h2 className="cart-title">Your Cart</h2>
-
-      {cartItems.length === 0 ? (
-        <p className="empty-cart">Your cart is empty</p>
-      ) : (
-        <div className="cart-list">
-          {cartItems.map((item, index) => (
-            <div key={index} className="cart-item">
-              <img src={item.product.img} alt={item.product.name} className="cart-item-image" />
-              <div className="cart-item-info">
-                <h3>{item.product.name}</h3>
-                <p>{item.product.price} x {item.quantity}</p>
-
-          {/* Quantity Controls */}
-            <div className="quantity-controls">
-              <button onClick={() => handleDecreaseQuantity(item.product.id)}><i class="fa-solid fa-minus"></i></button>
-              <span>{item.quantity}</span>
-              <button onClick={() => handleIncreaseQuantity(item.product.id)}><i class="fa-solid fa-plus"></i></button>
-              <button 
-                className="remove-btn" 
-                onClick={() => handleRemoveFromCart(item.product.id)}
-              >
-              <i class="fa-regular fa-trash-can"></i>
-              </button>
-            </div>
-
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* 📄 Product Detail */}
+      {pageMode === "details" && selectedProduct && (
+        <ProductDetail
+          selectedProduct={selectedProduct}
+          cartItems={cartItems}
+          setPageMode={setPageMode}
+          handleAddToCart={handleAddToCart}
+        />
       )}
 
-    {cartItems.length > 0 && (
-      <button
-        className="checkout-btn"
-        onClick={() => setPageMode("checkout")}
-      >
-        Proceed to Checkout
-      </button>
-    )}
+      {/* 🛍️ Cart */}
+      {pageMode === "cart" && (
+        <Cart
+          user={user}
+          cartItems={cartItems}
+          handleIncreaseQuantity={handleIncreaseQuantity}
+          handleDecreaseQuantity={handleDecreaseQuantity}
+          handleRemoveFromCart={handleRemoveFromCart}
+          setPageMode={setPageMode}
+        />
+      )}
 
-  </div>
-)}
+      {/* 💳 Checkout */}
+      {pageMode === "checkout" && (
+        <Checkout cartItems={cartItems} setPageMode={setPageMode} handleCheckout={handleCheckout}/>
+      )}
 
-{pageMode === "checkout" && (
-  <div className="checkout-page">
-    <button className="back-button" onClick={() => setPageMode("cart")}>
-      <span className="back-icon"><i className="fa-solid fa-arrow-left"></i></span> Back to Cart
-    </button>
-
-    <h2>Checkout</h2>
-
-    {cartItems.length === 0 ? (
-      <div className="empty-cart-message">Your cart is empty.</div>
-    ) : (
-      <>
-        <ul className="checkout-list">
-          {cartItems.map((item, index) => (
-            <li key={index} className="checkout-item">
-              <div className="checkout-item-left">
-                <img src={item.product.img} alt={item.product.name} className="checkout-item-img" />
-                <div className="checkout-item-info">
-                    <span className="checkout-item-name">{item.product.name}</span>
-                    <span className="checkout-item-qty">Qty: {item.quantity}</span>
-                </div>
-              </div>
-              <span className="checkout-item-price">{item.product.price}</span>
-            </li>
-          ))}
-        </ul>
-
-        <div className="checkout-summary">
-            <div className="checkout-total">
-            Total: <i className="fa-solid fa-indian-rupee-sign"></i> 
-            {cartItems.reduce((sum, item) => {
-                // Fix: Removes commas and currency symbols before parsing
-                const numericPrice = parseFloat(item.product.price.replace(/[^0-9.]/g, "")); 
-                return sum + (numericPrice * item.quantity);
-            }, 0).toLocaleString('en-IN')} {/* Adds commas back to the total */}
-            </div>
-
-            <button className="pay-btn">Pay Now</button>
-        </div>
-      </>
-    )}
-  </div>
-)}
-
-
-      {/* Footer Info */}
+      {/* FOOTER stays same */}
       <div className="shop-footer">
         <div className="footer-card">
           <div className="footer-grid">
             <div className="footer-item">
               <div className="footer-icon">🚚</div>
               <h3 className="footer-title">Free Shipping</h3>
-              <p className="footer-text">On orders over <i class="fa-solid fa-indian-rupee-sign"></i>500</p>
+              <p className="footer-text">On orders over ₹500</p>
             </div>
             <div className="footer-item">
               <div className="footer-icon">♻️</div>

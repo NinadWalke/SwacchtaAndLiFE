@@ -1,6 +1,35 @@
 const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose");
 
+const cartItemSchema = new mongoose.Schema({
+  id: {
+    type: Number,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  price: {
+    type: Number,  
+    required: true
+  },
+  description: {
+    type: String
+  },
+  img: {
+    type: String
+  },
+  category: {
+    type: String,
+    required: true
+  },
+  quantity: {
+    type: Number,
+    required: true
+  }
+});
+
 const userSchema = new mongoose.Schema(
   {
     googleId: { type: String, unique: true, sparse: true },
@@ -83,6 +112,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       required: true,
       default: 0
+    },
+    cart: {
+      type: [cartItemSchema],
+      default: []
     }
   },
   { timestamps: true }
