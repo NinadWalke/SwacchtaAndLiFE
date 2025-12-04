@@ -1,7 +1,11 @@
 const Committee = require("../schemas/Committee");
 const User = require("../schemas/User");
+const Event = require("../schemas/Event");
+const Report = require("../schemas/Report");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+
+const geocodeAddress = require("../utils/mapboxConfig");
 
 const { sendEmail } = require("../utils/emails");
 
@@ -76,7 +80,9 @@ exports.registerCommittee = async (req, res) => {
         message: "A committee with this leader email already exists",
       });
     }
-
+    const loc = await geocodeAddress(
+      `${line1}, ${area}, ${city}, ${state}, ${pincode}`
+    );
     const committee = new Committee({
       committeeName,
       description,
@@ -97,6 +103,11 @@ exports.registerCommittee = async (req, res) => {
         state,
         pincode,
         landmark,
+      },
+      committeeLocation: {
+        type: "Point",
+        coordinates: [loc.longitude, loc.latitude],
+        address: loc.placeName,
       },
       password,
       committeeStatus: "PENDING",
@@ -209,4 +220,58 @@ exports.getCommitteeStatus = async (req, res) => {
     committeeStatus,
     committeeName,
   });
+};
+
+exports.getCommitteeData = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // 1. Fetch committee
+    const committee = await Committee.findById(id);
+    if (!committee) {
+      return res.status(404).json({ message: "Committee not found" });
+    }
+
+    const { coordinates } = committee.committeeLocation;
+
+    // SAFETY CHECK
+    if (!coordinates || coordinates.length !== 2) {
+      return res
+        .status(400)
+        .json({ message: "Committee does not have a valid location saved." });
+    }
+
+    const lng = coordinates[0];
+    const lat = coordinates[1];
+
+    // 2. Query reports NEAR the committee center (radius = 1500m)
+    const reports = await Report.find({
+      location: {
+        $geoWithin: {
+          $centerSphere: [[lng, lat], 1.5 / 6371],
+          // 1.5km radius — adjust as needed
+        },
+      },
+    });
+
+    // 3. Query events near the committee center (same radius)
+    const events = await Event.find({
+      "eventLocationData.coordinates": {
+        $geoWithin: {
+          $centerSphere: [[lng, lat], 1.5 / 6371],
+        },
+      },
+    });
+
+    return res.json({
+      committeeLocation: committee.committeeLocation,
+      reports,
+      events,
+    });
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ message: "Server error", error: err.message });
+  }
 };

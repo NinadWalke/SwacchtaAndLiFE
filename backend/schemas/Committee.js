@@ -107,7 +107,27 @@ const committeeSchema = new mongoose.Schema(
         trim: true,
       },
     },
-
+    committeeLocation: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point",
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        default: [0, 0], // will be replaced after geocoding
+        required: true,
+      },
+      address: {
+        type: String,
+        trim: true,
+      },
+      committeeActive: {
+        type: Boolean,
+        default: true,
+        required: true,
+      },
+    },
     // ---------------------------
     // Members (after approval)
     // ---------------------------

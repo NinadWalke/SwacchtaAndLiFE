@@ -28,4 +28,7 @@ router.get("/committee", verifyToken, wrapAsync(committeeController.getCommittee
 // Check committee registration status
 router.get("/:id/status", wrapAsync(committeeController.getCommitteeStatus));
 
+// get committee data
+router.get("/:id/data", verifyToken, wrapAsync(committeeController.getCommitteeData));
+
 module.exports = router;
