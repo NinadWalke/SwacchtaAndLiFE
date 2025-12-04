@@ -1,6 +1,8 @@
 const Report = require("../schemas/Report");
 const User = require("../schemas/User");
 
+const { sendSMS } = require("../utils/twilio");
+
 // Fetch all reports with populated user data
 exports.getAllReports = async (req, res) => {
   const reports = await Report.find().populate(
@@ -56,6 +58,16 @@ exports.createReport = async (req, res) => {
   await user.save();
   await newReport.save();
 
+  if (user.phone) {
+    const smsBody = `Your report has been submitted successfully!\nReport ID: ${newReport._id}\nStatus: Pending review.`;
+
+    try {
+      await sendSMS(user.phone, smsBody);
+    } catch (smsErr) {
+      console.error("SMS error:", smsErr);
+    }
+  }
+
   return res.status(201).json({
     message: "Report created successfully!",
     report: newReport,
@@ -103,10 +115,10 @@ exports.updateReportStatus = async (req, res) => {
   });
 };
 
-exports.getAllCars = async(req, res) => {
+exports.getAllCars = async (req, res) => {
   // collect cars from db
   // res.json()
-}
+};
 
 exports.allotReportToCar = async (req, res) => {
   const { id, cid } = req.params;

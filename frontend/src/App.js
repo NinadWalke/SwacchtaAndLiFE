@@ -20,8 +20,6 @@ import MyReports from "./pages/profile/MyReports.jsx";
 
 // Services
 import Upload from "./pages/services/report/Upload.jsx";
-// Leaderboard
-import Leaderboard from "./pages/leaderboard/Leaderboard.jsx";
 
 // Committee Section
 import CommitteeForms from "./pages/services/committee/CommitteeForms.jsx";
@@ -61,8 +59,6 @@ function App() {
             <Route path="/profile/reports" element={<MyReports />} />
             {/* -- Core Routes -- */}
             <Route path="/upload" element={<Upload />} />
-            {/* -- Leaderboard Routes -- */}
-            <Route path="/leaderboard" element={<Leaderboard />} />
             {/* - Committee Routes - */}
             <Route path="/committee" element={<CommitteeForms />} />
             <Route
