@@ -25,4 +25,7 @@ router.post("/login", wrapAsync(committeeController.loginCommittee));
 // Get committee details (protected)
 router.get("/committee", verifyToken, wrapAsync(committeeController.getCommitteeProfile));
 
+// Check committee registration status
+router.get("/:id/status", wrapAsync(committeeController.getCommitteeStatus));
+
 module.exports = router;
