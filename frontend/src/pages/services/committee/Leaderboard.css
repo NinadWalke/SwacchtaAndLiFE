@@ -14,7 +14,7 @@
   
   /* --- Base & Layout --- */
   .leaderboard-container {
-    width: 100%;
+    width: 150%;
     min-height: 100vh;
     padding: 2rem 1rem;
     background-color: var(--color-background-light);
@@ -95,7 +95,8 @@
   /* --- Leaderboard Table --- */
   .leaderboard-table-container {
     width: 100%;
-    max-width: 800px;
+    margin: auto;
+    max-width: 1300px;
     background-color: var(--color-text-light);
     border-radius: 12px;
     box-shadow: 0 4px 15px var(--color-shadow);

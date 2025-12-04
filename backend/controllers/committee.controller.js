@@ -275,3 +275,41 @@ exports.getCommitteeData = async (req, res) => {
       .json({ message: "Server error", error: err.message });
   }
 };
+
+exports.getCommitteeUsers = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // 1. Fetch committee
+    const committee = await Committee.findById(id).populate("members");
+    if (!committee) {
+      return res.status(404).json({ message: "Committee not found" });
+    }
+
+    // 2. Fetch all users belonging to the committee
+    const memberIds = committee.members.map((m) => m._id);
+
+    // 3. Populate their reports
+    const users = await User.find({ _id: { $in: memberIds } })
+      .populate("reports")   // so we can count them
+      .select("fname lname email points reports"); // data needed for leaderboard
+
+    // 4. Sort by number of reports (descending)
+    const sorted = users.sort(
+      (a, b) => (b.reports?.length || 0) - (a.reports?.length || 0)
+    );
+
+    // 5. Send back clean leaderboard structure
+    return res.json({
+      committeeName: committee.committeeName,
+      users: sorted,
+    });
+
+  } catch (err) {
+    console.error("getCommitteeUsers ERROR:", err);
+    return res.status(500).json({
+      message: "Server error",
+      error: err.message,
+    });
+  }
+};
