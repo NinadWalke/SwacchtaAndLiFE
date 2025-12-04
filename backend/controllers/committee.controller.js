@@ -8,6 +8,7 @@ const bcrypt = require("bcrypt");
 const geocodeAddress = require("../utils/mapboxConfig");
 
 const { sendEmail } = require("../utils/emails");
+const { sendSMS } = require("../utils/twilio");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -141,8 +142,10 @@ exports.registerCommittee = async (req, res) => {
 
     await sendEmail(leaderEmail, "Committee Registration Received", emailHTML);
 
-    // Optional Twilio placeholder
-    // sendSMS(leaderPhone, `Your committee "${committeeName}" has been registered. ID: ${committee._id}`);
+    await sendSMS(
+      leaderPhone,
+      `Your committee "${committeeName}" has been put on hold for registration.\nCommittee ID: ${committee._id}\nWe'll contact you soon for verification.`
+    );
 
     return res.status(201).json({
       message: "Committee registered successfully. We'll get back to you soon!",
@@ -291,7 +294,7 @@ exports.getCommitteeUsers = async (req, res) => {
 
     // 3. Populate their reports
     const users = await User.find({ _id: { $in: memberIds } })
-      .populate("reports")   // so we can count them
+      .populate("reports") // so we can count them
       .select("fname lname email points reports"); // data needed for leaderboard
 
     // 4. Sort by number of reports (descending)
@@ -304,7 +307,6 @@ exports.getCommitteeUsers = async (req, res) => {
       committeeName: committee.committeeName,
       users: sorted,
     });
-
   } catch (err) {
     console.error("getCommitteeUsers ERROR:", err);
     return res.status(500).json({
