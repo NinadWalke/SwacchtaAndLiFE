@@ -82,14 +82,13 @@ exports.getReportsAssignedToOsp = async (req, res) => {
     const userId = req.user._id;
 
     const reports = await Report.find({
-      assignedTo: userId
+      assignedTo: userId,
     }).sort({ createdAt: -1 });
 
     return res.status(200).json({
       message: "Reports assigned to this OSP",
-      reports
+      reports,
     });
-
   } catch (err) {
     console.error("Error fetching OSP assigned reports:", err);
     return res.status(500).json({ message: "Internal server error" });
@@ -112,7 +111,7 @@ exports.getReportById = async (req, res) => {
   return res.status(200).json({ report });
 };
 
-// Toggle report status (pending → allotted → resolved → pending)
+// Officials can ONLY close (delete) resolved reports
 exports.updateReportStatus = async (req, res) => {
   const { id } = req.params;
 
@@ -122,53 +121,34 @@ exports.updateReportStatus = async (req, res) => {
     return res.status(404).json({ message: "Report not found" });
   }
 
-  // pending → allotted
-  if (report.status === "pending") {
-    report.status = "allotted";
-    await report.save();
-
-    return res.status(200).json({
-      message: "Status updated",
+  // Only delete resolved reports
+  if (report.status !== "resolved") {
+    return res.status(400).json({
+      message: "This action is only allowed when the report is resolved",
       status: report.status,
     });
   }
 
-  // allotted → resolved
-  if (report.status === "allotted") {
-    report.status = "resolved";
-    await report.save();
-
-    return res.status(200).json({
-      message: "Status updated",
-      status: report.status,
-    });
+  // --- DELETE FROM CLOUDINARY ---
+  if (report.reportImg) {
+    const publicId = extractPublicId(report.reportImg);
+    await cloudinary.uploader.destroy(publicId);
   }
 
-  // resolved → DELETE FROM CLOUD + DELETE FROM DB
-  if (report.status === "resolved") {
-    // delete main image
-    if (report.reportImg) {
-      const publicId = extractPublicId(report.reportImg);
-      await cloudinary.uploader.destroy(publicId);
-    }
-
-    // delete YOLO image
-    if (report.reportYoloImg) {
-      const publicId = extractPublicId(report.reportYoloImg);
-      await cloudinary.uploader.destroy(publicId);
-    }
-
-    // delete the document
-    await Report.findByIdAndDelete(id);
-
-    const newReports = await Report.find();
-
-    return res.status(200).json({
-      message: "Report deleted (was resolved)",
-      status: "deleted",
-      newReports: newReports,
-    });
+  if (report.reportYoloImg) {
+    const publicId = extractPublicId(report.reportYoloImg);
+    await cloudinary.uploader.destroy(publicId);
   }
+
+  // --- DELETE FROM DATABASE ---
+  await Report.findByIdAndDelete(id);
+  const newReports = await Report.find();
+
+  return res.status(200).json({
+    message: "Report successfully closed and deleted",
+    status: "deleted",
+    newReports,
+  });
 };
 
 // assign report to an active osp
@@ -184,7 +164,9 @@ exports.assignReportToOsp = async (req, res) => {
     }
 
     if (report.status !== "pending") {
-      return res.status(400).json({ message: "Only pending reports can be allotted" });
+      return res
+        .status(400)
+        .json({ message: "Only pending reports can be allotted" });
     }
 
     const osp = await User.findById(ospId);
@@ -204,9 +186,8 @@ exports.assignReportToOsp = async (req, res) => {
 
     return res.status(200).json({
       message: "Report successfully allotted to OSP",
-      report
+      report,
     });
-
   } catch (err) {
     console.error("Error assigning report to OSP:", err);
     return res.status(500).json({ message: "Internal server error" });
@@ -225,12 +206,19 @@ exports.ospResolveReport = async (req, res) => {
       return res.status(404).json({ message: "Report not found" });
     }
 
-    if (!report.assignedTo || report.assignedTo.toString() !== userId.toString()) {
-      return res.status(403).json({ message: "You are not assigned to this report" });
+    if (
+      !report.assignedTo ||
+      report.assignedTo.toString() !== userId.toString()
+    ) {
+      return res
+        .status(403)
+        .json({ message: "You are not assigned to this report" });
     }
 
     if (report.status !== "allotted") {
-      return res.status(400).json({ message: "Report must be in allotted state" });
+      return res
+        .status(400)
+        .json({ message: "Report must be in allotted state" });
     }
 
     report.status = "resolved";
@@ -238,9 +226,8 @@ exports.ospResolveReport = async (req, res) => {
 
     return res.status(200).json({
       message: "Report marked resolved by OSP",
-      report
+      report,
     });
-
   } catch (err) {
     console.error("Error resolving report:", err);
     return res.status(500).json({ message: "Internal server error" });

@@ -14,6 +14,7 @@ export default function Upload() {
   const [location, setLocation] = useState({ latitude: null, longitude: null }); // state for user location
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   // --- Camera Logic ---
   const startCamera = async () => {
@@ -96,6 +97,7 @@ export default function Upload() {
   };
 
   const submitReport = async (lat, lng, modifiedImageUrl) => {
+    setLoading(true);
     try {
       const ogBlob = await fetch(image).then((res) => res.blob());
       const modifiedBlob = await fetch(modifiedImageUrl).then((res) =>
@@ -119,6 +121,9 @@ export default function Upload() {
     } catch (err) {
       console.error("Upload error:", err);
       alert("Error uploading image. Please try again.");
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -249,9 +254,10 @@ export default function Upload() {
               <button
                 type="submit"
                 className="btn btn--primary"
+                disabled={loading}
                 style={{ width: "100%", padding: "14px" }}
               >
-                Submit Report
+                {loading ? <>Processing</> : <>Submit Report</>}
               </button>
             </div>
           </form>
