@@ -39,7 +39,5 @@ router.post("/:id/assign-report/:cid", wrapAsync(reportsController.allotReportTo
 // Mark the report as resolved by the OSP
 router.post("/:id/mark-resolved/:cid", wrapAsync(reportsController.markReportResolved));
 
-// Delete a report
-router.delete("/:id", wrapAsync(reportsController.deleteReport));
 
 module.exports = router;

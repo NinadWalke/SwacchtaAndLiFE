@@ -2,6 +2,8 @@ const Report = require("../schemas/Report");
 const User = require("../schemas/User");
 
 const { sendSMS } = require("../utils/twilio");
+const cloudinary = require("cloudinary").v2;
+const { extractPublicId } = require("../utils/cloudinaryHelpers.js");
 
 // Fetch all reports with populated user data
 exports.getAllReports = async (req, res) => {
@@ -95,24 +97,58 @@ exports.updateReportStatus = async (req, res) => {
   const { id } = req.params;
 
   const report = await Report.findById(id);
+
   if (!report) {
     return res.status(404).json({ message: "Report not found" });
   }
 
+  // pending → allotted
   if (report.status === "pending") {
     report.status = "allotted";
-  } else if (report.status === "allotted") {
-    report.status = "resolved";
-  } else if (report.status === "resolved") {
-    report.status = "pending";
+    await report.save();
+
+    return res.status(200).json({
+      message: "Status updated",
+      status: report.status,
+    });
   }
 
-  await report.save();
+  // allotted → resolved
+  if (report.status === "allotted") {
+    report.status = "resolved";
+    await report.save();
 
-  return res.status(200).json({
-    message: "Status updated",
-    status: report.status,
-  });
+    return res.status(200).json({
+      message: "Status updated",
+      status: report.status,
+    });
+  }
+
+  // resolved → DELETE FROM CLOUD + DELETE FROM DB
+  if (report.status === "resolved") {
+    // delete main image
+    if (report.reportImg) {
+      const publicId = extractPublicId(report.reportImg);
+      await cloudinary.uploader.destroy(publicId);
+    }
+
+    // delete YOLO image
+    if (report.reportYoloImg) {
+      const publicId = extractPublicId(report.reportYoloImg);
+      await cloudinary.uploader.destroy(publicId);
+    }
+
+    // delete the document
+    await Report.findByIdAndDelete(id);
+
+    const newReports = await Report.find();
+
+    return res.status(200).json({
+      message: "Report deleted (was resolved)",
+      status: "deleted",
+      newReports: newReports
+    });
+  }
 };
 
 exports.getAllCars = async (req, res) => {
@@ -136,18 +172,4 @@ exports.markReportResolved = async (req, res) => {
   // change report status
   // car.save(), report.save()
   // twilio integrated here
-};
-
-// Delete a report
-exports.deleteReport = async (req, res) => {
-  const { id } = req.params;
-
-  const report = await Report.findByIdAndDelete(id);
-  if (!report) {
-    return res.status(404).json({ message: "Report not found" });
-  }
-
-  return res.status(200).json({
-    message: "Report deleted successfully",
-  });
 };

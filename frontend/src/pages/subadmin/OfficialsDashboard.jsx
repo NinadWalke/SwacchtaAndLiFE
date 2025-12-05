@@ -79,17 +79,27 @@ export default function OfficialsDashboard() {
   }, []);
 
   const toggleStatusDB = async (reportId) => {
+    setLoading(true);
     try {
       const res = await api.post(`/reports/${reportId}`);
-      const newStatus = res.data.status;
+      const { status, newReports } = res.data;
+
+      // If backend deleted the report
+      if (status === "deleted") {
+        setAllReports(newReports); // replace entire list
+        return;
+      }
+
+      // Otherwise update only that one report's status
       setAllReports((prevReports) =>
-        prevReports.map((r) =>
-          r._id === reportId ? { ...r, status: newStatus } : r
-        )
+        prevReports.map((r) => (r._id === reportId ? { ...r, status } : r))
       );
     } catch (err) {
       console.error("Error toggling status:", err);
       alert("Failed to update report status. Try again.");
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -268,13 +278,14 @@ export default function OfficialsDashboard() {
                     <button
                       className="btn btn--secondary"
                       onClick={() => toggleStatusDB(r._id)}
-                      disabled={r.status === "resolved"}
+                      disabled={loading}
                     >
-                      {r.status === "pending"
+                      {loading ? "Processing" 
+                        : r.status === "pending"
                         ? "Mark Allotted"
                         : r.status === "allotted"
                         ? "Mark Resolved"
-                        : "Resolved"}
+                        : "Close Report"}
                     </button>
                   </td>
                   <td>
