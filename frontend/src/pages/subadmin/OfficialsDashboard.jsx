@@ -112,7 +112,11 @@ export default function OfficialsDashboard() {
   );
 
   if (loading) return <div className="loading-state">Loading Dashboard...</div>;
-
+  
+  if (!location.latitude || !location.longitude) {
+    return <div className="loading-state">Fetching your location...</div>;
+  }
+  
   return (
     <main className="dashboard-page">
       <header className="dashboard-header">
