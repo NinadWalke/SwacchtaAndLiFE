@@ -1,0 +1,169 @@
+/* EventSignup.css
+   Modal-style signup form that matches the Events card design
+*/
+
+:root {
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Lato", sans-serif;
+
+  --color-background: #f8f9fa;
+  --color-text: #34495e;
+  --color-primary-green: #0a6847;
+  --color-accent-green: #77b0aa;
+  --color-white: #ffffff;
+  --color-border: #dbe2e9;
+
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.15);
+  --transition-smooth: all 0.3s ease-in-out;
+}
+
+.event-signup__backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(25, 39, 52, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 40;
+}
+
+.event-signup__card {
+  position: relative;
+  width: 90%;
+  max-width: 480px;
+  background-color: var(--color-white);
+  border-radius: 18px;
+  padding: 1.8rem 1.9rem 1.6rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
+  font-family: var(--font-body);
+}
+
+.event-signup__close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.95rem;
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.event-signup__title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+  color: var(--color-primary-green);
+}
+
+.event-signup__subtitle {
+  font-size: 0.95rem;
+  color: #5e6c7a;
+  margin-bottom: 1.2rem;
+}
+
+.event-signup__subtitle .highlight {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* FORM */
+.event-signup__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-signup__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.event-signup__field label {
+  font-size: 0.88rem;
+  color: #576574;
+}
+
+.event-signup__field input,
+.event-signup__field textarea {
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.event-signup__field input:focus,
+.event-signup__field textarea:focus {
+  border-color: var(--color-accent-green);
+  box-shadow: 0 0 0 3px rgba(119, 176, 170, 0.25);
+}
+
+/* ACTIONS */
+.event-signup__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.3rem;
+}
+
+/* Re-use button styles from Events */
+.btn {
+  padding: 9px 20px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.btn--primary {
+  background-color: var(--color-accent-green);
+  color: var(--color-white);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-primary-green);
+}
+
+.btn--secondary {
+  background-color: var(--color-white);
+  color: var(--color-accent-green);
+  border-color: var(--color-accent-green);
+}
+
+.btn--secondary:hover {
+  background-color: var(--color-accent-green);
+  color: var(--color-white);
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.event-signup__hint {
+  margin-top: 0.9rem;
+  font-size: 0.8rem;
+  color: #7b8a97;
+  text-align: left;
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .event-signup__card {
+    padding: 1.5rem 1.35rem 1.4rem;
+  }
+
+  .event-signup__actions {
+    flex-direction: column-reverse;
+  }
+
+  .event-signup__actions .btn {
+    width: 100%;
+  }
+}

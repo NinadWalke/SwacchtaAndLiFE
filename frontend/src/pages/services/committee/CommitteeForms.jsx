@@ -4,7 +4,6 @@ import api from "../../../utils/axiosConfig";
 import { Link } from "react-router-dom";
 import { useCommitteeAuth } from "../../../components/CommitteeAuthContext";
 
-// Renamed component function
 function CommitteeForms() {
   const { login, committee, isAuthenticated, logout } = useCommitteeAuth();
   const [activeTab, setActiveTab] = useState("register");
@@ -87,14 +86,15 @@ function CommitteeForms() {
       [e.target.name]: e.target.value,
     });
   };
+  
   const loginOnChange = (e) => {
     setCommitteeLoginFormData({
       ...committeeLoginFormData,
       [e.target.name]: e.target.value,
     });
   };
+
   if (isAuthenticated) {
-    // This JSX provides a professional "session active" card
     return (
       <main className="committee-page">
         <div className="form-card committee-logged-in">
@@ -108,12 +108,10 @@ function CommitteeForms() {
           </p>
 
           <div className="logged-in__actions">
-            {/* New button linking to the dashboard */}
             <Link to="/committee/dashboard" className="btn btn--primary">
               Go to Dashboard
             </Link>
 
-            {/* Restyled Logout button */}
             <button
               onClick={() => logout()}
               className="btn btn--danger-outline"
@@ -125,8 +123,9 @@ function CommitteeForms() {
       </main>
     );
   }
+
   return (
-    <main className="committee-page">
+    <main className="committee-page"> 
       <div className="form-card">
         <div className="form-card__header">
           <h1 className="form-card__title">Committee Portal</h1>
@@ -417,10 +416,11 @@ function CommitteeForms() {
                 type="email"
                 placeholder="you@example.com"
                 onChange={loginOnChange}
-                value={committeeLoginFormData.value}
+                value={committeeLoginFormData.leaderEmail}
                 required
               />
             </div>
+
             <div className="form__group">
               <label className="form__label" htmlFor="login-password">
                 Password
@@ -432,10 +432,11 @@ function CommitteeForms() {
                 type="password"
                 placeholder="••••••••"
                 onChange={loginOnChange}
-                value={committeeLoginFormData.value}
+                value={committeeLoginFormData.password}
                 required
               />
             </div>
+
             <button type="submit" className="btn btn--primary">
               Login
             </button>
@@ -518,5 +519,7 @@ function CommitteeForms() {
     </main>
   );
 }
+
+
 
 export default CommitteeForms;

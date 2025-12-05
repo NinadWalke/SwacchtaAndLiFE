@@ -70,6 +70,7 @@
   display: flex;
   flex-direction: column;
   transition: var(--transition-smooth);
+  cursor: pointer;
 }
 
 .event-card:hover {
@@ -132,6 +133,8 @@
   gap: 0.75rem;
   color: #555;
   margin-bottom: 1rem;
+  text-decoration: underline;
+  color: var(--color-primary-green);
 }
 
 .meta__item {
@@ -154,6 +157,7 @@
   border-top: 1px solid var(--color-border);
   margin-top: 1.5rem;
   padding-top: 1.5rem;
+  cursor: pointer;
 }
 
 .footer__attendees {
@@ -181,4 +185,32 @@
   font-size: 1.2rem;
   color: #777;
   padding: 3rem;
+}
+
+/* appended to Event.css */
+.event-card__link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.event-card__image-container {
+  height: 160px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  overflow: hidden;
+}
+.event-card__content {
+  padding: 14px;
+}
+.event-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.event-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-top: 1px solid #eee;
 }
