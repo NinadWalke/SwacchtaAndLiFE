@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Event.css";
 import api from "../../../utils/axiosConfig";
 import { useAuth } from "../../../components/AuthContext";
 
 function Event() {
   const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getEvents = async () => {
@@ -17,37 +19,44 @@ function Event() {
           (e1, e2) => new Date(e1.eventDateTime) - new Date(e2.eventDateTime)
         );
         setEvents(allEvents);
+        console.log("Fetched events:", allEvents);
       } catch (e) {
-        alert(e.message);
+        console.error("Error fetching events:", e);
+        alert("Failed to load events.");
       } finally {
-        setLoading(false); // Stop loading regardless of outcome
+        setLoading(false);
       }
     };
     getEvents();
   }, []);
 
-  const handleSignUp = async (id) => {
+  const handleSignUp = async (id, e) => {
+    // stop propagation if event passed (button click)
+    if (e && e.stopPropagation) e.stopPropagation();
+
     try {
       const res = await api.post(`/events/${id}`);
-      const updatedEvent = res.data.event;
+      const updatedEvent = res.data.event || res.data;
       setEvents((prevEvents) =>
-        prevEvents.map((e) => (e._id === updatedEvent._id ? updatedEvent : e))
+        prevEvents.map((ev) => (ev._id === updatedEvent._id ? updatedEvent : ev))
       );
-    } catch (e) {
-      console.log("Error: " + e.message);
+    } catch (err) {
+      console.error("Sign up error:", err);
       alert("Failed to register. Please try again.");
     }
   };
 
-  const handleUnregister = async (id) => {
+  const handleUnregister = async (id, e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
+
     try {
       const res = await api.post(`/events/${id}/unregister`);
-      const updatedEvent = res.data.event;
+      const updatedEvent = res.data.event || res.data;
       setEvents((prevEvents) =>
-        prevEvents.map((e) => (e._id === updatedEvent._id ? updatedEvent : e))
+        prevEvents.map((ev) => (ev._id === updatedEvent._id ? updatedEvent : ev))
       );
-    } catch (e) {
-      console.log("Error: " + e.message);
+    } catch (err) {
+      console.error("Unregister error:", err);
       alert("Failed to unregister. Please try again.");
     }
   };
@@ -66,7 +75,7 @@ function Event() {
   return (
     <main className="events-page">
       <header className="events-page__header">
-        <h1 className="events-page__title">Community Events</h1>
+        <h1 className="events-page__title">Events</h1>
         <p className="events-page__subtitle">
           Join fellow citizens in making our community cleaner and greener. Find
           a local event and sign up today!
@@ -81,10 +90,14 @@ function Event() {
             {events.map((event) => {
               const { day, month, time } = formatDate(event.eventDateTime);
               const isRegistered =
-                user && event.registeredUsers.includes(user._id);
+                user && event.registeredUsers && event.registeredUsers.includes(user._id);
 
               return (
-                <div key={event._id} className="event-card">
+                <div
+                  key={event._id}
+                  className="event-card"
+                  onClick={() => navigate(`/events/${event._id}`)}
+                >
                   <div className="event-card__image-container">
                     <div className="event-card__date">
                       <span className="date__day">{day}</span>
@@ -102,6 +115,7 @@ function Event() {
                             href={`https://www.google.com/maps?q=${event.eventLocationData.coordinates[1]},${event.eventLocationData.coordinates[0]}`}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()} // prevent card navigation
                           >
                             {event.eventLocation}
                           </a>
@@ -127,14 +141,14 @@ function Event() {
                     {isRegistered ? (
                       <button
                         className="btn btn--secondary"
-                        onClick={() => handleUnregister(event._id)}
+                        onClick={(e) => handleUnregister(event._id, e)}
                       >
                         Unregister
                       </button>
                     ) : (
                       <button
                         className="btn btn--primary"
-                        onClick={() => handleSignUp(event._id)}
+                        onClick={(e) => handleSignUp(event._id, e)}
                       >
                         Sign Up
                       </button>
