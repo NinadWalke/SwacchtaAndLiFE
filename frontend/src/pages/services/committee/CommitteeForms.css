@@ -34,7 +34,7 @@
 */
 .form-card {
   width: 100%;
-  max-width: 450px;
+  max-width: 650px;
   background-color: var(--color-white);
   padding: 2.5rem;
   border-radius: var(--border-radius);

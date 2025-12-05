@@ -1,0 +1,41 @@
+.osp-dashboard {
+    padding: 2rem;
+  }
+  
+  .osp-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  
+  .stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .stat-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    flex: 1;
+    text-align: center;
+  }
+  
+  .dashboard-module {
+    background: white;
+    padding: 1.2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+  }
+  
+  .reports-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .reports-table td, .reports-table th {
+    padding: 10px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  

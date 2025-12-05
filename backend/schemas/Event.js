@@ -42,6 +42,11 @@ const eventSchema = new mongoose.Schema(
       address: {
         type: String,
       },
+      eventActive: {
+        type: Boolean,
+        default: true,
+        required: true
+      }
     },
   },
   { timestamps: true }

@@ -16,7 +16,9 @@ exports.createEvent = async (req, res) => {
       eventDescription,
       eventDateTime,
       eventLocation,
-    } = req.body;
+    } = req.body;    
+    const {eventType, } = req.body;
+
 
     // Geocode the address
     const loc = await geocodeAddress(eventLocation);
@@ -52,7 +54,7 @@ exports.createEvent = async (req, res) => {
 exports.getEventById = async (req, res) => {
   const { id } = req.params;
 
-  const currEvent = await Event.findById(id);
+  const currEvent = await Event.findById(id).populate("registeredUsers");
   if (!currEvent) {
     return res.status(404).json({ message: "Event not found!" });
   }
@@ -76,7 +78,8 @@ exports.registerForEvent = async (req, res) => {
       event.registeredUsers.push(userId);
       await event.save();
     }
-
+    // twilio integration here
+    // nodemailer integration here
     return res.json({ message: "Registered successfully", event });
   } catch (err) {
     console.error(err);
@@ -88,6 +91,14 @@ exports.registerForEvent = async (req, res) => {
 exports.updateEvent = async (req, res) => {
   return res.json({ message: "Event update endpoint not implemented yet" });
 };
+
+// Mark event completed
+exports.markEventCompleted = async (req, res) => {
+  const {id} = req.params;
+  const eventToMark = await Event.findById(id);
+  eventToMark.eventActive = true;
+  res.json({message: "Event marked completed!", event: eventToMark});
+}
 
 // Unregister user from event
 exports.unregisterFromEvent = async (req, res) => {

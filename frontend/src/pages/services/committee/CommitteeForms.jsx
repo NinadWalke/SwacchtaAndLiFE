@@ -1,24 +1,43 @@
 import React, { useState } from "react";
 import "./CommitteeForms.css";
 import api from "../../../utils/axiosConfig";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 import { useCommitteeAuth } from "../../../components/CommitteeAuthContext";
 
 function CommitteeForms() {
   const { login, committee, isAuthenticated, logout } = useCommitteeAuth();
   const [activeTab, setActiveTab] = useState("register");
+  const [statusCheckId, setStatusCheckId] = useState("");
+  const [statusResult, setStatusResult] = useState(null);
   const [committeeRegistrationFormData, setCommitteeRegistrationFormData] =
     useState({
+      // Committee Info
       committeeName: "",
+      description: "",
+      localityType: "Society",
+      approxHouseholds: "",
+
+      // Leader Info
+      leaderName: "",
       leaderEmail: "",
-      fullname: "",
-      contact: "",
-      members: "",
-      responsibilities: "",
-      actions: "",
+      leaderPhone: "",
+      alternatePhone: "",
+
+      // Address
+      line1: "",
+      line2: "",
+      area: "",
+      city: "",
+      district: "",
+      state: "",
+      pincode: "",
+      landmark: "",
+
+      // Auth
       password: "",
       confirmPassword: "",
     });
+
   const [committeeLoginFormData, setCommitteeLoginFormData] = useState({
     leaderEmail: "",
     password: "",
@@ -31,9 +50,10 @@ function CommitteeForms() {
         "/committees/register",
         committeeRegistrationFormData
       );
-      login(res.data.token, res.data.committee);
-      alert("Committee Registered successfully!");
-      window.location.href = "/committee/dashboard";
+      alert(
+        "We have recieved your request for registration of your committee! You'll be notified on your email and SMS!"
+      );
+      window.location.href = "/committee";
     } catch (err) {
       console.error(err.response?.data || err.message);
       alert(err.response?.data?.message || "Registration failed");
@@ -44,7 +64,6 @@ function CommitteeForms() {
     e.preventDefault();
     try {
       const res = await api.post("/committees/login", committeeLoginFormData);
-      console.log(res);
       login(res.data.token, res.data.committee);
       alert("Logged in to your committee successfully!");
       window.location.href = "/committee/dashboard";
@@ -54,6 +73,13 @@ function CommitteeForms() {
     }
   };
 
+  const handleStatusCheck = async (e) => {
+    e.preventDefault();
+    const res = await api.get(`/committees/${statusCheckId}/status`);
+    setStatusResult(res.data);
+  };
+
+  // Helper functions
   const registrationOnChange = (e) => {
     setCommitteeRegistrationFormData({
       ...committeeRegistrationFormData,
@@ -123,17 +149,21 @@ function CommitteeForms() {
           >
             Login
           </button>
+          <button
+            className={`tab-button ${activeTab === "status" ? "active" : ""}`}
+            onClick={() => setActiveTab("status")}
+          >
+            Check Status
+          </button>
         </div>
 
         {activeTab === "register" && (
           <form className="committee-form" onSubmit={handleRegisterSubmit}>
+            {/* Committee Name */}
             <div className="form__group">
-              <label className="form__label" htmlFor="register-name">
-                Committee Name
-              </label>
+              <label className="form__label">Committee Name</label>
               <input
                 className="form__input"
-                id="register-name"
                 name="committeeName"
                 type="text"
                 placeholder="e.g., Thane Clean-Up Crew"
@@ -143,109 +173,208 @@ function CommitteeForms() {
               />
             </div>
 
+            {/* Description */}
             <div className="form__group">
-              <label className="form__label" htmlFor="register-email">
-                Email Address
-              </label>
+              <label className="form__label">Committee Description</label>
+              <textarea
+                className="form__input"
+                name="description"
+                placeholder="Short description of your committee"
+                onChange={registrationOnChange}
+                value={committeeRegistrationFormData.description}
+              />
+            </div>
+
+            {/* Locality Type */}
+            <div className="form__group">
+              <label className="form__label">Locality Type</label>
+              <select
+                className="form__input"
+                name="localityType"
+                onChange={registrationOnChange}
+                value={committeeRegistrationFormData.localityType}
+              >
+                <option value="Society">Society</option>
+                <option value="Colony">Colony</option>
+                <option value="Village">Village</option>
+                <option value="Apartment">Apartment</option>
+                <option value="Commercial Area">Commercial Area</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            {/* Approx Households */}
+            <div className="form__group">
+              <label className="form__label">Approx Households</label>
               <input
                 className="form__input"
-                id="register-email"
+                name="approxHouseholds"
+                type="number"
+                placeholder="e.g., 120"
+                onChange={registrationOnChange}
+                value={committeeRegistrationFormData.approxHouseholds}
+              />
+            </div>
+
+            {/* Leader Name */}
+            <div className="form__group">
+              <label className="form__label">Leader Full Name</label>
+              <input
+                className="form__input"
+                name="leaderName"
+                type="text"
+                placeholder="e.g., Rohan Patil"
+                onChange={registrationOnChange}
+                value={committeeRegistrationFormData.leaderName}
+                required
+              />
+            </div>
+
+            {/* Leader Email */}
+            <div className="form__group">
+              <label className="form__label">Leader Email</label>
+              <input
+                className="form__input"
                 name="leaderEmail"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="leader@example.com"
                 onChange={registrationOnChange}
                 value={committeeRegistrationFormData.leaderEmail}
                 required
               />
             </div>
 
+            {/* Leader Phone */}
             <div className="form__group">
-              <label className="form__label" htmlFor="register-fullname">
-                Full Name
-              </label>
+              <label className="form__label">Leader Phone Number</label>
               <input
                 className="form__input"
-                id="register-fullname"
-                name="fullname"
+                name="leaderPhone"
                 type="text"
-                placeholder="Your First and Last Name"
+                placeholder="10-digit mobile number"
                 onChange={registrationOnChange}
-                value={committeeRegistrationFormData.fullname}
+                value={committeeRegistrationFormData.leaderPhone}
                 required
               />
             </div>
 
+            {/* Alternate Phone */}
             <div className="form__group">
-              <label className="form__label" htmlFor="register-contact">
-                Contact Number
-              </label>
+              <label className="form__label">Alternate Phone (optional)</label>
               <input
                 className="form__input"
-                id="register-contact"
-                name="contact"
-                type="tel"
-                placeholder="10-digit Phone Number"
-                onChange={registrationOnChange}
-                value={committeeRegistrationFormData.contact}
-                required
-              />
-            </div>
-
-            <div className="form__group">
-              <label className="form__label" htmlFor="register-members">
-                No. of Members
-              </label>
-              <input
-                className="form__input"
-                id="register-members"
-                name="members"
-                type="number"
-                placeholder="Number of Members"
-                onChange={registrationOnChange}
-                value={committeeRegistrationFormData.members}
-                required
-              />
-            </div>
-
-            <div className="form__group">
-              <label className="form__label" htmlFor="register-responsibilities">
-                Are you aware of your committee responsibilities?
-              </label>
-              <input
-                className="form__input"
-                id="register-responsibilities"
-                name="responsibilities"
+                name="alternatePhone"
                 type="text"
-                placeholder="YES / NO"
+                placeholder="Optional alternate number"
                 onChange={registrationOnChange}
-                value={committeeRegistrationFormData.responsibilities}
-                required
+                value={committeeRegistrationFormData.alternatePhone}
               />
             </div>
 
+            {/* Address Section */}
+            <h3 className="form__section-title">Committee Address</h3>
+
             <div className="form__group">
-              <label className="form__label" htmlFor="register-actions">
-                What actions will your committee take after formation?
-              </label>
+              <label className="form__label">Address Line 1</label>
               <input
                 className="form__input"
-                id="register-actions"
-                name="actions"
+                name="line1"
                 type="text"
-                placeholder="Eg: Clean-up drives, awareness sessions, reporting issues"
+                placeholder="Building / Street"
                 onChange={registrationOnChange}
-                value={committeeRegistrationFormData.actions}
+                value={committeeRegistrationFormData.line1}
                 required
               />
             </div>
 
             <div className="form__group">
-              <label className="form__label" htmlFor="register-password">
-                Password
-              </label>
+              <label className="form__label">Address Line 2</label>
               <input
                 className="form__input"
-                id="register-password"
+                name="line2"
+                type="text"
+                placeholder="Optional"
+                onChange={registrationOnChange}
+                value={committeeRegistrationFormData.line2}
+              />
+            </div>
+
+            <div className="form__group">
+              <label className="form__label">Area / Locality</label>
+              <input
+                className="form__input"
+                name="area"
+                type="text"
+                placeholder="e.g., Ghodbunder Road"
+                onChange={registrationOnChange}
+                value={committeeRegistrationFormData.area}
+                required
+              />
+            </div>
+
+            <div className="form__group">
+              <label className="form__label">City</label>
+              <input
+                className="form__input"
+                name="city"
+                type="text"
+                onChange={registrationOnChange}
+                value={committeeRegistrationFormData.city}
+                required
+              />
+            </div>
+
+            <div className="form__group">
+              <label className="form__label">District</label>
+              <input
+                className="form__input"
+                name="district"
+                type="text"
+                onChange={registrationOnChange}
+                value={committeeRegistrationFormData.district}
+              />
+            </div>
+
+            <div className="form__group">
+              <label className="form__label">State</label>
+              <input
+                className="form__input"
+                name="state"
+                type="text"
+                onChange={registrationOnChange}
+                value={committeeRegistrationFormData.state}
+                required
+              />
+            </div>
+
+            <div className="form__group">
+              <label className="form__label">Pincode</label>
+              <input
+                className="form__input"
+                name="pincode"
+                type="text"
+                onChange={registrationOnChange}
+                value={committeeRegistrationFormData.pincode}
+                required
+              />
+            </div>
+
+            <div className="form__group">
+              <label className="form__label">Landmark (Optional)</label>
+              <input
+                className="form__input"
+                name="landmark"
+                type="text"
+                onChange={registrationOnChange}
+                value={committeeRegistrationFormData.landmark}
+              />
+            </div>
+
+            {/* Password */}
+            <div className="form__group">
+              <label className="form__label">Password</label>
+              <input
+                className="form__input"
                 name="password"
                 type="password"
                 placeholder="••••••••"
@@ -256,12 +385,9 @@ function CommitteeForms() {
             </div>
 
             <div className="form__group">
-              <label className="form__label" htmlFor="confirm-password">
-                Confirm Password
-              </label>
+              <label className="form__label">Confirm Password</label>
               <input
                 className="form__input"
-                id="confirm-password"
                 name="confirmPassword"
                 type="password"
                 placeholder="••••••••"
@@ -272,7 +398,7 @@ function CommitteeForms() {
             </div>
 
             <button type="submit" className="btn btn--primary">
-              Register
+              Register Committee
             </button>
           </form>
         )}
@@ -314,6 +440,79 @@ function CommitteeForms() {
             <button type="submit" className="btn btn--primary">
               Login
             </button>
+          </form>
+        )}
+
+        {activeTab === "status" && (
+          <form className="committee-form" onSubmit={handleStatusCheck}>
+            <div className="form__group">
+              <label className="form__label">Enter Committee ID</label>
+              <input
+                className="form__input"
+                type="text"
+                placeholder="Enter your Committee ID"
+                value={statusCheckId}
+                onChange={(e) => setStatusCheckId(e.target.value)}
+                required
+              />
+            </div>
+
+            <button type="submit" className="btn btn--primary">
+              Check Status
+            </button>
+
+            {statusResult && (
+              <div
+                className="status-card"
+                style={{
+                  marginTop: "1.5rem",
+                  padding: "1.2rem",
+                  borderRadius: "8px",
+                  backgroundColor: "#f5f7fa",
+                  border: "1px solid #dfe3e8",
+                  lineHeight: "1.6",
+                }}
+              >
+                <h3 style={{ marginBottom: "0.5rem", color: "#0a6847" }}>
+                  Committee Status
+                </h3>
+
+                <p>
+                  <strong>Committee Name:</strong> {statusResult.committeeName}
+                </p>
+
+                <p>
+                  <strong>Status:</strong>{" "}
+                  <span
+                    style={{
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                      color: "white",
+                      backgroundColor:
+                        statusResult.committeeStatus === "APPROVED"
+                          ? "#28a745"
+                          : statusResult.committeeStatus === "REJECTED"
+                          ? "#dc3545"
+                          : statusResult.committeeStatus === "UNDER_PROCESS"
+                          ? "#17a2b8"
+                          : "#ffc107", // PENDING
+                    }}
+                  >
+                    {statusResult.committeeStatus}
+                  </span>
+                </p>
+
+                <p>
+                  <strong>KYC Verified:</strong>{" "}
+                  {statusResult.isKycVerified ? "Yes ✔️" : "No ❌"}
+                </p>
+
+                <p>
+                  <strong>Committee Verified:</strong>{" "}
+                  {statusResult.isCommitteeVerified ? "Yes ✔️" : "No ❌"}
+                </p>
+              </div>
+            )}
           </form>
         )}
       </div>

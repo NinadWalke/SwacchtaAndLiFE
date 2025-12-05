@@ -23,7 +23,7 @@ export default function Navbar() {
     { to: "/signup", label: "Signup", type: "guest" },
     { to: "/profile", label: "Profile", type: "user" },
     { to: "/upload", label: "Upload", type: "user" },
-    { to: "/leaderboard", label: "Leaderboard", type: "user" },
+    { to: "/osp", label: "OSP", type: "user" },
     // Grouping other links for potential future dropdown
     { to: "/events", label: "Events", type: "user" },
     { to: "/committee", label: "Committee", type: "user" },
@@ -46,11 +46,11 @@ export default function Navbar() {
         <Link to="/" className="navbar__brand">
           {/* Suggestion: Host your own SVG logo for better performance and quality */}
           <img
-            src="https://img.icons8.com/color/48/000000/recycle.png"
+            src="Logo.png"
             alt="Swacchta&Life Logo"
             className="brand__logo"
           />
-          <h1 className="brand__title">Swacchta&Life</h1>
+          {/* <h1 className="brand__title">Green Sathi</h1> */}
         </Link>
 
         {/* Navigation Links */}

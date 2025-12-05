@@ -4,7 +4,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/axiosConfig";
-import "./OfficialsDashboard.css"; // Import the new stylesheet
+import "./OfficialsDashboard.css";
 
 // Custom CSS-based marker icons
 const createMarkerIcon = (status) => {
@@ -20,7 +20,13 @@ export default function OfficialsDashboard() {
   const navigate = useNavigate();
   const [allReports, setAllReports] = useState([]);
   const [events, setEvents] = useState([]);
-  const [location, setLocation] = useState({ latitude: null, longitude: null }); // state for user location
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
+
+  // OSP Selection State
+  const [showOspSelection, setShowOspSelection] = useState(false);
+  const [activeOsps, setActiveOsps] = useState([]);
+  const [selectedReportId, setSelectedReportId] = useState(null);
+  const [loadingOsps, setLoadingOsps] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -79,21 +85,76 @@ export default function OfficialsDashboard() {
   }, []);
 
   const toggleStatusDB = async (reportId) => {
+    setLoading(true);
     try {
       const res = await api.post(`/reports/${reportId}`);
-      const newStatus = res.data.status;
+      const { status, newReports } = res.data;
+
+      if (status === "deleted") {
+        setAllReports(newReports);
+        return;
+      }
+
       setAllReports((prevReports) =>
-        prevReports.map((r) =>
-          r._id === reportId ? { ...r, status: newStatus } : r
-        )
+        prevReports.map((r) => (r._id === reportId ? { ...r, status } : r))
       );
     } catch (err) {
       console.error("Error toggling status:", err);
       alert("Failed to update report status. Try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Memoize stats to avoid recalculating on every render
+  const openOspSelection = async (reportId) => {
+    setLoadingOsps(true);
+    setShowOspSelection(true);
+    setSelectedReportId(reportId);
+    
+    try {
+      const res = await api.get("/osp/active");
+      setActiveOsps(res.data.osps);
+    } catch (err) {
+      console.error("Failed to load active OSPs:", err);
+      alert("Failed to load available OSPs.");
+      setShowOspSelection(false);
+    } finally {
+      setLoadingOsps(false);
+    }
+  };
+
+  const assignReportToOsp = async (ospId) => {
+    try {
+      const res = await api.post(`/reports/${selectedReportId}/assign`, {
+        ospId,
+      });
+
+      setAllReports((prev) =>
+        prev.map((r) =>
+          r._id === selectedReportId
+            ? { ...r, status: "allotted", assignedTo: ospId }
+            : r
+        )
+      );
+
+      // Close OSP selection and go back to reports view
+      setShowOspSelection(false);
+      setSelectedReportId(null);
+      setActiveOsps([]);
+
+      alert("Report successfully allotted to OSP!");
+    } catch (err) {
+      console.error("Error assigning report:", err);
+      alert("Failed to allot report.");
+    }
+  };
+
+  const cancelOspSelection = () => {
+    setShowOspSelection(false);
+    setSelectedReportId(null);
+    setActiveOsps([]);
+  };
+
   const stats = useMemo(() => {
     const total = allReports.length;
     const pending = allReports.filter((r) => r.status === "pending").length;
@@ -101,7 +162,6 @@ export default function OfficialsDashboard() {
     return { total, pending, resolved };
   }, [allReports]);
 
-  // Use real data for the map, filtering for valid coordinates
   const mapReports = allReports.filter(
     (r) =>
       r?.location?.coordinates &&
@@ -111,7 +171,12 @@ export default function OfficialsDashboard() {
       typeof r.location.coordinates[1] === "number"
   );
 
-  if (loading) return <div className="loading-state">Loading Dashboard...</div>;
+  // Get the selected report details
+  const selectedReport = allReports.find((r) => r._id === selectedReportId);
+
+  if (loading && allReports.length === 0) {
+    return <div className="loading-state">Loading Dashboard...</div>;
+  }
 
   return (
     <main className="dashboard-page">
@@ -166,7 +231,10 @@ export default function OfficialsDashboard() {
           {mapReports.map((r) => (
             <Marker
               key={r._id}
-              position={[r.location.coordinates[1], r.location.coordinates[0]]}
+              position={[
+                r.location.coordinates[1],
+                r.location.coordinates[0],
+              ]}
               icon={createMarkerIcon(r.status)}
             >
               <Popup>
@@ -225,7 +293,6 @@ export default function OfficialsDashboard() {
                     <strong>Attendees:</strong> {ev.registeredUsers.length}
                   </span>
                   <br />
-
                   <button
                     className="btn btn--secondary"
                     style={{ marginTop: "10px" }}
@@ -240,56 +307,124 @@ export default function OfficialsDashboard() {
         </MapContainer>
       </section>
 
-      {/* --- TABLE MODULE --- */}
+      {/* --- REPORTS TABLE OR OSP SELECTION --- */}
       <section className="dashboard-module">
-        <h2 className="module-header">All Reports</h2>
-        <div className="table-container">
-          <table className="reports-table">
-            <thead>
-              <tr>
-                <th>Report ID</th>
-                <th>Time</th>
-                <th>Status</th>
-                <th>Action</th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allReports.map((r) => (
-                <tr key={r._id}>
-                  <td>{r._id.slice(-6)}...</td>
-                  <td>{new Date(r.time).toLocaleString()}</td>
-                  <td>
-                    <span className={`status-badge status--${r.status}`}>
-                      {r.status}
-                    </span>
-                  </td>
-                  <td>
-                    <button
-                      className="btn btn--secondary"
-                      onClick={() => toggleStatusDB(r._id)}
-                      disabled={r.status === "resolved"}
-                    >
-                      {r.status === "pending"
-                        ? "Mark Allotted"
-                        : r.status === "allotted"
-                        ? "Mark Resolved"
-                        : "Resolved"}
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      className="btn btn--primary"
-                      onClick={() => navigate(`/officials/report/${r._id}`)}
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {!showOspSelection ? (
+          <>
+            <h2 className="module-header">All Reports</h2>
+            <div className="table-container">
+              <table className="reports-table">
+                <thead>
+                  <tr>
+                    <th>Report ID</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {allReports.map((r) => (
+                    <tr key={r._id}>
+                      <td>{r._id.slice(-6)}...</td>
+                      <td>{new Date(r.time).toLocaleString()}</td>
+                      <td>
+                        <span className={`status-badge status--${r.status}`}>
+                          {r.status}
+                        </span>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn--secondary"
+                          onClick={() =>
+                            r.status === "pending"
+                              ? openOspSelection(r._id)
+                              : toggleStatusDB(r._id)
+                          }
+                          disabled={loading}
+                        >
+                          {loading
+                            ? "Processing"
+                            : r.status === "pending"
+                            ? "Allot Report"
+                            : r.status === "allotted"
+                            ? "Mark Resolved"
+                            : "Close Report"}
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn--primary"
+                          onClick={() => navigate(`/officials/report/${r._id}`)}
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        ) : (
+          <div className="osp-selection-container">
+            <div className="osp-selection-header">
+              <button className="btn btn--back" onClick={cancelOspSelection}>
+                ← Back to Reports
+              </button>
+              <h2 className="module-header">Assign Report to OSP</h2>
+            </div>
+
+            {selectedReport && (
+              <div className="selected-report-info">
+                <h3>Report Details</h3>
+                <p>
+                  <strong>Report ID:</strong> {selectedReport._id.slice(-6)}
+                </p>
+                <p>
+                  <strong>Time:</strong>{" "}
+                  {new Date(selectedReport.time).toLocaleString()}
+                </p>
+                <p>
+                  <strong>Status:</strong>{" "}
+                  <span
+                    className={`status-badge status--${selectedReport.status}`}
+                  >
+                    {selectedReport.status}
+                  </span>
+                </p>
+              </div>
+            )}
+
+            <div className="osp-selection-content">
+              <h3>Available OSPs</h3>
+              {loadingOsps ? (
+                <p className="loading-text">Loading OSPs...</p>
+              ) : activeOsps.length === 0 ? (
+                <p className="no-osps-message">No OSPs are currently on duty.</p>
+              ) : (
+                <div className="osp-grid">
+                  {activeOsps.map((osp) => (
+                    <div key={osp._id} className="osp-card">
+                      <div className="osp-info">
+                        <h4 className="osp-name">
+                          {osp.fname} {osp.lname}
+                        </h4>
+                        <p className="osp-phone">{osp.phone}</p>
+                      </div>
+                      <button
+                        className="btn btn--primary"
+                        onClick={() => assignReportToOsp(osp._id)}
+                      >
+                        Assign
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </section>
     </main>
   );
