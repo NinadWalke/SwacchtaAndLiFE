@@ -56,7 +56,7 @@
 .event-details__date-badge {
   position: absolute;
   left: 8%;
-  bottom: -34px;
+  bottom: 10px;
   background-color: var(--color-white);
   border-radius: 14px;
   padding: 0.7rem 0.9rem;

@@ -8,16 +8,25 @@ import EventSignUpForm from "./EventSignUpForm";
 function EventDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
-
   const [event, setEvent] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [showSignUp, setShowSignUp] = useState(false);
+  const [isUserSignedUp, setIsUserSignedUp] = useState(false);
+  const { user } = useAuth();
+  // loading states
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
+  const checkUserSignedUp = (eventObj) => {
+    return eventObj.registrations?.some(
+      (reg) => reg.user === user?._id || reg.user?._id === user?._id
+    );
+  };
   useEffect(() => {
     const fetchEvent = async () => {
       try {
         const res = await api.get(`/events/${id}`);
+        const isUserSignedUpCheck = checkUserSignedUp(res.data);
+        setIsUserSignedUp(isUserSignedUpCheck);
         setEvent(res.data);
       } catch (err) {
         console.error(err);
@@ -44,22 +53,50 @@ function EventDetail() {
 
   const handleSignUp = async (formData) => {
     try {
-      const res = await api.post(`/events/${id}`, formData || {});
-      setEvent(res.data.event || res.data);
+      setSubmitting(true);
+
+      // POST /events/:id
+      const res = await api.post(`/events/${id}`, formData);
+
+      const isUserSignedUpCheck = checkUserSignedUp(res.data.event);
+      setIsUserSignedUp(isUserSignedUpCheck);
+
+      // Backend returns: { message, registration, event }
+      const updatedEvent = res.data.event || res.data;
+
+      setEvent(updatedEvent);
       setShowSignUp(false);
     } catch (err) {
-      console.error(err);
-      alert("Failed to register. Please try again.");
+      console.error("Sign-up failed:", err);
+
+      const msg =
+        err.response?.data?.message || "Failed to register. Please try again.";
+
+      alert(msg);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleUnregister = async () => {
     try {
+      setSubmitting(true);
+
       const res = await api.post(`/events/${id}/unregister`);
-      setEvent(res.data.event || res.data);
+      const isUserSignedUpCheck = checkUserSignedUp(res.data.event);
+      setIsUserSignedUp(isUserSignedUpCheck);
+      const updatedEvent = res.data.event || res.data;
+
+      setEvent(updatedEvent);
     } catch (err) {
-      console.error(err);
-      alert("Failed to unregister. Please try again.");
+      console.error("Unregister failed:", err);
+      const msg =
+        err.response?.data?.message ||
+        "Failed to unregister. Please try again.";
+
+      alert(msg);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -74,8 +111,6 @@ function EventDetail() {
   if (!event) return null;
 
   const { day, month, time } = formatDate(event.eventDateTime);
-  const isRegistered =
-    user && event.registeredUsers && event.registeredUsers.includes(user._id);
 
   return (
     <main className="event-details-page">
@@ -139,8 +174,8 @@ function EventDetail() {
           <aside className="event-details__sidebar">
             <div className="event-details__card">
               <p className="event-details__stat">
-                <strong>{event.registeredUsers.length}</strong> Registered
-                volunteers
+                <strong>{event.registrations.length}</strong>
+                Registered volunteers
               </p>
 
               <p className="event-details__small">
@@ -148,19 +183,21 @@ function EventDetail() {
                 may be provided by organizers.
               </p>
 
-              {isRegistered ? (
+              {isUserSignedUp ? (
                 <button
                   className="btn btn--secondary full-width"
                   onClick={handleUnregister}
+                  disabled={submitting}
                 >
-                  Unregister
+                  {submitting ? "Unregistering..." : "Unregister"}
                 </button>
               ) : (
                 <button
                   className="btn btn--primary full-width"
                   onClick={() => setShowSignUp(true)}
+                  disabled={submitting}
                 >
-                  Sign Up
+                  {submitting ? "Registering..." : "Sign Up"}
                 </button>
               )}
 
