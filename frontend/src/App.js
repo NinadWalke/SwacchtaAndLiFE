@@ -20,6 +20,7 @@ import MyReports from "./pages/profile/MyReports.jsx";
 
 // Services
 import Upload from "./pages/services/report/Upload.jsx";
+import OspDashboard from "./pages/osp/OspDashboard.jsx";
 
 // Committee Section
 import CommitteeForms from "./pages/services/committee/CommitteeForms.jsx";
@@ -59,6 +60,7 @@ function App() {
             <Route path="/profile/reports" element={<MyReports />} />
             {/* -- Core Routes -- */}
             <Route path="/upload" element={<Upload />} />
+            <Route path="/osp" element={<OspDashboard />} />
             {/* - Committee Routes - */}
             <Route path="/committee" element={<CommitteeForms />} />
             <Route
