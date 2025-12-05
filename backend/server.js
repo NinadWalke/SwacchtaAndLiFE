@@ -20,6 +20,7 @@ const reportsRouter = require("./routes/reportsRouter.js");
 const eventsRouter = require('./routes/eventsRouter.js');
 const committeeRouter = require('./routes/committeeRouter.js');
 const shopRouter = require('./routes/shopRouter.js');
+const ospRouter = require('./routes/ospRouter.js');
 
 // --- Models ---
 const User = require("./schemas/User.js");
@@ -101,6 +102,7 @@ app.use('/reports', reportsRouter);
 app.use('/events', eventsRouter);
 app.use('/committees', committeeRouter);
 app.use('/shop', shopRouter);
+app.use('/osp', ospRouter);
 
 // x. Default Route
 app.get("/", async (req, res) => {

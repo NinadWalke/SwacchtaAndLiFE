@@ -5,184 +5,340 @@
 
 /* 1. THEME & FONT VARIABLES */
 :root {
-    --font-heading: 'Poppins', sans-serif;
-    --font-body: 'Lato', sans-serif;
-    --color-background: #f8f9fa;
-    --color-text: #34495e;
-    --color-primary-green: #0a6847;
-    --color-accent-green: #77b0aa;
-    --color-white: #ffffff;
-    --color-border: #dbe2e9;
-    --color-pending: #f39c12; /* Orange for pending */
-    --color-allotted: #3498db; /* Blue for allotted */
-    --color-resolved: #2ecc71; /* Green for resolved */
-    --color-event: grey;
-    --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* 2. PAGE & HEADER LAYOUT */
-  .dashboard-page {
-    background-color: var(--color-background);
-    min-height: 100vh;
-    padding: 2rem;
-  }
-  
-  .dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  
-  .dashboard-header__title {
-    font-family: var(--font-heading);
-    font-size: 2.2rem;
-    color: var(--color-primary-green);
-    margin: 0;
-  }
-  
-  /* 3. STATS CARDS
-     - A key feature for any dashboard, providing quick insights.
-  */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  
-  .stat-card {
-    background-color: var(--color-white);
-    padding: 1.5rem;
-    border-radius: var(--border-radius, 12px);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  }
-  
-  .stat-card__title {
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 0.5rem;
-  }
-  
-  .stat-card__value {
-    font-family: var(--font-heading);
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--color-text);
-  }
-  
-  /* 4. DASHBOARD MODULES (for Map and Table) */
-  .dashboard-module {
-    background-color: var(--color-white);
-    padding: 1.5rem;
-    border-radius: var(--border-radius, 12px);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    margin-bottom: 2rem;
-  }
-  
-  .module-header {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    color: var(--color-primary-green);
-    margin-bottom: 1.5rem;
-  }
-  
-  /* 5. MAP & POPUP STYLING */
-  .leaflet-container {
-    border-radius: 8px;
-  }
-  /* Themed popup */
-  .leaflet-popup .leaflet-popup-content-wrapper {
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-  }
-  .leaflet-popup .leaflet-popup-content {
-    font-family: var(--font-body);
-  }
-  
-  /* Custom CSS-based map markers */
-  .marker-pin {
-    width: 30px;
-    height: 30px;
-    border-radius: 50% 50% 90% 90%;
-    background: var(--color-pending);
-    position: absolute;
-    transform: rotate(-45deg);
-    left: 50%;
-    top: 50%;
-    margin: -15px 0 0 -15px;
-    border: 2px solid var(--color-white);
-    box-shadow: 0 0 5px rgba(0,0,0,0.5);
-  }
-  .marker-pin::after {
-    content: '';
-    width: 14px;
-    height: 14px;
-    margin: 6px 0 0 6px;
-    background: var(--color-white);
-    position: absolute;
-    border-radius: 50%;
-  }
-  .marker-pin.allotted { background: var(--color-allotted); }
-  .marker-pin.resolved { background: var(--color-resolved); }
-  .marker-pin.event { background: var(--color-event); }
-  
-  /* 6. TABLE STYLING */
-  .table-container {
-    overflow-x: auto; /* Ensures table is responsive on small screens */
-  }
-  
-  .reports-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-  }
-  
-  .reports-table th, .reports-table td {
-    padding: 12px 15px;
-    text-align: left;
-  }
-  
-  .reports-table thead {
-    background-color: #f5f7fa;
-  }
-  
-  .reports-table th {
-    font-family: var(--font-heading);
-    font-weight: 600;
-    color: var(--color-text);
-  }
-  
-  .reports-table tbody tr {
-    border-bottom: 1px solid var(--color-border);
-    transition: background-color 0.2s ease;
-  }
-  
-  .reports-table tbody tr:hover {
-    background-color: var(--color-highlight-bg, #f0fdf4);
-  }
-  
-  /* Status Badges for easy scanning */
-  .status-badge {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-weight: 600;
-    color: var(--color-white);
-    font-size: 0.8rem;
-    text-transform: capitalize;
-  }
-  .status--pending { background-color: var(--color-pending); }
-  .status--allotted { background-color: var(--color-allotted); }
-  .status--resolved { background-color: var(--color-resolved); }
-  
-  /* Button styles */
-  .btn { padding: 8px 16px; font-family: var(--font-heading); font-weight: 600; border-radius: 8px; border: 2px solid transparent; cursor: pointer; transition: var(--transition-smooth); }
-  .btn--primary { background-color: var(--color-accent-green); color: var(--color-white); }
-  .btn--primary:hover { background-color: var(--color-primary-green); }
-  .btn--secondary { background-color: var(--color-white); color: var(--color-accent-green); border-color: var(--color-accent-green); }
-  .btn--secondary:hover { background-color: var(--color-accent-green); color: var(--color-white); }
-  .btn:disabled { background-color: #ccc; cursor: not-allowed; border-color: #ccc; }
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Lato', sans-serif;
+  --color-background: #f8f9fa;
+  --color-text: #34495e;
+  --color-primary-green: #0a6847;
+  --color-accent-green: #77b0aa;
+  --color-white: #ffffff;
+  --color-border: #dbe2e9;
+  --color-pending: #f39c12;
+  --color-allotted: #3498db;
+  --color-resolved: #2ecc71;
+  --color-event: grey;
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 2. PAGE & HEADER LAYOUT */
+.dashboard-page {
+  background-color: var(--color-background);
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-header__title {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  color: var(--color-primary-green);
+  margin: 0;
+}
+
+/* 3. STATS CARDS */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background-color: var(--color-white);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.stat-card__title {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card__value {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* 4. DASHBOARD MODULES */
+.dashboard-module {
+  background-color: var(--color-white);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 2rem;
+}
+
+.module-header {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--color-primary-green);
+  margin-bottom: 1.5rem;
+}
+
+/* 5. MAP & POPUP STYLING */
+.leaflet-container {
+  border-radius: 8px;
+  z-index: 1;
+}
+
+.leaflet-popup .leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.leaflet-popup .leaflet-popup-content {
+  font-family: var(--font-body);
+}
+
+/* Custom CSS-based map markers */
+.marker-pin {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 50% 90% 90%;
+  background: var(--color-pending);
+  position: absolute;
+  transform: rotate(-45deg);
+  left: 50%;
+  top: 50%;
+  margin: -15px 0 0 -15px;
+  border: 2px solid var(--color-white);
+  box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+.marker-pin::after {
+  content: '';
+  width: 14px;
+  height: 14px;
+  margin: 6px 0 0 6px;
+  background: var(--color-white);
+  position: absolute;
+  border-radius: 50%;
+}
+
+.marker-pin.allotted { background: var(--color-allotted); }
+.marker-pin.resolved { background: var(--color-resolved); }
+.marker-pin.event { background: var(--color-event); }
+
+/* 6. TABLE STYLING */
+.table-container {
+  overflow-x: auto;
+}
+
+.reports-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.reports-table th, .reports-table td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.reports-table thead {
+  background-color: #f5f7fa;
+}
+
+.reports-table th {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.reports-table tbody tr {
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.2s ease;
+}
+
+.reports-table tbody tr:hover {
+  background-color: #f0fdf4;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  color: var(--color-white);
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.status--pending { background-color: var(--color-pending); }
+.status--allotted { background-color: var(--color-allotted); }
+.status--resolved { background-color: var(--color-resolved); }
+
+/* Button styles */
+.btn {
+  padding: 8px 16px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn--primary {
+  background-color: var(--color-accent-green);
+  color: var(--color-white);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-primary-green);
+}
+
+.btn--secondary {
+  background-color: var(--color-white);
+  color: var(--color-accent-green);
+  border-color: var(--color-accent-green);
+}
+
+.btn--secondary:hover {
+  background-color: var(--color-accent-green);
+  color: var(--color-white);
+}
+
+.btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  border-color: #ccc;
+}
+
+.btn--back {
+  background-color: var(--color-white);
+  color: var(--color-text);
+  border-color: var(--color-border);
+  padding: 8px 16px;
+  font-size: 0.95rem;
+}
+
+.btn--back:hover {
+  background-color: var(--color-background);
+  border-color: var(--color-text);
+}
+
+/* 7. OSP SELECTION INLINE VIEW */
+.osp-selection-container {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.osp-selection-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.selected-report-info {
+  background-color: #f0fdf4;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--color-primary-green);
+  margin-bottom: 2rem;
+}
+
+.selected-report-info h3 {
+  font-family: var(--font-heading);
+  color: var(--color-primary-green);
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.selected-report-info p {
+  margin: 0.5rem 0;
+  color: var(--color-text);
+}
+
+.osp-selection-content h3 {
+  font-family: var(--font-heading);
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+}
+
+.loading-text {
+  text-align: center;
+  color: #666;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.no-osps-message {
+  text-align: center;
+  color: #999;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  font-style: italic;
+}
+
+.osp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.osp-card {
+  background-color: var(--color-white);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 2px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.osp-card:hover {
+  border-color: var(--color-accent-green);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.osp-info {
+  flex: 1;
+}
+
+.osp-name {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: var(--color-text);
+  margin: 0 0 0.5rem 0;
+}
+
+.osp-phone {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Loading state */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 1.2rem;
+  color: var(--color-text);
+}

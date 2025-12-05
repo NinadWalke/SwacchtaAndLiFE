@@ -116,7 +116,8 @@ const userSchema = new mongoose.Schema(
     cart: {
       type: [cartItemSchema],
       default: []
-    }
+    },
+    isOnDuty: { type: Boolean, default: false }
   },
   { timestamps: true }
 );
