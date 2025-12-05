@@ -14,11 +14,8 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    registeredUsers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
+    registrations: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "EventRegistration" },
     ],
     eventDateTime: {
       type: Date,
@@ -45,8 +42,8 @@ const eventSchema = new mongoose.Schema(
       eventActive: {
         type: Boolean,
         default: true,
-        required: true
-      }
+        required: true,
+      },
     },
   },
   { timestamps: true }

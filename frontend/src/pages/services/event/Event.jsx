@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Event.css";
 import api from "../../../utils/axiosConfig";
 import { useAuth } from "../../../components/AuthContext";
@@ -111,14 +111,15 @@ function Event() {
                       <span className="meta__item">
                         📍{" "}
                         {event?.eventLocationData?.coordinates?.length === 2 ? (
-                          <a
+                          <Link
                             href={`https://www.google.com/maps?q=${event.eventLocationData.coordinates[1]},${event.eventLocationData.coordinates[0]}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()} // prevent card navigation
+                            style={{}}
                           >
                             {event.eventLocation}
-                          </a>
+                          </Link>
                         ) : (
                           event.eventLocation || "Location not available"
                         )}
@@ -138,21 +139,6 @@ function Event() {
                     <span className="footer__attendees text-center me-3">
                       {event.registeredUsers.length} Registered
                     </span>
-                    {isRegistered ? (
-                      <button
-                        className="btn btn--secondary"
-                        onClick={(e) => handleUnregister(event._id, e)}
-                      >
-                        Unregister
-                      </button>
-                    ) : (
-                      <button
-                        className="btn btn--primary"
-                        onClick={(e) => handleSignUp(event._id, e)}
-                      >
-                        Sign Up
-                      </button>
-                    )}
                   </div>
                 </div>
               );

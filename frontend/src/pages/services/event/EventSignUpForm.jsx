@@ -3,22 +3,20 @@ import "./EventSignUpForm.css";
 
 function EventSignUpForm({ event, onClose, onSubmit }) {
   const [formValues, setFormValues] = useState({
-    name: "",
-    phone: "",
     participants: "",
-    idProof: null,
+    experience: "",
     notes: "",
+    consent: false
   });
-
   const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
-  const { name, value, type, files } = e.target;
+    const { name, value, type, files } = e.target;
 
-  setFormValues((prev) => ({
-    ...prev,
-    [name]: type === "file" ? files[0] : value, // 👈 handle file & normal inputs
-  }));
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: type === "file" ? files[0] : value, // 👈 handle file & normal inputs
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -33,28 +31,10 @@ function EventSignUpForm({ event, onClose, onSubmit }) {
     }
   };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-
-    if (file && file.size > 2 * 1024 * 1024) {
-      alert("File size exceeds 2MB. Please upload a smaller file.");
-      return;
-    }
-
-    setFormValues((prev) => ({
-      ...prev,
-      idProof: file,
-    }));
-  };
-
   return (
     <div className="event-signup__backdrop">
       <div className="event-signup__card">
-        <button
-          className="event-signup__close"
-          type="button"
-          onClick={onClose}
-        >
+        <button className="event-signup__close" type="button" onClick={onClose}>
           ✕
         </button>
 
@@ -65,49 +45,7 @@ function EventSignUpForm({ event, onClose, onSubmit }) {
         </p>
 
         <form className="event-signup__form" onSubmit={handleSubmit}>
-          <div className="event-signup__field">
-            <label htmlFor="name">Name</label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              placeholder="Enter your Name"
-              value={formValues.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="event-signup__field">
-            <label htmlFor="phone">Phone number </label>
-            <input
-              id="phone"
-              name="phone"
-              type="tel"
-              placeholder="Enter your phone number"
-              value={formValues.phone}
-              onChange={handleChange}
-              required
-            />
-          </div>
 
-          <div className="event-signup__field">
-              <label htmlFor="gender">Gender</label>
-              <select
-                id="gender"
-                name="gender"
-                value={formValues.gender}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select your gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Prefer not to say">Prefer not to say</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-          
           <div className="event-signup__field">
             <label htmlFor="participants">No. of Participants</label>
             <input
@@ -121,28 +59,15 @@ function EventSignUpForm({ event, onClose, onSubmit }) {
           </div>
 
           <div className="event-signup__field">
-        <label htmlFor="idProof">Upload ID Proof (Aadhar / College ID / PAN)</label>
-        <input
-          type="file"
-          id="idProof"
-          name="idProof"
-          accept=".jpg,.jpeg,.png,.pdf"
-          onChange={handleChange}
-          required
-        />
-        <small style={{ fontSize: "12px", color: "#777" }}>
-          Allowed formats: JPG, PNG, PDF — Max size: 2MB
-        </small>
-      </div>
-
-      <div className="event-signup__field">
-            <label htmlFor="experince">Do you have previous volunteering experience?</label>
+            <label htmlFor="experience">
+              Do you have previous volunteering experience?
+            </label>
             <textarea
-              id="experince"
-              name="experince"
+              id="experience"
+              name="experience"
               rows="3"
               placeholder="Describe your previous experience "
-              value={formValues.experince}
+              value={formValues.experience}
               onChange={handleChange}
             />
           </div>
@@ -170,10 +95,9 @@ function EventSignUpForm({ event, onClose, onSubmit }) {
                 }
                 required
               />
-               I agree to participate responsibly and follow event instructions.
+              I agree to participate responsibly and follow event instructions.
             </label>
           </div>
-
 
           <div className="event-signup__actions">
             <button

@@ -181,7 +181,7 @@ export default function Home() {
                     <button
                       className="btn btn--secondary"
                       style={{ marginTop: "10px" }}
-                      onClick={() => navigate(`/officials/event/${ev._id}`)}
+                      onClick={() => navigate(`/events/${ev._id}`)}
                     >
                       View Details
                     </button>
