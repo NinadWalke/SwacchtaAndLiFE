@@ -18,11 +18,14 @@ const uploadFields = uploadImgCloudinary.fields([
 // Get all reports
 router.get("/", wrapAsync(reportsController.getAllReports));
 
+// Create a new report (with images)
+router.post("/", uploadFields, wrapAsync(reportsController.createReport));
+
 // Get reports created by logged-in user
 router.get("/my-reports", wrapAsync(reportsController.getMyReports));
 
-// Create a new report (with images)
-router.post("/", uploadFields, wrapAsync(reportsController.createReport));
+// Get all reports assigned to the logged-in OSP
+router.get("/assigned", wrapAsync(reportsController.getReportsAssignedToOsp));
 
 // Get report by ID
 router.get("/:id", wrapAsync(reportsController.getReportById));
@@ -30,14 +33,11 @@ router.get("/:id", wrapAsync(reportsController.getReportById));
 // Toggle report status
 router.post("/:id", wrapAsync(reportsController.updateReportStatus));
 
-// Collect all cars to choose from
-router.get("/:id/cars" , wrapAsync(reportsController.getAllCars));
+// Assign a report to an OSP (official action)
+router.post("/:id/assign", wrapAsync(reportsController.assignReportToOsp));
 
-// Allot report to a car
-router.post("/:id/assign-report/:cid", wrapAsync(reportsController.allotReportToCar));
-
-// Mark the report as resolved by the OSP
-router.post("/:id/mark-resolved/:cid", wrapAsync(reportsController.markReportResolved));
+// OSP marks report resolved
+router.post("/:id/resolve", wrapAsync(reportsController.ospResolveReport));
 
 
 module.exports = router;
