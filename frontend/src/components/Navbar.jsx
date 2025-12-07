@@ -26,6 +26,7 @@ export default function Navbar() {
     { to: "/osp", label: "OSP", type: "user" },
     // Grouping other links for potential future dropdown
     { to: "/events", label: "Events", type: "user" },
+    { to: "/training", label: "Training", type: "user" },
     { to: "/committee", label: "Committee", type: "user" },
     { to: "/shop", label: "Shop", type: "user" },
     { to: "/officials", label: "Officials", type: "user" },

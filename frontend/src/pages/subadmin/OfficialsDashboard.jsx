@@ -291,7 +291,7 @@ export default function OfficialsDashboard() {
                     </span>
                     <br />
                     <span>
-                      <strong>Attendees:</strong> {ev.registeredUsers.length}
+                      <strong>Attendees:</strong> {ev?.registrations?.length}
                     </span>
                     <br />
                     <button

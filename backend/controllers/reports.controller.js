@@ -47,7 +47,7 @@ exports.createReport = async (req, res) => {
 
   // Add report to user records
   user.reports.push(newReport);
-  user.points += 15; // Scoring system
+  if(user.greenCoins) user.greenCoins += 15; // Scoring system
 
   await user.save();
   await newReport.save();

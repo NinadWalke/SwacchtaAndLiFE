@@ -1,0 +1,705 @@
+/* ============================================================================
+   GreenSync Training Page Styles - Premium Edition
+   ============================================================================ */
+
+:root {
+  --gs-primary: #ff6b6b;
+  --gs-primary-dark: #ff5252;
+  --gs-primary-light: #ff9999;
+  --gs-secondary: #4ecdc4;
+  --gs-accent: #ffe66d;
+  --gs-gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gs-gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gs-gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --gs-gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  --gs-gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  --gs-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --gs-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --gs-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+  --gs-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================================================
+   BASE CONTAINER & LAYOUT
+   ============================================================================ */
+.gs-training-container {
+  padding: 40px 20px;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+  min-height: 100vh;
+}
+
+/* ============================================================================
+   HEADER
+   ============================================================================ */
+.gs-training-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+  padding: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  box-shadow: var(--gs-shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.gs-training-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: gs-training-pulse 15s ease-in-out infinite;
+}
+
+@keyframes gs-training-pulse {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; }
+  50% { transform: scale(1.2) rotate(180deg); opacity: 0.6; }
+}
+
+.gs-training-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.5px;
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(90deg, #ffffff 0%, #ffeaa7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================================
+   MAIN CONTENT AREA
+   ============================================================================ */
+.gs-training-main {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+/* ============================================================================
+   SECTION STYLING
+   ============================================================================ */
+.gs-training-section {
+  width: 100%;
+  animation: gs-training-fade-in 0.6s ease-out;
+}
+
+@keyframes gs-training-fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.gs-training-section-heading {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2d3436;
+  margin: 0 0 30px 0;
+  position: relative;
+  padding-left: 20px;
+}
+
+.gs-training-section-heading::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 80%;
+  background: var(--gs-gradient-1);
+  border-radius: 3px;
+}
+
+/* ============================================================================
+   FLASHCARDS SECTION - STUNNING DESIGN
+   ============================================================================ */
+.gs-training-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 30px;
+  justify-items: center;
+  padding: 20px 0;
+}
+
+.gs-training-flash-card {
+  width: 240px;
+  height: 160px;
+  perspective: 1500px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gs-training-flash-card:hover {
+  transform: translateY(-10px) scale(1.02);
+}
+
+.gs-training-flash-card__front,
+.gs-training-flash-card__back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: var(--gs-shadow-lg);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.gs-training-flash-card__front {
+  background: var(--gs-gradient-2);
+  color: #ffffff;
+  position: relative;
+}
+
+.gs-training-flash-card__front::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 70%);
+  transform: rotate(45deg);
+  animation: gs-training-shine 3s infinite;
+}
+
+@keyframes gs-training-shine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.gs-training-flash-card:nth-child(2) .gs-training-flash-card__front {
+  background: var(--gs-gradient-3);
+}
+
+.gs-training-flash-card:nth-child(3) .gs-training-flash-card__front {
+  background: var(--gs-gradient-4);
+}
+
+.gs-training-flash-card:nth-child(4) .gs-training-flash-card__front {
+  background: var(--gs-gradient-5);
+}
+
+.gs-training-flash-card:nth-child(5) .gs-training-flash-card__front {
+  background: var(--gs-gradient-1);
+}
+
+.gs-training-flash-card:nth-child(6) .gs-training-flash-card__front {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+}
+
+.gs-training-flash-card__back {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: #ffffff;
+  transform: rotateY(180deg);
+}
+
+.gs-training-flash-card__title {
+  font-weight: 700;
+  font-size: 1.3rem;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.gs-training-flash-card__desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  font-weight: 400;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.gs-training-flash-card--flipped .gs-training-flash-card__front {
+  transform: rotateY(180deg);
+}
+
+.gs-training-flash-card--flipped .gs-training-flash-card__back {
+  transform: rotateY(0deg);
+}
+
+/* ============================================================================
+   QUIZ SECTION - PREMIUM INTERACTIVE DESIGN
+   ============================================================================ */
+.gs-training-quiz-start-btn {
+  padding: 16px 40px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--gs-gradient-2);
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--gs-shadow-md);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.gs-training-quiz-start-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.gs-training-quiz-start-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.gs-training-quiz-start-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: var(--gs-shadow-xl);
+}
+
+.gs-training-quiz-start-btn:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.gs-training-quiz-box {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  padding: 40px;
+  border-radius: 30px;
+  box-shadow: var(--gs-shadow-lg);
+  text-align: center;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.gs-training-quiz-box::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+  animation: gs-training-rotate 20s linear infinite;
+}
+
+@keyframes gs-training-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.gs-training-quiz-question {
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 30px;
+  color: #2d3436;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.gs-training-quiz-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.gs-training-quiz-option-btn {
+  padding: 14px 28px;
+  border-radius: 50px;
+  border: none;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--gs-shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.gs-training-quiz-option-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: translate(-50%, -50%);
+  transition: width 0.5s, height 0.5s;
+}
+
+.gs-training-quiz-option-btn:hover::after {
+  width: 200px;
+  height: 200px;
+}
+
+.gs-training-quiz-option-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: var(--gs-shadow-md);
+}
+
+.gs-training-quiz-option-btn:active {
+  transform: translateY(-1px);
+}
+
+.gs-training-quiz-result {
+  padding: 30px;
+  position: relative;
+  z-index: 1;
+}
+
+.gs-training-quiz-result__title {
+  font-size: 2rem;
+  font-weight: 800;
+  background: var(--gs-gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 20px 0;
+  animation: gs-training-bounce 0.6s ease-out;
+}
+
+@keyframes gs-training-bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.gs-training-quiz-result__score,
+.gs-training-quiz-result__coins {
+  font-size: 1.3rem;
+  color: #2d3436;
+  margin: 15px 0;
+  line-height: 1.8;
+  font-weight: 600;
+}
+
+.gs-training-quiz-result__coins {
+  font-size: 1.5rem;
+  color: #f39c12;
+  text-shadow: 0 2px 10px rgba(243, 156, 18, 0.3);
+}
+
+.gs-training-quiz-restart-btn {
+  margin-top: 25px;
+  padding: 14px 32px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--gs-gradient-4);
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--gs-shadow-md);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gs-training-quiz-restart-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: var(--gs-shadow-xl);
+}
+
+/* ============================================================================
+   CHATBOT - MODERN FLOATING DESIGN
+   ============================================================================ */
+.gs-training-chatbot {
+  position: relative;
+}
+
+.gs-training-chatbot-icon {
+  font-size: 2.5rem;
+  cursor: pointer;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  padding: 15px;
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--gs-shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.gs-training-chatbot-icon::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s;
+  animation: gs-training-pulse-ring 2s ease-out infinite;
+}
+
+@keyframes gs-training-pulse-ring {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+
+.gs-training-chatbot-icon:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: var(--gs-shadow-lg);
+}
+
+.gs-training-chatbot-icon:hover::before {
+  opacity: 1;
+}
+
+.gs-training-chatbot-icon:active {
+  transform: scale(0.95);
+}
+
+.gs-training-chatbox {
+  position: absolute;
+  top: 70px;
+  right: 0;
+  width: 380px;
+  max-height: 550px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 25px;
+  box-shadow: var(--gs-shadow-xl);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 999;
+  animation: gs-training-slide-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes gs-training-slide-in {
+  from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.gs-training-chat-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+}
+
+.gs-training-chat-message {
+  margin-bottom: 15px;
+  padding: 12px 18px;
+  border-radius: 20px;
+  max-width: 85%;
+  word-wrap: break-word;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  animation: gs-training-message-in 0.3s ease-out;
+  box-shadow: var(--gs-shadow-sm);
+}
+
+@keyframes gs-training-message-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.gs-training-chat-message--bot {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  text-align: left;
+  margin-right: auto;
+  border-bottom-left-radius: 5px;
+}
+
+.gs-training-chat-message--user {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: #ffffff;
+  text-align: right;
+  margin-left: auto;
+  border-bottom-right-radius: 5px;
+}
+
+.gs-training-chat-options {
+  display: flex;
+  justify-content: space-around;
+  padding: 15px;
+  border-top: 1px solid rgba(102, 126, 234, 0.1);
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+  gap: 10px;
+}
+
+.gs-training-chat-option-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 1;
+  box-shadow: var(--gs-shadow-sm);
+}
+
+.gs-training-chat-option-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--gs-shadow-md);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.gs-training-chat-option-btn:active {
+  transform: translateY(0);
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN - TABLET
+   ============================================================================ */
+@media (max-width: 768px) {
+  .gs-training-title {
+    font-size: 2rem;
+  }
+
+  .gs-training-section-heading {
+    font-size: 1.7rem;
+  }
+
+  .gs-training-cards-container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .gs-training-flash-card {
+    width: 200px;
+    height: 140px;
+  }
+
+  .gs-training-chatbox {
+    width: 340px;
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN - MOBILE
+   ============================================================================ */
+@media (max-width: 600px) {
+  .gs-training-container {
+    padding: 20px 15px;
+  }
+
+  .gs-training-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 25px;
+  }
+
+  .gs-training-title {
+    font-size: 1.8rem;
+  }
+
+  .gs-training-chatbot {
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    z-index: 1000;
+  }
+
+  .gs-training-chatbox {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: calc(100vw - 40px);
+    max-width: 380px;
+  }
+
+  .gs-training-cards-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .gs-training-flash-card {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .gs-training-quiz-options {
+    flex-direction: column;
+  }
+
+  .gs-training-quiz-option-btn {
+    width: 100%;
+  }
+
+  .gs-training-chat-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .gs-training-chat-option-btn {
+    width: 100%;
+  }
+}
+
+/* ============================================================================
+   ACCESSIBILITY & FOCUS STATES
+   ============================================================================ */
+.gs-training-quiz-start-btn:focus,
+.gs-training-quiz-option-btn:focus,
+.gs-training-quiz-restart-btn:focus,
+.gs-training-chat-option-btn:focus,
+.gs-training-chatbot-icon:focus {
+  outline: 3px solid #667eea;
+  outline-offset: 3px;
+}
+
+/* ============================================================================
+   SCROLLBAR STYLING FOR CHAT
+   ============================================================================ */
+.gs-training-chat-messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.gs-training-chat-messages::-webkit-scrollbar-track {
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 10px;
+}
+
+.gs-training-chat-messages::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+}
+
+.gs-training-chat-messages::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #764ba2 0%, #667eea 100%);
+}

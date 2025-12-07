@@ -223,7 +223,7 @@ export default function CommitteeDashboard() {
                       </span>
                       <br />
                       <span>
-                        <strong>Attendees:</strong> {ev.registeredUsers.length}
+                        <strong>Attendees:</strong> {ev?.registrations?.length}
                       </span>
                     </div>
                   </Popup>

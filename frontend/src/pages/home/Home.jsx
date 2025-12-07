@@ -174,7 +174,7 @@ export default function Home() {
                     </span>
                     <br />
                     <span>
-                      <strong>Attendees:</strong> {ev.registeredUsers.length}
+                      <strong>Attendees:</strong> {ev?.registrations?.length || 0}
                     </span>
                     <br />
 
