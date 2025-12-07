@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "../training.css";
+import api from "../../../../utils/axiosConfig";
+import {useAuth} from "../../../../components/AuthContext";
 
 export default function Quiz() {
   const quizQuestions = [
@@ -12,10 +14,11 @@ export default function Quiz() {
 
   const [quizStep, setQuizStep] = useState(0);
   const [score, setScore] = useState(0);
-  const [showQuiz, setShowQuiz] = useState(false);
   const [greenCoins, setGreenCoins] = useState(0);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const {user} = useAuth();
 
-  const handleQuizAnswer = (answer) => {
+  const handleQuizAnswer = async (answer) => {
     let newScore = score;
     if (answer === quizQuestions[quizStep].a) newScore += 1;
 
@@ -23,41 +26,89 @@ export default function Quiz() {
       setQuizStep(quizStep + 1);
     } else {
       setQuizStep("done");
-      setGreenCoins(newScore * 10); // 10 coins per right answer
+      await api.post("/training/quiz", {points: newScore * 10, userId: user._id});
+      setGreenCoins(newScore * 10);
     }
     setScore(newScore);
   };
 
+  const resetQuiz = () => {
+    setQuizStep(0);
+    setScore(0);
+    setShowQuiz(false);
+    setGreenCoins(0);
+  };
+
   return (
-    <div>
-      <h2 className="section-heading">Quick Quiz</h2>
+    <section className="gs-training-section">
+      <h2 className="gs-training-section-heading">Quick Quiz</h2>
 
       {!showQuiz ? (
-        <button className="start-quiz-btn" onClick={() => setShowQuiz(true)}>
+        <button 
+          className="gs-training-quiz-start-btn" 
+          onClick={() => setShowQuiz(true)}
+        >
           Start Quiz
         </button>
       ) : (
-        <div className="quiz-box">
+        <div className="gs-training-quiz-box">
           {quizStep === "done" ? (
-            <div className="quiz-result">
-              <h3>Quiz Completed! 🎉</h3>
-              <p>Your Score: {score} / {quizQuestions.length}</p>
-              <p>GreenCoins Earned: {greenCoins} 🪙</p>
+            <div className="gs-training-quiz-result">
+              <h3 className="gs-training-quiz-result__title">Quiz Completed! 🎉</h3>
+              <p className="gs-training-quiz-result__score">
+                Your Score: {score} / {quizQuestions.length}
+              </p>
+              <p className="gs-training-quiz-result__coins">
+                GreenCoins Earned: {greenCoins} 🪙
+              </p>
+              <button 
+                className="gs-training-quiz-restart-btn" 
+                onClick={resetQuiz}
+              >
+                Restart Quiz
+              </button>
             </div>
           ) : (
             <>
-              <p className="quiz-question">{quizQuestions[quizStep].q}</p>
-              <div className="quiz-options">
-                <button onClick={() => handleQuizAnswer("Yes")}>Yes</button>
-                <button onClick={() => handleQuizAnswer("No")}>No</button>
-                <button onClick={() => handleQuizAnswer("Wet Waste")}>Wet Waste</button>
-                <button onClick={() => handleQuizAnswer("Dry Waste")}>Dry Waste</button>
-                <button onClick={() => handleQuizAnswer("Hazardous Waste")}>Hazardous Waste</button>
+              <p className="gs-training-quiz-question">
+                {quizQuestions[quizStep].q}
+              </p>
+              <div className="gs-training-quiz-options">
+                <button 
+                  className="gs-training-quiz-option-btn"
+                  onClick={() => handleQuizAnswer("Yes")}
+                >
+                  Yes
+                </button>
+                <button 
+                  className="gs-training-quiz-option-btn"
+                  onClick={() => handleQuizAnswer("No")}
+                >
+                  No
+                </button>
+                <button 
+                  className="gs-training-quiz-option-btn"
+                  onClick={() => handleQuizAnswer("Wet Waste")}
+                >
+                  Wet Waste
+                </button>
+                <button 
+                  className="gs-training-quiz-option-btn"
+                  onClick={() => handleQuizAnswer("Dry Waste")}
+                >
+                  Dry Waste
+                </button>
+                <button 
+                  className="gs-training-quiz-option-btn"
+                  onClick={() => handleQuizAnswer("Hazardous Waste")}
+                >
+                  Hazardous Waste
+                </button>
               </div>
             </>
           )}
         </div>
       )}
-    </div>
+    </section>
   );
 }

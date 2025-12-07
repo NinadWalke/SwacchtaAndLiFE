@@ -90,7 +90,7 @@ function Event() {
             {events.map((event) => {
               const { day, month, time } = formatDate(event.eventDateTime);
               const isRegistered =
-                user && event.registeredUsers && event.registeredUsers.includes(user._id);
+                user && event?.registrations && event?.registrations.includes(user._id);
 
               return (
                 <div
@@ -137,7 +137,7 @@ function Event() {
 
                   <div className="event-card__footer">
                     <span className="footer__attendees text-center me-3">
-                      {event.registeredUsers.length} Registered
+                      {event?.registrations.length} Registered
                     </span>
                   </div>
                 </div>

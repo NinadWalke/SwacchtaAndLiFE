@@ -54,27 +54,27 @@ export default function Profile() {
     }
   };
 
-  // getting user level based on points
-  const getUserLevel = (points) => {
-    if (points >= 1000) {
+  // getting user level based on greenCoins
+  const getUserLevel = (greenCoins) => {
+    if (greenCoins >= 1000) {
       return {
         level: "Platinum Protector",
         badge: "✨",
         privilege: "Special recognition, merchandise rewards",
       };
-    } else if (points >= 500) {
+    } else if (greenCoins >= 500) {
       return {
         level: "Civic Hero",
         badge: "🦸",
         privilege: "Leaderboard visibility",
       };
-    } else if (points >= 200) {
+    } else if (greenCoins >= 200) {
       return {
         level: "Eco Guardian",
         badge: "🌍",
         privilege: "Early access to challenges",
       };
-    } else if (points >= 50) {
+    } else if (greenCoins >= 50) {
       return {
         level: "Clean City Advocate",
         badge: "🧹",
@@ -88,7 +88,7 @@ export default function Profile() {
       };
     }
   };
-  const { level, badge, privilege } = getUserLevel(currUser?.points);
+  const { level, badge, privilege } = getUserLevel(currUser?.greenCoins);
 
   // Improved loading state
   if (!currUser) {
@@ -123,7 +123,7 @@ export default function Profile() {
 
           <p className="profile-privilege">{privilege}</p>
 
-          <p className="profile-avatar__points">{currUser.points} Points</p>
+          <p className="profile-avatar__greenCoins">{currUser?.greenCoins} GreenCoins</p>
           <p className="profile-avatar__location">
             {currUser.address || "Location not set"}
           </p>
@@ -260,7 +260,7 @@ export default function Profile() {
                   <strong>Username</strong> <span>{currUser.username}</span>
                 </div>
                 <div className="profile-display__item">
-                  <strong>Points</strong> <span>{currUser.points}</span>
+                  <strong>GreenCoins</strong> <span>{currUser?.greenCoins}</span>
                 </div>
               </div>
               <div className="profile-actions">

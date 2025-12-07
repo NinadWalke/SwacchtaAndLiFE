@@ -8,7 +8,6 @@ import Chatbot from "./components/Chatbot";
 export default function Training() {
   return (
     <div className="training-container">
-
       {/* -------- HEADER & CHATBOT ICON -------- */}
       <div className="training-header">
         <h1 className="training-title">Training & Awareness</h1>
@@ -20,7 +19,6 @@ export default function Training() {
 
       {/* -------- QUIZ SECTION -------- */}
       <Quiz />
-
     </div>
   );
 }

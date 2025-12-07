@@ -4,7 +4,10 @@ import "../training.css";
 export default function Chatbot() {
   const [chatOpen, setChatOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { sender: "bot", text: "Hi! I'm your Waste Training Assistant. How can I help you?" }
+    { 
+      sender: "bot", 
+      text: "Hi! I'm your Waste Training Assistant. How can I help you?" 
+    }
   ]);
 
   const predefinedReplies = {
@@ -27,28 +30,50 @@ export default function Chatbot() {
   };
 
   return (
-    <>
-      <div className="chatbot-icon" onClick={() => setChatOpen(!chatOpen)}>
+    <div className="gs-training-chatbot">
+      <button 
+        className="gs-training-chatbot-icon" 
+        onClick={() => setChatOpen(!chatOpen)}
+        aria-label="Toggle chat"
+      >
         💬
-      </div>
+      </button>
 
       {chatOpen && (
-        <div className="chatbox">
-          <div className="chat-messages">
+        <div className="gs-training-chatbox">
+          <div className="gs-training-chat-messages">
             {messages.map((m, i) => (
-              <div key={i} className={`chat-message ${m.sender}`}>
+              <div 
+                key={i} 
+                className={`gs-training-chat-message gs-training-chat-message--${m.sender}`}
+              >
                 {m.text}
               </div>
             ))}
           </div>
 
-          <div className="chat-options">
-            <button onClick={() => sendUserMessage("segregation")}>Segregation</button>
-            <button onClick={() => sendUserMessage("ewaste")}>E-Waste</button>
-            <button onClick={() => sendUserMessage("bins")}>Bins Info</button>
+          <div className="gs-training-chat-options">
+            <button 
+              className="gs-training-chat-option-btn"
+              onClick={() => sendUserMessage("segregation")}
+            >
+              Segregation
+            </button>
+            <button 
+              className="gs-training-chat-option-btn"
+              onClick={() => sendUserMessage("ewaste")}
+            >
+              E-Waste
+            </button>
+            <button 
+              className="gs-training-chat-option-btn"
+              onClick={() => sendUserMessage("bins")}
+            >
+              Bins Info
+            </button>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
