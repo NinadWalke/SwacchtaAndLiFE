@@ -123,7 +123,7 @@ export default function Profile() {
 
           <p className="profile-privilege">{privilege}</p>
 
-          <p className="profile-avatar__greenCoins">{currUser?.greenCoins} GreenCoins</p>
+          <p className="profile-avatar__greenCoins">{currUser?.greencoins} GreenCoins</p>
           <p className="profile-avatar__location">
             {currUser.address || "Location not set"}
           </p>
