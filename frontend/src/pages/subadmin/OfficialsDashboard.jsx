@@ -110,7 +110,7 @@ export default function OfficialsDashboard() {
     setLoadingOsps(true);
     setShowOspSelection(true);
     setSelectedReportId(reportId);
-    
+
     try {
       const res = await api.get("/osp/active");
       setActiveOsps(res.data.osps);
@@ -219,92 +219,94 @@ export default function OfficialsDashboard() {
       {/* --- MAP MODULE --- */}
       <section className="dashboard-module">
         <h2 className="module-header">Live Reports Map</h2>
-        <MapContainer
-          center={[location.latitude, location.longitude]}
-          zoom={14}
-          style={{ height: "450px", width: "100%" }}
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          />
-          {mapReports.map((r) => (
-            <Marker
-              key={r._id}
-              position={[
-                r.location.coordinates[1],
-                r.location.coordinates[0],
-              ]}
-              icon={createMarkerIcon(r.status)}
-            >
-              <Popup>
-                <strong>Report ID: {r._id.slice(-6)}</strong>
-                <br />
-                Status:{" "}
-                <span className={`status-badge status--${r.status}`}>
-                  {r.status}
-                </span>
-                <br />
-                <button
-                  className="btn btn--secondary"
-                  style={{ marginTop: "10px" }}
-                  onClick={() => navigate(`/officials/report/${r._id}`)}
-                >
-                  View Details
-                </button>
-              </Popup>
-            </Marker>
-          ))}
-          {events.map((ev) => (
-            <Marker
-              key={ev._id}
-              position={[
-                ev.eventLocationData.coordinates[1],
-                ev.eventLocationData.coordinates[0],
-              ]}
-              icon={createMarkerIcon("event")}
-            >
-              <Popup>
-                <div style={{ minWidth: "180px" }}>
-                  <strong>{ev.eventName}</strong>
+        {location.latitude && location.longitude && (
+          <MapContainer
+            center={[location.latitude, location.longitude]}
+            zoom={14}
+            style={{ height: "450px", width: "100%" }}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            />
+            {mapReports.map((r) => (
+              <Marker
+                key={r._id}
+                position={[
+                  r.location.coordinates[1],
+                  r.location.coordinates[0],
+                ]}
+                icon={createMarkerIcon(r.status)}
+              >
+                <Popup>
+                  <strong>Report ID: {r._id.slice(-6)}</strong>
                   <br />
-                  <span>
-                    <strong>Hosted By:</strong> {ev.eventHostedBy}
-                  </span>
-                  <br />
-                  <span>
-                    <strong>Date:</strong>{" "}
-                    {new Date(ev.eventDateTime).toLocaleDateString("en-IN", {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </span>
-                  <br />
-                  <span>
-                    <strong>Time:</strong>{" "}
-                    {new Date(ev.eventDateTime).toLocaleTimeString("en-IN", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
-                  <br />
-                  <span>
-                    <strong>Attendees:</strong> {ev.registeredUsers.length}
+                  Status:{" "}
+                  <span className={`status-badge status--${r.status}`}>
+                    {r.status}
                   </span>
                   <br />
                   <button
                     className="btn btn--secondary"
                     style={{ marginTop: "10px" }}
-                    onClick={() => navigate(`/officials/event/${ev._id}`)}
+                    onClick={() => navigate(`/officials/report/${r._id}`)}
                   >
                     View Details
                   </button>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
+                </Popup>
+              </Marker>
+            ))}
+            {events.map((ev) => (
+              <Marker
+                key={ev._id}
+                position={[
+                  ev.eventLocationData.coordinates[1],
+                  ev.eventLocationData.coordinates[0],
+                ]}
+                icon={createMarkerIcon("event")}
+              >
+                <Popup>
+                  <div style={{ minWidth: "180px" }}>
+                    <strong>{ev.eventName}</strong>
+                    <br />
+                    <span>
+                      <strong>Hosted By:</strong> {ev.eventHostedBy}
+                    </span>
+                    <br />
+                    <span>
+                      <strong>Date:</strong>{" "}
+                      {new Date(ev.eventDateTime).toLocaleDateString("en-IN", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
+                    <br />
+                    <span>
+                      <strong>Time:</strong>{" "}
+                      {new Date(ev.eventDateTime).toLocaleTimeString("en-IN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                    <br />
+                    <span>
+                      <strong>Attendees:</strong> {ev.registeredUsers.length}
+                    </span>
+                    <br />
+                    <button
+                      className="btn btn--secondary"
+                      style={{ marginTop: "10px" }}
+                      onClick={() => navigate(`/officials/event/${ev._id}`)}
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
+        )}
       </section>
 
       {/* --- REPORTS TABLE OR OSP SELECTION --- */}
@@ -401,7 +403,9 @@ export default function OfficialsDashboard() {
               {loadingOsps ? (
                 <p className="loading-text">Loading OSPs...</p>
               ) : activeOsps.length === 0 ? (
-                <p className="no-osps-message">No OSPs are currently on duty.</p>
+                <p className="no-osps-message">
+                  No OSPs are currently on duty.
+                </p>
               ) : (
                 <div className="osp-grid">
                   {activeOsps.map((osp) => (
