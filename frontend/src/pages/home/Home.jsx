@@ -237,7 +237,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       <section id="training" className="training-features-section">
         <div className="training-content-wrapper">
           {/* --- Section Header --- */}
