@@ -13,14 +13,13 @@ module.exports.getAllFranchisees = async (req, res) => {
 
     return res.status(200).json({
       count: franchisees.length,
-      franchisees
+      franchisees,
     });
-
   } catch (err) {
     console.error("Error fetching franchisees:", err);
     return res.status(500).json({
       message: "Server error while fetching franchisees",
-      error: err.message
+      error: err.message,
     });
   }
 };
@@ -30,7 +29,9 @@ module.exports.getNearbyFranchisees = async (req, res) => {
     const { lat, lng, radiusKm = 25 } = req.query;
 
     if (!lat || !lng) {
-      return res.status(400).json({ message: "Latitude and longitude are required" });
+      return res
+        .status(400)
+        .json({ message: "Latitude and longitude are required" });
     }
 
     const radiusInRadians = radiusKm / 6371; // Earth radius km → radians
@@ -38,20 +39,21 @@ module.exports.getNearbyFranchisees = async (req, res) => {
     const franchisees = await Franchisee.find({
       location: {
         $geoWithin: {
-          $centerSphere: [[parseFloat(lng), parseFloat(lat)], radiusInRadians]
-        }
-      }
+          $centerSphere: [[parseFloat(lng), parseFloat(lat)], radiusInRadians],
+        },
+      },
     }).populate("owner", "fname lname email phone");
 
     return res.status(200).json({
       count: franchisees.length,
       radiusKm: Number(radiusKm),
-      franchisees
+      franchisees,
     });
-
   } catch (err) {
     console.error("Nearby franchisees error:", err);
-    return res.status(500).json({ message: "Server error", error: err.message });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: err.message });
   }
 };
 
@@ -155,24 +157,24 @@ module.exports.createWasteType = async (req, res) => {
   const type = await WasteType.create({
     name,
     description,
-    pricePerKg
+    pricePerKg,
   });
 
   return res.status(201).json({
     message: "Waste type created successfully.",
-    type
+    type,
   });
 };
 module.exports.updateWasteType = async (req, res) => {
   const { id } = req.params;
 
   const updated = await WasteType.findByIdAndUpdate(id, req.body, {
-    new: true
+    new: true,
   });
 
   return res.json({
     message: "Waste type updated.",
-    type: updated
+    type: updated,
   });
 };
 module.exports.deleteWasteType = async (req, res) => {
@@ -182,13 +184,15 @@ module.exports.deleteWasteType = async (req, res) => {
   return res.json({ message: "Waste type deleted successfully." });
 };
 module.exports.getFranchiseeWasteTypes = async (req, res) => {
-  const franchisee = await Franchisee.findOne({ owner: req.user._id })
-    .populate("acceptedWasteTypes");
+  const franchisee = await Franchisee.findOne({ owner: req.user._id }).populate(
+    "acceptedWasteTypes"
+  );
 
-  if (!franchisee) return res.status(404).json({ message: "Franchisee not found." });
+  if (!franchisee)
+    return res.status(404).json({ message: "Franchisee not found." });
 
   return res.json({
-    types: franchisee.acceptedWasteTypes
+    types: franchisee.acceptedWasteTypes,
   });
 };
 module.exports.updateFranchiseeWasteTypes = async (req, res) => {
@@ -199,10 +203,10 @@ module.exports.updateFranchiseeWasteTypes = async (req, res) => {
     { acceptedWasteTypes: types },
     { new: true }
   );
-  
+
   return res.json({
     message: "Waste types updated for franchisee.",
-    types: franchisee.acceptedWasteTypes
+    types: franchisee.acceptedWasteTypes,
   });
 };
 
@@ -222,7 +226,6 @@ module.exports.getFranchiseeRequests = async (req, res) => {
         .status(403)
         .json({ message: "No franchisee assigned to this account" });
     }
-    
 
     const submissions = await WasteSubmission.find({
       franchisee: franchisee._id,
@@ -230,12 +233,54 @@ module.exports.getFranchiseeRequests = async (req, res) => {
       .populate("user", "fname lname email phone")
       .populate("wasteType", "name")
       .sort({ createdAt: -1 });
-    
+
     return res.status(200).json(submissions);
   } catch (err) {
     console.error("Error fetching franchisee submissions:", err);
     return res.status(500).json({ message: "Server error" });
   }
+};
+
+exports.assignVendor = async (req, res) => {
+  const { vendorId } = req.body; // vendorId = email
+
+  if (!vendorId) {
+    return res.status(400).json({ message: "Vendor email is required." });
+  }
+
+  // Find vendor by email
+  const vendor = await User.findOne({ email: vendorId });
+  if (!vendor) {
+    return res
+      .status(404)
+      .json({ message: "Vendor with this email not found." });
+  }
+
+  // Find waste submission
+  const submission = await WasteSubmission.findById(req.params.id);
+  if (!submission) {
+    return res.status(404).json({ message: "Submission not found." });
+  }
+
+  // Heavy waste check
+  if (submission.weightKg < 10) {
+    return res
+      .status(400)
+      .json({ message: "Vendor pickup allowed only for heavy waste." });
+  }
+
+  // Assign vendor internally using ObjectId
+  submission.vendor = vendor._id;
+  submission.pickupMethod = "vendor";
+  submission.finalAmount = submission.estimatedAmount - 200; // e.g. user gets reduced amount
+  submission.status = "vendor-assigned";
+
+  await submission.save();
+
+  return res.json({
+    message: "Vendor assigned successfully!",
+    submission,
+  });
 };
 
 // PATCH /recycle/franchisee/requests/:id/approve

@@ -25,8 +25,9 @@ router.delete('/types/:id', wrapASync(recycleController.deleteWasteType));
 router.get('/franchisee/waste-types', wrapASync(recycleController.getFranchiseeWasteTypes));
 router.post('/franchisee/waste-types', wrapASync(recycleController.updateFranchiseeWasteTypes));
 
-// Franchisee managing requests
+// Franchisee managing requests 
 router.get('/franchisee/requests', wrapASync(recycleController.getFranchiseeRequests));
+router.patch('/franchisee/requests/:id/assign-vendor', wrapASync(recycleController.assignVendor));
 router.patch('/franchisee/requests/:id/approve', wrapASync(recycleController.approveSubmission));
 router.patch('/franchisee/requests/:id/reject', wrapASync(recycleController.rejectSubmission));
 

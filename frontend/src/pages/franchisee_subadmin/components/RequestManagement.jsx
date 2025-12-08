@@ -46,11 +46,27 @@ function RequestManagement() {
     }
     setActionLoading(null);
   };
+  const handleAssignVendor = async (id) => {
+    const vendorId = prompt("Enter Vendor email to assign:"); // still called vendorId
+    if (!vendorId) return;
+
+    try {
+      await api.patch(`/recycle/franchisee/requests/${id}/assign-vendor`, {
+        vendorId, // VALUE = email
+      });
+      setMessage({ type: "success", text: "Vendor assigned!" });
+      fetchRequests();
+    } catch {
+      setMessage({ type: "error", text: "Failed to assign vendor." });
+    }
+  };
 
   return (
     <div className="requests-section">
       <h2 className="section-title">Request Management</h2>
-      <p className="section-subtitle">Approve or reject recycling submissions.</p>
+      <p className="section-subtitle">
+        Approve or reject recycling submissions.
+      </p>
 
       {message && (
         <div className={`form__message form__message--${message.type}`}>
@@ -85,7 +101,9 @@ function RequestManagement() {
                 <td>{req.weightKg || 0} kg</td>
 
                 <td>
-                  <span className={`status-tag status-${req.status.toLowerCase()}`}>
+                  <span
+                    className={`status-tag status-${req.status.toLowerCase()}`}
+                  >
                     {req.status}
                   </span>
                 </td>
@@ -95,6 +113,7 @@ function RequestManagement() {
                 <td className="actions-cell">
                   {req.status === "pending" ? (
                     <>
+                      {/* Approve Button */}
                       <button
                         className="btn-action approve"
                         disabled={actionLoading === req._id}
@@ -103,6 +122,7 @@ function RequestManagement() {
                         Approve
                       </button>
 
+                      {/* Reject Button */}
                       <button
                         className="btn-action reject"
                         disabled={actionLoading === req._id}
@@ -110,6 +130,17 @@ function RequestManagement() {
                       >
                         Reject
                       </button>
+
+                      {/* Assign Vendor Button — Only for heavy waste */}
+                      {req.weightKg >= 10 && (
+                        <button
+                          className="btn-action vendor"
+                          disabled={actionLoading === req._id}
+                          onClick={() => handleAssignVendor(req._id)}
+                        >
+                          Assign Vendor
+                        </button>
+                      )}
                     </>
                   ) : (
                     <span className="status-static">{req.status}</span>
