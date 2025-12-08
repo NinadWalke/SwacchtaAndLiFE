@@ -9,7 +9,7 @@ function Footer() {
       <div className="footer__container">
         {/* Column 1: Brand and Mission */}
         <div className="footer__col">
-          <h3 className="footer__col-title">Swacchta&Life</h3>
+          <h3 className="footer__col-title">GreenSathi</h3>
           <p className="footer__brand-tagline">
             A smart waste management initiative leveraging technology and citizen
             participation for a cleaner, greener India.

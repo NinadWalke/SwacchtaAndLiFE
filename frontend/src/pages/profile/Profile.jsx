@@ -277,6 +277,12 @@ export default function Profile() {
                   My Reports
                 </button>
                 <button
+                  onClick={() => navigate("/profile/recycle-requests")}
+                  className="btn btn--primary"
+                >
+                  My Recycle Requests
+                </button>
+                <button
                   onClick={handleLogout}
                   className="btn btn--danger-outline"
                 >

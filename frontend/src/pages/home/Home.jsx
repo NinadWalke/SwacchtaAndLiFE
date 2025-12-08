@@ -23,7 +23,6 @@ export default function Home() {
   const navigate = useNavigate();
   const [allReports, setAllReports] = useState([]);
   const [events, setEvents] = useState([]);
-  
   const images = [
     '/assets/HeroImg1.jpg',
     '/assets/HeroImg2.jpg',
@@ -93,10 +92,21 @@ export default function Home() {
         { enableHighAccuracy: true }
       );
     };
+    const getFranchisees = async () => {
+      try {
+        const res = await api.get("/recycle/franchisees");
+        setFranchisees(res.data.franchisees || []);
+      } catch (err) {
+        console.error("Failed to fetch franchisees:", err);
+      }
+    };
+
     getReports();
     getEvents();
     getUserLocation();
+    getFranchisees();
   }, []);
+
   return (
     // Semantic main tag for the page content
     <main className="home-page">
@@ -197,7 +207,8 @@ export default function Home() {
                     </span>
                     <br />
                     <span>
-                      <strong>Attendees:</strong> {ev?.registrations?.length || 0}
+                      <strong>Attendees:</strong>{" "}
+                      {ev?.registrations?.length || 0}
                     </span>
                     <br />
 
@@ -208,6 +219,35 @@ export default function Home() {
                     >
                       View Details
                     </button>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+            {/* Franchisee Markers */}
+            {franchisees.map((f) => (
+              <Marker
+                key={f._id}
+                position={[
+                  f.location.coordinates[1],
+                  f.location.coordinates[0],
+                ]}
+                icon={createMarkerIcon("franchisee")}
+              >
+                <Popup>
+                  <div style={{ minWidth: "180px" }}>
+                    <strong>{f.centerName}</strong>
+                    <br />
+                    <span>
+                      <strong>Owner:</strong> {f.owner?.fname} {f.owner?.lname}
+                    </span>
+                    <br />
+                    <span>
+                      <strong>Phone:</strong> {f.phone}
+                    </span>
+                    <br />
+                    <span>
+                      <strong>Pincode:</strong> {f.pincode}
+                    </span>
                   </div>
                 </Popup>
               </Marker>

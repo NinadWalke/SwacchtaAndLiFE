@@ -16,22 +16,53 @@ exports.getAllReports = async (req, res) => {
 };
 // Create a new report with location + images
 exports.createReport = async (req, res) => {
-  // Image uploads required
-  if (!req.files || !req.files["image"] || !req.files["image2"]) {
-    return res.status(400).json({ message: "Both images must be uploaded." });
-  }
-
-  const imageUrl1 = req.files["image"][0].path;
-  const imageUrl2 = req.files["image2"][0].path;
-
   const { latitude, longitude, remarks } = req.body;
 
   if (!latitude || !longitude) {
     return res.status(400).json({ message: "Location coordinates required" });
   }
 
-  // Create new report
-  const newReport = new Report({
+  // ------------------- STEP 1: Duplicate check BEFORE upload -------------------
+  const RADIUS_METERS = 50; // 50 meters
+
+  const existingReport = await Report.findOne({
+    location: {
+      $near: {
+        $geometry: { type: "Point", coordinates: [Number(longitude), Number(latitude)] },
+        $maxDistance: RADIUS_METERS,
+      },
+    },
+    status: { $in: ["pending", "allotted", "in-progress"] },
+  });
+
+  if (existingReport) {
+    return res.status(409).json({
+      message:
+        "A report near your location is already under process. A collection vehicle has been dispatched. Thank you for helping keep the city clean!",
+    });
+  }
+
+  // ------------------- STEP 2: Ensure images exist -------------------
+  if (!req.files || !req.files.image || !req.files.image2) {
+    return res.status(400).json({ message: "Both images must be uploaded." });
+  }
+
+  // ------------------- STEP 3: Upload NOW (after validation passes) -------------------
+  const uploadBufferToCloudinary = (buffer) => {
+    return new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream((err, result) => {
+        if (err) reject(err);
+        else resolve(result.secure_url);
+      });
+      stream.end(buffer);
+    });
+  };
+
+  const imageUrl1 = await uploadBufferToCloudinary(req.files.image[0].buffer);
+  const imageUrl2 = await uploadBufferToCloudinary(req.files.image2[0].buffer);
+
+  // ------------------- STEP 4: Save report -------------------
+  const newReport = await Report.create({
     reportImg: imageUrl1,
     reportYoloImg: imageUrl2,
     remarks,
@@ -39,29 +70,15 @@ exports.createReport = async (req, res) => {
     reportOwner: req.user._id,
     location: {
       type: "Point",
-      coordinates: [Number(longitude), Number(latitude)], // GeoJSON format
+      coordinates: [Number(longitude), Number(latitude)],
     },
   });
 
+  // Update user
   const user = req.user;
-
-  // Add report to user records
-  user.reports.push(newReport);
-  if(user.greenCoins) user.greenCoins += 15; // Scoring system
-
+  user.reports.push(newReport._id);
+  user.greenCoins = (user.greenCoins || 0) + 15;
   await user.save();
-  await newReport.save();
-
-  // --- Disabled SMS as to not waste credits ---
-  // if (user.phone) {
-  //   const smsBody = `Your report has been submitted successfully!\nReport ID: ${newReport._id}\nStatus: Pending review.`;
-
-  //   try {
-  //     await sendSMS(user.phone, smsBody);
-  //   } catch (smsErr) {
-  //     console.error("SMS error:", smsErr);
-  //   }
-  // }
 
   return res.status(201).json({
     message: "Report created successfully!",

@@ -1,0 +1,99 @@
+.vendor-dashboard {
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.vendor-title {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.vendor-subtitle {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.vendor-alert {
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vendor-alert-success {
+  background-color: #d4f8d4;
+  color: #0a6b0a;
+}
+
+.vendor-alert-error {
+  background-color: #ffd4d4;
+  color: #a10000;
+}
+
+.vendor-alert-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.vendor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.vendor-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.vendor-card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.vendor-card-header span {
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.status-vendor-assigned { background: #e8f1ff; color: #2459d1; }
+.status-collected { background: #e8ffe8; color: #137c13; }
+.status-rejected { background: #ffeaea; color: #d12727; }
+
+.vendor-card-body p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.vendor-card-actions {
+  margin-top: 15px;
+  display: flex;
+}
+
+.vendor-btn-collect {
+  padding: 10px 14px;
+  background: #0a6847;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.vendor-btn-collect:hover {
+  background: #09593d;
+}
+
+.vendor-collected-label {
+  font-size: 14px;
+  color: #444;
+}

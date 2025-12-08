@@ -119,10 +119,13 @@ export default function Upload() {
         navigate("/");
       }
     } catch (err) {
-      console.error("Upload error:", err);
-      alert("Error uploading image. Please try again.");
-    }
-    finally {
+      if (err?.response?.status === 409) {
+        alert(err.response.data.message);
+        return;
+      }
+
+      alert("Error uploading report. Please try again.");
+    } finally {
       setLoading(false);
     }
   };
@@ -144,7 +147,11 @@ export default function Upload() {
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
         });
-        submitReport(pos.coords.latitude, pos.coords.longitude, modifiedImageUrl);  // main submit function transferred to submitReport
+        submitReport(
+          pos.coords.latitude,
+          pos.coords.longitude,
+          modifiedImageUrl
+        ); // main submit function transferred to submitReport
       },
       (err) => {
         console.log("Location permission denied: ", err);

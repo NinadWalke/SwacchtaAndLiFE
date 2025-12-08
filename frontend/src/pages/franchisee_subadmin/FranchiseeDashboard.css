@@ -1,0 +1,68 @@
+/* PAGE WRAPPER */
+.franchisee-dashboard-page {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-background), #eef2f5);
+}
+
+/* MAIN CARD */
+.franchisee-dashboard-card {
+  width: 100%;
+  max-width: 1000px;
+  background: var(--color-white);
+  padding: 2.5rem;
+  border-radius: 14px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
+}
+
+.dashboard-title {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: var(--color-primary-green);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* --- INNER NAVIGATION TABS --- */
+.dashboard-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.nav-btn {
+  flex: 1;
+  padding: 12px 20px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: #f4f6f7;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.nav-btn:hover {
+  background: var(--color-accent-green);
+  color: var(--color-white);
+}
+
+.nav-btn.active {
+  background: var(--color-primary-green);
+  color: var(--color-white);
+  border-color: var(--color-primary-green);
+}
+
+/* SECTION CONTAINER */
+.dashboard-content {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  background: #fafbfc;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+}
