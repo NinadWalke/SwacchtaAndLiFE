@@ -6,6 +6,12 @@ const wrapAsync = require("../utils/wrapAsync");
 // READ ALL
 router.get("/", wrapAsync(wasteSubmissionController.getAllSubmissions));
 
+// Vendor routes
+router.get('/vendor/near-me', wrapAsync(wasteSubmissionController.getNearbyVendorEvents));
+router.post('/vendor/events', wasteSubmissionController.createVendorEvent);
+router.get('/vendor/events/all', wrapAsync(wasteSubmissionController.getAllVendorEvents));
+router.post('/vendor/settlement', wrapAsync(wasteSubmissionController.createSettlement));
+
 router.get("/assigned", wrapAsync(wasteSubmissionController.getVendorAssignments));
 
 router.patch(

@@ -500,6 +500,233 @@ select.form__input:focus {
   border: 1px solid rgba(220, 53, 69, 0.3);
 }
 
+/* Vendor Events */
+
+.vendor-events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .vendor-events-grid {
+    gap: 2rem;
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .vendor-events-grid {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  }
+}
+
+/* ============================================
+   EVENT CARD COMPONENT
+   ============================================ */
+
+.vendor-event-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle gradient accent on hover */
+.vendor-event-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #10b981, #059669);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.vendor-event-card:hover::before {
+  transform: scaleX(1);
+}
+
+.vendor-event-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+/* ============================================
+   CARD TITLE
+   ============================================ */
+
+.vendor-event-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 1.25rem 0;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 2.8em;
+}
+
+/* ============================================
+   EVENT DETAILS SECTION
+   ============================================ */
+
+.vendor-event-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.9375rem;
+  color: #4b5563;
+  line-height: 1.5;
+  transition: color 0.2s ease;
+}
+
+.detail-row:hover {
+  color: #1f2937;
+}
+
+/* ============================================
+   ICON STYLING
+   ============================================ */
+
+.detail-icon {
+  font-size: 1.125rem;
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.detail-row:hover .detail-icon {
+  background: #e5e7eb;
+  transform: scale(1.1);
+}
+
+/* Icon-specific colors for better UX */
+.detail-row:nth-child(1) .detail-icon {
+  background: #fef3c7;
+}
+
+.detail-row:nth-child(2) .detail-icon {
+  background: #dbeafe;
+}
+
+.detail-row:nth-child(3) .detail-icon {
+  background: #d1fae5;
+}
+
+.detail-row:nth-child(4) .detail-icon {
+  background: #e0e7ff;
+}
+
+/* ============================================
+   DETAIL TEXT CONTENT
+   ============================================ */
+
+.detail-row > span:last-child {
+  flex: 1;
+  word-break: break-word;
+}
+
+/* Special styling for waste types (comma-separated list) */
+.detail-row:nth-child(3) > span:last-child {
+  font-weight: 500;
+  color: #059669;
+}
+
+/* Vendor name emphasis */
+.detail-row:nth-child(4) > span:last-child {
+  font-weight: 500;
+  color: #6366f1;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.vendor-events-grid:empty::after {
+  content: 'No vendor events available at this time.';
+  display: block;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #9ca3af;
+  font-size: 1rem;
+  grid-column: 1 / -1;
+}
+
+/* ============================================
+   DARK MODE SUPPORT (OPTIONAL)
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  .vendor-event-card {
+    background: #1f2937;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .vendor-event-title {
+    color: #f9fafb;
+  }
+
+  .detail-row {
+    color: #d1d5db;
+  }
+
+  .detail-row:hover {
+    color: #f3f4f6;
+  }
+
+  .detail-icon {
+    background: #374151;
+  }
+
+  .detail-row:hover .detail-icon {
+    background: #4b5563;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================ */
+
+.vendor-event-card:focus-within {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vendor-event-card,
+  .detail-icon,
+  .detail-row {
+    transition: none;
+  }
+}
 /* -----------------------------------------
    Responsive Design
 ------------------------------------------*/

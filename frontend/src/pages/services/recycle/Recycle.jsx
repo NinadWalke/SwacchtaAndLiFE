@@ -17,6 +17,7 @@ function Recycle() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  const [vendorEvents, setVendorEvents] = useState([]);
 
   // Fetch waste types + franchisees
   useEffect(() => {
@@ -34,6 +35,11 @@ function Recycle() {
           );
 
           setFranchisees(franRes.data.franchisees);
+          // Fetch nearby vendor events (within 2 km)
+          const eventsRes = await api.get(
+            `/waste-submission/vendor/near-me?lat=${lat}&lng=${lng}&radiusKm=2`
+          );
+          setVendorEvents(eventsRes.data.events || []);
         });
       } catch (err) {
         console.error("Failed to fetch recycle data", err);
@@ -50,11 +56,11 @@ function Recycle() {
   const handleWasteTypeSelect = (type) => {
     setSelectedWasteType(type);
     setFormData({ ...formData, wasteTypeId: type._id });
-    
+
     // Smooth scroll to form
-    document.getElementById('submit-form')?.scrollIntoView({ 
-      behavior: 'smooth',
-      block: 'start'
+    document.getElementById("submit-form")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
     });
   };
 
@@ -98,7 +104,7 @@ function Recycle() {
     "Glass Waste": "🍾",
     "Metal Waste": "🔧",
     "Paper & Cardboard": "📦",
-    "Battery Waste": "🔋"
+    "Battery Waste": "🔋",
   };
 
   return (
@@ -108,8 +114,9 @@ function Recycle() {
         <div className="hero-content">
           <h1 className="hero-title">Recycle & Earn Money</h1>
           <p className="hero-subtitle">
-            Turn your waste into cash! Submit recyclable items to nearby franchisees 
-            and earn money for contributing to a cleaner environment.
+            Turn your waste into cash! Submit recyclable items to nearby
+            franchisees and earn money for contributing to a cleaner
+            environment.
           </p>
           <div className="hero-stats">
             <div className="stat-item">
@@ -158,13 +165,17 @@ function Recycle() {
       {/* Waste Types Section */}
       <section className="waste-types-section">
         <h2 className="section-title">What Can You Recycle?</h2>
-        <p className="section-subtitle">Click on a waste type to start your submission</p>
-        
+        <p className="section-subtitle">
+          Click on a waste type to start your submission
+        </p>
+
         <div className="waste-types-grid">
           {wasteTypes.map((type) => (
             <div
               key={type._id}
-              className={`waste-type-card ${selectedWasteType?._id === type._id ? 'selected' : ''}`}
+              className={`waste-type-card ${
+                selectedWasteType?._id === type._id ? "selected" : ""
+              }`}
               onClick={() => handleWasteTypeSelect(type)}
             >
               <div className="waste-icon">{wasteIcons[type.name] || "♻️"}</div>
@@ -178,16 +189,70 @@ function Recycle() {
           ))}
         </div>
       </section>
+      {/* Vendor Events Near You */}
+      <section className="vendor-events-section">
+        <h2 className="section-title">Vendor Collection Events Near You</h2>
+        <p className="section-subtitle">
+          {vendorEvents.length > 0
+            ? `${vendorEvents.length} collection events within 2 km radius`
+            : "No collection events happening near you right now."}
+        </p>
+
+        {vendorEvents.length > 0 ? (
+          <div className="vendor-events-grid">
+            {vendorEvents.map((ev) => (
+              <div key={ev._id} className="vendor-event-card">
+                <h3 className="vendor-event-title">{ev.title}</h3>
+
+                <div className="vendor-event-details">
+                  <div className="detail-row">
+                    <span className="detail-icon">📍</span>
+                    <span>
+                      {" "}
+                      <a
+                        href={`https://www.google.com/maps?q=${ev.location.coordinates[1]},${ev.location.coordinates[0]}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                      {ev.location.address || "Nearby Area"}
+                      </a>
+                    </span>
+                  </div>
+
+                  <div className="detail-row">
+                    <span className="detail-icon">🗓️</span>
+                    <span>{new Date(ev.date).toLocaleString()}</span>
+                  </div>
+
+                  <div className="detail-row">
+                    <span className="detail-icon">♻️</span>
+                    <span>Collecting: {ev.wasteTypes.join(", ")}</span>
+                  </div>
+
+                  <div className="detail-row">
+                    <span className="detail-icon">🚛</span>
+                    <span>Vendor: {ev.vendorName}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="empty-state">
+            <p>❌ No vendor collection events nearby.</p>
+          </div>
+        )}
+      </section>
 
       {/* Nearby Franchisees */}
       <section className="franchisees-section">
         <h2 className="section-title">Collection Centers Near You</h2>
         <p className="section-subtitle">
-          {franchisees.length > 0 
-            ? `${franchisees.length} centers within 25km radius` 
+          {franchisees.length > 0
+            ? `${franchisees.length} centers within 25km radius`
             : "Finding nearby centers..."}
         </p>
-        
+
         {franchisees.length > 0 ? (
           <div className="franchisees-grid">
             {franchisees.map((f) => (
@@ -313,8 +378,11 @@ function Recycle() {
                 <div className="estimated-earning">
                   <span>Estimated Earning: </span>
                   <strong>
-                    ₹{(parseFloat(formData.weightKg) * 
-                      (wasteTypes.find(t => t._id === formData.wasteTypeId)?.pricePerKg || 0)
+                    ₹
+                    {(
+                      parseFloat(formData.weightKg) *
+                      (wasteTypes.find((t) => t._id === formData.wasteTypeId)
+                        ?.pricePerKg || 0)
                     ).toFixed(2)}
                   </strong>
                 </div>
@@ -322,7 +390,11 @@ function Recycle() {
             </div>
 
             {/* Submit Button */}
-            <button className="btn btn--primary" type="submit" disabled={loading}>
+            <button
+              className="btn btn--primary"
+              type="submit"
+              disabled={loading}
+            >
               {loading ? "Submitting..." : "Submit Request"}
             </button>
           </form>

@@ -1,0 +1,35 @@
+.vendor-events-container {
+  background: #fff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  animation: fadeIn 0.3s ease;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.vendor-events-container h2 {
+  color: #0a6847;
+  margin-bottom: 20px;
+}
+
+.vendor-event-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.vendor-event-form input,
+.vendor-event-form textarea {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #dcdcdc;
+  background: #fafafa;
+}
+
+.vendor-event-form input:focus,
+.vendor-event-form textarea:focus {
+  outline: none;
+  border-color: #0a6847;
+  box-shadow: 0 0 0 2px rgba(10, 104, 71, 0.18);
+}
