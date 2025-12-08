@@ -15,6 +15,7 @@ export default function Upload() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   // --- Camera Logic ---
   const startCamera = async () => {
@@ -162,114 +163,134 @@ export default function Upload() {
   };
 
   return (
-    <main className="upload-page">
-      <div className="upload-card">
-        <div className="upload-card__header">
-          <h1 className="upload-card__title">Report Garbage</h1>
-        </div>
+  <main className="upload-page">
+    <div className="upload-card">
 
-        {/* --- TABS --- */}
-        <div className="upload__tabs">
-          <button
-            onClick={() => setActiveTab("camera")}
-            className={`upload__tab-button ${
-              activeTab === "camera" ? "active" : ""
-            }`}
-          >
-            Use Camera
-          </button>
-          <button
-            onClick={() => setActiveTab("upload")}
-            className={`upload__tab-button ${
-              activeTab === "upload" ? "active" : ""
-            }`}
-          >
-            Upload File
-          </button>
-        </div>
+      {/* HEADER */}
+      <div className="upload-card__header">
+        <h1 className="upload-card__title">Report Garbage</h1>
+      </div>
 
-        {/* --- TAB CONTENT: CAMERA --- */}
-        {activeTab === "camera" && (
-          <div className="upload__content-panel">
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              className="camera-view__video"
-              style={{ display: stream ? "block" : "none" }}
-            />
-            <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
-            <div className="camera-controls">
-              {!stream && (
-                <button onClick={startCamera} className="btn btn--primary">
-                  Start Camera
-                </button>
-              )}
-              {stream && (
-                <button onClick={capturePhoto} className="btn btn--capture">
-                  Capture
-                </button>
-              )}
-              {stream && (
-                <button onClick={stopCamera} className="btn btn--danger">
-                  Stop Camera
-                </button>
-              )}
-            </div>
+      {/* --- INSTRUCTIONS DROPDOWN --- */}
+      <div className="instructions-wrapper">
+        <button
+          className="instructions-toggle"
+          onClick={() => setShowInstructions(!showInstructions)}
+        >
+          <span>🌿 How to Use</span>
+          <span className="arrow">{showInstructions ? "▲" : "▼"}</span>
+        </button>
+
+        {showInstructions && (
+          <div className="instructions-content fade-slide">
+            <ul>
+              <li>📸 Capture a clear photo of garbage or upload a file.</li>
+              <li>📍 Keep location ON — GPS is required for reporting.</li>
+              <li>🔍 Ensure garbage is fully visible in the frame.</li>
+              <li>🚫 Avoid uploading random photos or clean areas.</li>
+              <li>⚠ Wrong or fake uploads may reduce your GreenCoins.</li>
+            </ul>
           </div>
-        )}
-
-        {/* --- TAB CONTENT: FILE UPLOAD --- */}
-        {activeTab === "upload" && (
-          <div className="upload__content-panel">
-            <div className="file-upload-view">
-              <label
-                htmlFor="file-upload"
-                className="btn btn--primary file-input__label"
-              >
-                Choose an Image
-              </label>
-              <input
-                id="file-upload"
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="file-input__native"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* --- IMAGE PREVIEW --- */}
-        {image && (
-          <div className="upload__preview">
-            <h2 className="upload__preview-title">Image Preview</h2>
-            <img src={image} alt="preview" className="upload__preview-image" />
-          </div>
-        )}
-
-        {/* --- REMARKS & SUBMIT FORM --- */}
-        {image && (
-          <form onSubmit={handleSubmit} className="upload__form">
-            <textarea
-              placeholder="Add any relevant remarks (e.g., location details, type of waste)..."
-              value={remarks}
-              onChange={(e) => setRemarks(e.target.value)}
-              className="form__textarea"
-            ></textarea>
-            <div className="upload__submit-container">
-              <button
-                type="submit"
-                className="btn btn--primary"
-                disabled={loading}
-                style={{ width: "100%", padding: "14px" }}
-              >
-                {loading ? <>Processing</> : <>Submit Report</>}
-              </button>
-            </div>
-          </form>
         )}
       </div>
-    </main>
-  );
+
+
+      {/* --- TABS --- */}
+      <div className="upload__tabs">
+        <button
+          onClick={() => setActiveTab("camera")}
+          className={`upload__tab-button ${activeTab === "camera" ? "active" : ""}`}
+        >
+          Use Camera
+        </button>
+
+        <button
+          onClick={() => setActiveTab("upload")}
+          className={`upload__tab-button ${activeTab === "upload" ? "active" : ""}`}
+        >
+          Upload File
+        </button>
+      </div>
+
+      {/* --- REST OF YOUR EXISTING CONTENT (unchanged) --- */}
+      {activeTab === "camera" && (
+        <div className="upload__content-panel">
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            className="camera-view__video"
+            style={{ display: stream ? "block" : "none" }}
+          />
+          <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
+          <div className="camera-controls">
+            {!stream && (
+              <button onClick={startCamera} className="btn btn--primary">
+                Start Camera
+              </button>
+            )}
+            {stream && (
+              <button onClick={capturePhoto} className="btn btn--capture">
+                Capture
+              </button>
+            )}
+            {stream && (
+              <button onClick={stopCamera} className="btn btn--danger">
+                Stop Camera
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {activeTab === "upload" && (
+        <div className="upload__content-panel">
+          <div className="file-upload-view">
+            <label
+              htmlFor="file-upload"
+              className="btn btn--primary file-input__label"
+            >
+              Choose an Image
+            </label>
+            <input
+              id="file-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="file-input__native"
+            />
+          </div>
+        </div>
+      )}
+
+      {image && (
+        <div className="upload__preview">
+          <h2 className="upload__preview-title">Image Preview</h2>
+          <img src={image} alt="preview" className="upload__preview-image" />
+        </div>
+      )}
+
+      {image && (
+        <form onSubmit={handleSubmit} className="upload__form">
+          <textarea
+            placeholder="Add any relevant remarks..."
+            value={remarks}
+            onChange={(e) => setRemarks(e.target.value)}
+            className="form__textarea"
+          ></textarea>
+          <div className="upload__submit-container">
+            <button
+              type="submit"
+              className="btn btn--primary"
+              disabled={loading}
+              style={{ width: "100%", padding: "14px" }}
+            >
+              {loading ? <>Processing</> : <>Submit Report</>}
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
+  </main>
+);
 }

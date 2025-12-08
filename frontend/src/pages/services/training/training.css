@@ -703,3 +703,20 @@
 .gs-training-chat-messages::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #764ba2 0%, #667eea 100%);
 }
+
+.gs-training-quiz-redeem-note {
+  font-size: 0.9rem;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+/* Green text */
+.green-text {
+  color: #4caf50; /* green */
+}
+
+/* Red text */
+.red-text {
+  color: #f44336; /* red */
+}
+
