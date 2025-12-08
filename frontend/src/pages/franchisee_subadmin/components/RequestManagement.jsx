@@ -125,6 +125,36 @@ function RequestManagement() {
     setSelectedRequestId(null);
   };
 
+  const handleVerify = async (id) => {
+    setActionLoading(id);
+    try {
+      await api.patch(`/waste-submission/requests/${id}/verify`);
+      setMessage({ type: "success", text: "Submission verified!" });
+      fetchRequests();
+    } catch (err) {
+      setMessage({
+        type: "error",
+        text: err?.response?.data?.message || "Verification failed.",
+      });
+    }
+    setActionLoading(null);
+  };
+
+  const handlePay = async (id) => {
+    setActionLoading(id);
+    try {
+      await api.patch(`/waste-submission/requests/${id}/pay`);
+      setMessage({ type: "success", text: "Payment marked successful!" });
+      fetchRequests();
+    } catch (err) {
+      setMessage({
+        type: "error",
+        text: err?.response?.data?.message || "Payment update failed.",
+      });
+    }
+    setActionLoading(null);
+  };
+
   const statusConfig = {
     pending: { label: "Pending", icon: "⏳", color: "pending" },
     approved: { label: "Approved", icon: "✅", color: "approved" },
@@ -492,6 +522,26 @@ function RequestManagement() {
                         </>
                       )}
                     </button>
+                    {req.status === "collected" && (
+  <button
+    className="btn-action-modern verify"
+    disabled={actionLoading === req._id}
+    onClick={() => handleVerify(req._id)}
+  >
+    {actionLoading === req._id ? "Verifying..." : "Verify Collection"}
+  </button>
+)}
+
+{req.status === "verified" && (
+  <button
+    className="btn-action-modern pay"
+    disabled={actionLoading === req._id}
+    onClick={() => handlePay(req._id)}
+  >
+    {actionLoading === req._id ? "Paying..." : "Mark Paid"}
+  </button>
+)}
+
                   </div>
                 </div>
               );

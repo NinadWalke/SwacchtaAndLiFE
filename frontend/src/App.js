@@ -10,8 +10,8 @@ import { CommitteeAuthProvider } from "./components/CommitteeAuthContext.jsx";
 import Login from "./pages/authentication/Login";
 import Signup from "./pages/authentication/Signup";
 import Otp from "./pages/authentication/Otp";
-// Admin
-import AdminDashboard from "./pages/admin/AdminDashboard";
+// Vendor
+import Vendor from "./pages/vendor/Vendor.jsx";
 // Franchisee Dashboard
 import FranchiseeDashboard from "./pages/franchisee_subadmin/FranchiseeDashboard.jsx";
 
@@ -58,8 +58,8 @@ function App() {
         <CommitteeAuthProvider>
           <Navbar />
           <Routes>
-            {/* -- Admin Routes -- */}
-            <Route path="/admin" element={<AdminDashboard />} />
+            {/* -- Vendor Routes -- */}
+            <Route path="/Vendor" element={<Vendor />} />
             {/* -- Authentication --*/}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />

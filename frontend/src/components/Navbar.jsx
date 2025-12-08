@@ -32,7 +32,7 @@ export default function Navbar() {
     { to: "/committee", label: "Committee", type: "user" },
     { to: "/shop", label: "Shop", type: "user" },
     { to: "/officials", label: "Officials", type: "user" },
-    { to: "/admin", label: "Admin", type: "user" }, // Consider role-based access for this
+    { to: "/vendor", label: "Vendor", type: "user" }, 
   ];
 
   const filteredLinks = navLinks.filter(link => {
