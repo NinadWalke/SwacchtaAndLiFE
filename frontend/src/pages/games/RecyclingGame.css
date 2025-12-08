@@ -1,0 +1,299 @@
+/* Game Container */
+.game-container {
+  width: 100vw;
+  height: 90vh;
+  background: linear-gradient(to bottom, #7dd3fc, #e0f2fe);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Score Display */
+.score-display {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.score-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+/* Current Bin Type Display */
+.bin-type-display {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.bin-type-label {
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.bin-type-badge {
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  margin-left: 0.5rem;
+}
+
+.bin-type-badge.recyclable {
+  background-color: #3b82f6;
+}
+
+.bin-type-badge.organic {
+  background-color: #22c55e;
+}
+
+.bin-type-badge.hazardous {
+  background-color: #ef4444;
+}
+
+/* Controls Help */
+.controls-help {
+  position: absolute;
+  top: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.controls-text {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 20;
+  padding: 1rem;
+}
+
+/* Start Screen */
+.start-screen {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 28rem;
+  text-align: center;
+}
+
+.start-title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.start-description {
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+}
+
+.bin-types-list {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.bin-type-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.bin-type-item-badge {
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: bold;
+  min-width: 100px;
+}
+
+.bin-type-item-badge.recyclable {
+  background-color: #3b82f6;
+}
+
+.bin-type-item-badge.organic {
+  background-color: #22c55e;
+}
+
+.bin-type-item-badge.hazardous {
+  background-color: #ef4444;
+}
+
+.bin-type-item-text {
+  font-size: 0.875rem;
+}
+
+.start-button {
+  background-color: #22c55e;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.start-button:hover {
+  background-color: #16a34a;
+}
+
+/* Game Over Screen */
+.game-over-screen {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 42rem;
+}
+
+.game-over-title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #dc2626;
+}
+
+.game-over-content {
+  margin-bottom: 1.5rem;
+}
+
+.game-over-message {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.game-over-emoji {
+  font-size: 1.5rem;
+}
+
+.game-over-correction {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+}
+
+.game-over-info-box {
+  background-color: #f3f4f6;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.game-over-info-text {
+  color: #1f2937;
+  line-height: 1.625;
+}
+
+.game-over-footer {
+  text-align: center;
+}
+
+.final-score {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.play-again-button {
+  background-color: #3b82f6;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.play-again-button:hover {
+  background-color: #2563eb;
+}
+
+/* Falling Items */
+.falling-item {
+  position: absolute;
+  font-size: 2.25rem;
+  transition: all 0.05s linear;
+  transform: translate(-50%, -50%);
+}
+
+/* Dustbin */
+.dustbin-container {
+  position: absolute;
+  bottom: 2rem;
+  transition: all 0.1s linear;
+  transform: translateX(-50%);
+}
+
+.dustbin {
+  width: 5rem;
+  height: 6rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dustbin.recyclable {
+  background-color: #3b82f6;
+}
+
+.dustbin.organic {
+  background-color: #22c55e;
+}
+
+.dustbin.hazardous {
+  background-color: #ef4444;
+}
+
+.dustbin-icon {
+  color: white;
+  font-size: 2.25rem;
+}
+
+.dustbin-label {
+  position: absolute;
+  top: -2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  white-space: nowrap;
+}

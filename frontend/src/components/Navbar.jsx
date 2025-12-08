@@ -43,7 +43,7 @@ export default function Navbar() {
   });
 
   return (
-    <header className="navbar">
+    <header className="navbar" style={{padding: 0}}>
       <div className="navbar__container">
         {/* Brand/Logo - links to home */}
         <Link to="/" className="navbar__brand">
@@ -79,6 +79,10 @@ export default function Navbar() {
           <span className="hamburger__line hamburger__line--2"></span>
           <span className="hamburger__line hamburger__line--3"></span>
         </button>
+        
+        <div className="center-div">
+         {/* it is just for centering navlinks */}
+        </div>
       </div>
     </header>
   );
