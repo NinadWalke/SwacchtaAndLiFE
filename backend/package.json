@@ -24,5 +24,8 @@
     "passport-local-mongoose": "^8.0.0",
     "razorpay": "^2.9.6",
     "twilio": "^5.10.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
   }
 }
