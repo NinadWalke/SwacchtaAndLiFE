@@ -15,7 +15,7 @@ const wasteSubmissionSchema = new mongoose.Schema(
     weightKg: {
       type: Number,
       required: true,
-      min: 0.1
+      min: 0.1,
     },
     estimatedAmount: {
       type: Number,
@@ -24,20 +24,43 @@ const wasteSubmissionSchema = new mongoose.Schema(
     franchisee: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Franchisee",
-      default: null // assigned later
+      default: null, // assigned later
     },
     status: {
       type: String,
-      enum: ["pending", "approved", "collected", "verified", "paid", "rejected"],
+      enum: [
+        "pending",
+        "approved",
+        "vendor-assigned",
+        "collected",
+        "verified",
+        "paid",
+        "rejected",
+      ],
       default: "pending",
     },
     images: [
       {
         type: String, // Cloudinary URLs
-      }
+      },
     ],
     notes: {
       type: String,
+    },
+    vendor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", 
+      default: null,
+    },
+
+    pickupMethod: {
+      type: String,
+      enum: ["self", "vendor"],
+      default: "self",
+    },
+
+    finalAmount: {
+      type: Number,
     },
   },
   { timestamps: true }
