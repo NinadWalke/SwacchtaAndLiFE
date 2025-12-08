@@ -32,6 +32,9 @@ import Event from "./pages/services/event/Event.jsx";
 import EventDetail from './pages/services/event/EventDetail.jsx';
 import EventSignUpForm from "./pages/services/event/EventSignUpForm.jsx";
 
+// Franchisee Section
+import FranchiseeForm from "./pages/subadmin/franchisee_form/FranchiseeForm.jsx";
+
 //Training
 import Training from "./pages/services/training/training.jsx";
 
@@ -78,7 +81,8 @@ function App() {
             <Route path="/shop" element={<Shop />} />
             {/* -- Officials Routes -- */}
             <Route path="/officials" element={<OfficialsDashboard />} />
-            <Route path="/officials/create" element={<EventForm />} />
+            <Route path="/officials/event/create" element={<EventForm />} />
+            <Route path="/officials/franchisee/create" element={<FranchiseeForm />} />
             <Route
               path="/officials/report/:id"
               element={<OfficialsReportDisplay />}

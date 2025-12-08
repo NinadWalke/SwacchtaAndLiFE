@@ -5,8 +5,8 @@
 
 /* 1. THEME & FONT VARIABLES */
 :root {
-  --font-heading: 'Poppins', sans-serif;
-  --font-body: 'Lato', sans-serif;
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Lato", sans-serif;
   --color-background: #f8f9fa;
   --color-text: #34495e;
   --color-primary-green: #0a6847;
@@ -56,7 +56,7 @@
   padding: 1.5rem;
   border-radius: 12px;
   border: 1px solid var(--color-border);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .stat-card__title {
@@ -78,7 +78,7 @@
   padding: 1.5rem;
   border-radius: 12px;
   border: 1px solid var(--color-border);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   margin-bottom: 2rem;
 }
 
@@ -97,7 +97,7 @@
 
 .leaflet-popup .leaflet-popup-content-wrapper {
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 .leaflet-popup .leaflet-popup-content {
@@ -116,11 +116,11 @@
   top: 50%;
   margin: -15px 0 0 -15px;
   border: 2px solid var(--color-white);
-  box-shadow: 0 0 5px rgba(0,0,0,0.5);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 .marker-pin::after {
-  content: '';
+  content: "";
   width: 14px;
   height: 14px;
   margin: 6px 0 0 6px;
@@ -129,9 +129,22 @@
   border-radius: 50%;
 }
 
-.marker-pin.allotted { background: var(--color-allotted); }
-.marker-pin.resolved { background: var(--color-resolved); }
-.marker-pin.event { background: var(--color-event); }
+.marker-pin.allotted {
+  background: var(--color-allotted);
+}
+.marker-pin.resolved {
+  background: var(--color-resolved);
+}
+.marker-pin.event {
+  background: var(--color-event);
+}
+.marker-pin.franchisee {
+  background: #e63946; 
+}
+.marker-pin.franchisee:hover {
+  box-shadow: 0 0 8px rgba(230, 57, 70, 0.8);
+}
+
 
 /* 6. TABLE STYLING */
 .table-container {
@@ -144,7 +157,8 @@
   font-size: 0.95rem;
 }
 
-.reports-table th, .reports-table td {
+.reports-table th,
+.reports-table td {
   padding: 12px 15px;
   text-align: left;
 }
@@ -178,9 +192,15 @@
   text-transform: capitalize;
 }
 
-.status--pending { background-color: var(--color-pending); }
-.status--allotted { background-color: var(--color-allotted); }
-.status--resolved { background-color: var(--color-resolved); }
+.status--pending {
+  background-color: var(--color-pending);
+}
+.status--allotted {
+  background-color: var(--color-allotted);
+}
+.status--resolved {
+  background-color: var(--color-resolved);
+}
 
 /* Button styles */
 .btn {
@@ -238,8 +258,14 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .osp-selection-header {
@@ -312,7 +338,7 @@
 
 .osp-card:hover {
   border-color: var(--color-accent-green);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
 

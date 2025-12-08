@@ -23,6 +23,7 @@ const shopRouter = require('./routes/shopRouter.js');
 const ospRouter = require('./routes/ospRouter.js');
 const trainingRouter = require('./routes/trainingRouter.js');
 const recycleRouter = require('./routes/recycleRouter.js');
+const officialRouter = require('./routes/officialRouter.js');
 
 // --- Models ---
 const User = require("./schemas/User.js");
@@ -107,6 +108,7 @@ app.use('/shop', shopRouter);
 app.use('/osp', ospRouter);
 app.use('/training', trainingRouter);
 app.use('/recycle', recycleRouter);
+app.use('/official', officialRouter);
 
 // x. Default Route
 app.get("/", async (req, res) => {

@@ -1,8 +1,30 @@
-const User = require('../schemas/User');
-const WasteType = require('../schemas/WasteType');
-const WasteSubmission = require('../schemas/WasteSubmission');
-const Franchisee = require('../schemas/Franchisee');
-const { sendEmail } = require('../utils/emails'); // adjust path if needed
+const User = require("../schemas/User");
+const WasteType = require("../schemas/WasteType");
+const WasteSubmission = require("../schemas/WasteSubmission");
+const Franchisee = require("../schemas/Franchisee");
+const { sendEmail } = require("../utils/emails"); // adjust path if needed
+
+// GET /recycle/franchisees
+module.exports.getAllFranchisees = async (req, res) => {
+  try {
+    const franchisees = await Franchisee.find()
+      .populate("owner", "fname lname email phone") // show basic owner info
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      count: franchisees.length,
+      franchisees
+    });
+
+  } catch (err) {
+    console.error("Error fetching franchisees:", err);
+    return res.status(500).json({
+      message: "Server error while fetching franchisees",
+      error: err.message
+    });
+  }
+};
+
 
 // POST /recycle/create
 // body: { wasteTypeId, franchiseeId, weightKg?, itemName?, itemDescription?, images? }
@@ -19,12 +41,12 @@ module.exports.createRecycleRequest = async (req, res) => {
       weightKg,
       itemName,
       itemDescription,
-      images
+      images,
     } = req.body;
 
     if (!wasteTypeId || !franchiseeId) {
       return res.status(400).json({
-        message: "wasteTypeId and franchiseeId are required"
+        message: "wasteTypeId and franchiseeId are required",
       });
     }
 
@@ -35,13 +57,13 @@ module.exports.createRecycleRequest = async (req, res) => {
 
     const franchisee = await Franchisee.findById(franchiseeId);
     if (!franchisee || !franchisee.isActive) {
-      return res.status(404).json({ message: "Franchisee not found or inactive" });
+      return res
+        .status(404)
+        .json({ message: "Franchisee not found or inactive" });
     }
 
     const estimatedAmount =
-      weightKg && wasteType.pricePerKg
-        ? weightKg * wasteType.pricePerKg
-        : 0;
+      weightKg && wasteType.pricePerKg ? weightKg * wasteType.pricePerKg : 0;
 
     const submission = await WasteSubmission.create({
       user: userId,
@@ -52,19 +74,18 @@ module.exports.createRecycleRequest = async (req, res) => {
       itemName: itemName || "",
       itemDescription: itemDescription || "",
       images: images || [],
-      status: "pending"
+      status: "pending",
     });
 
     return res.status(201).json({
       message: "Recycle request created and sent to franchisee",
-      submission
+      submission,
     });
-
   } catch (err) {
     console.error("Error creating recycle request:", err);
     return res.status(500).json({
       message: "Server error",
-      error: err.message
+      error: err.message,
     });
   }
 };
@@ -112,11 +133,13 @@ module.exports.getFranchiseeRequests = async (req, res) => {
     // Find the franchisee owned by this user
     const franchisee = await Franchisee.findOne({ owner: userId });
     if (!franchisee) {
-      return res.status(403).json({ message: "No franchisee assigned to this account" });
+      return res
+        .status(403)
+        .json({ message: "No franchisee assigned to this account" });
     }
 
     const submissions = await WasteSubmission.find({
-      franchisee: franchisee._id
+      franchisee: franchisee._id,
     })
       .populate("user", "fname lname email phone")
       .populate("wasteType", "name")
@@ -139,16 +162,21 @@ module.exports.approveSubmission = async (req, res) => {
 
     const submissionId = req.params.id;
 
+    // Find franchisee owned by this user
     const franchisee = await Franchisee.findOne({ owner: userId });
     if (!franchisee) {
-      return res.status(403).json({ message: "No franchisee assigned to this account" });
+      return res
+        .status(403)
+        .json({ message: "This account is not linked to any franchisee" });
     }
 
+    // Find submission belonging to this franchisee
     let submission = await WasteSubmission.findOne({
       _id: submissionId,
-      franchisee: franchisee._id
+      franchisee: franchisee._id,
     })
-      .populate("user", "fname lname email")
+      .populate("user", "fname lname email phone")
+      .populate("wasteType", "name")
       .populate("franchisee", "centerName address pincode");
 
     if (!submission) {
@@ -156,46 +184,63 @@ module.exports.approveSubmission = async (req, res) => {
     }
 
     if (submission.status !== "pending") {
-      return res.status(400).json({ message: "Only pending requests can be approved" });
+      return res
+        .status(400)
+        .json({ message: "Only pending submissions can be approved" });
     }
 
+    // Update status
     submission.status = "approved";
     await submission.save();
 
-    // Send email to user with franchisee visit details
+    // Email to user (matching committee style)
     const user = submission.user;
     const fran = submission.franchisee;
 
     const emailHTML = `
       <h2>Recycle Request Approved</h2>
-      <p>Hi <strong>${user.fname || ""}</strong>,</p>
-      <p>Your recycle request has been <b>APPROVED</b> by <strong>${fran.centerName}</strong>.</p>
-      <p>Please visit the franchisee store with your segregated waste:</p>
-      <p><b>Address:</b> ${fran.address}, ${fran.pincode}</p>
+      <p>Hi <strong>${user.fname || "User"}</strong>,</p>
+      <p>Your recycle request for <b>${
+        submission.wasteType.name
+      }</b> has been <b>APPROVED</b> by the franchisee:</p>
+
       <br/>
-      <p>Show this message at the store for faster processing.</p>
+      <p><strong>${fran.centerName}</strong></p>
+      <p>${fran.address}, ${fran.pincode}</p>
+      <br/>
+
+      <p>Please visit this franchisee store to complete the waste submission process offline.</p>
+
+      <p>Our team will assist you with weighing, pricing, and final confirmation.</p>
+
+      <br/>
       <p>Regards,<br/>GreenSathi Team</p>
     `;
 
     try {
       if (user.email) {
-        await sendEmail(user.email, "Your Recycle Request is Approved", emailHTML);
+        await sendEmail(
+          user.email,
+          "Your Recycle Request Has Been Approved",
+          emailHTML
+        );
       }
     } catch (emailErr) {
       console.error("Error sending approval email:", emailErr);
-      // We won't fail the main request due to email error
+      // Do NOT break the flow
     }
 
     return res.status(200).json({
-      message: "Submission approved and user notified via email",
-      submission
+      message: "Submission approved and email sent to user",
+      submission,
     });
   } catch (err) {
     console.error("Error approving submission:", err);
-    return res.status(500).json({ message: "Server error" });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: err.message });
   }
 };
-
 
 // PATCH /recycle/franchisee/requests/:id/reject
 // body: { reason? }
@@ -211,12 +256,14 @@ module.exports.rejectSubmission = async (req, res) => {
 
     const franchisee = await Franchisee.findOne({ owner: userId });
     if (!franchisee) {
-      return res.status(403).json({ message: "No franchisee assigned to this account" });
+      return res
+        .status(403)
+        .json({ message: "No franchisee assigned to this account" });
     }
 
     let submission = await WasteSubmission.findOne({
       _id: submissionId,
-      franchisee: franchisee._id
+      franchisee: franchisee._id,
     })
       .populate("user", "fname lname email")
       .populate("franchisee", "centerName");
@@ -226,7 +273,9 @@ module.exports.rejectSubmission = async (req, res) => {
     }
 
     if (submission.status !== "pending") {
-      return res.status(400).json({ message: "Only pending requests can be rejected" });
+      return res
+        .status(400)
+        .json({ message: "Only pending requests can be rejected" });
     }
 
     submission.status = "rejected";
@@ -239,13 +288,19 @@ module.exports.rejectSubmission = async (req, res) => {
       const emailHTML = `
         <h2>Recycle Request Rejected</h2>
         <p>Hi <strong>${user.fname || ""}</strong>,</p>
-        <p>Your recycle request at <b>${submission.franchisee.centerName}</b> has been <b>REJECTED</b>.</p>
+        <p>Your recycle request at <b>${
+          submission.franchisee.centerName
+        }</b> has been <b>REJECTED</b>.</p>
         ${reason ? `<p><b>Reason:</b> ${reason}</p>` : ""}
         <p>You may submit a new request with valid details.</p>
         <p>Regards,<br/>GreenSathi Team</p>
       `;
       try {
-        await sendEmail(user.email, "Your Recycle Request was Rejected", emailHTML);
+        await sendEmail(
+          user.email,
+          "Your Recycle Request was Rejected",
+          emailHTML
+        );
       } catch (emailErr) {
         console.error("Error sending rejection email:", emailErr);
       }
@@ -253,7 +308,7 @@ module.exports.rejectSubmission = async (req, res) => {
 
     return res.status(200).json({
       message: "Submission rejected",
-      submission
+      submission,
     });
   } catch (err) {
     console.error("Error rejecting submission:", err);
