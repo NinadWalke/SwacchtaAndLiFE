@@ -12,15 +12,20 @@ import Signup from "./pages/authentication/Signup";
 import Otp from "./pages/authentication/Otp";
 // Admin
 import AdminDashboard from "./pages/admin/AdminDashboard";
+// Franchisee Dashboard
+import FranchiseeDashboard from "./pages/franchisee_subadmin/FranchiseeDashboard.jsx";
+
 // Home
 import Home from "./pages/home/Home";
 // Profile
 import Profile from "./pages/profile/Profile";
 import MyReports from "./pages/profile/MyReports.jsx";
+import MyRecycleRequests from "./pages/profile/MyRecycleRequests.jsx";
 
 // Services
 import Upload from "./pages/services/report/Upload.jsx";
 import OspDashboard from "./pages/osp/OspDashboard.jsx";
+import Recycle from "./pages/services/recycle/Recycle.jsx";
 
 // Committee Section
 import CommitteeForms from "./pages/services/committee/CommitteeForms.jsx";
@@ -30,6 +35,9 @@ import CommitteeDashboard from "./pages/services/committee/CommitteeDashboard.js
 import Event from "./pages/services/event/Event.jsx";
 import EventDetail from './pages/services/event/EventDetail.jsx';
 import EventSignUpForm from "./pages/services/event/EventSignUpForm.jsx";
+
+// Franchisee Section
+import FranchiseeForm from "./pages/subadmin/franchisee_form/FranchiseeForm.jsx";
 
 //Training
 import Training from "./pages/services/training/training.jsx";
@@ -43,7 +51,6 @@ import EventForm from "./pages/subadmin/event_form/EventForm.jsx";
 
 // Auth Provider
 import { AuthProvider } from "./components/AuthContext";
-
 function App() {
   return (
     <div>
@@ -61,6 +68,7 @@ function App() {
             {/* -- User Profile --*/}
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/reports" element={<MyReports />} />
+            <Route path="/profile/recycle-requests" element={<MyRecycleRequests />} />
             {/* -- Core Routes -- */}
             <Route path="/upload" element={<Upload />} />
             <Route path="/osp" element={<OspDashboard />} />
@@ -73,10 +81,13 @@ function App() {
             <Route path="/events" element={<Event />} />
             <Route path="/events/:id" element={<EventDetail />} />
             <Route path="/events/:id/signup" element={<EventSignUpForm />} />
+            <Route path="/recycle" element={<Recycle />} />
+            <Route path="/franchisee-dashboard" element={<FranchiseeDashboard />} />
             <Route path="/shop" element={<Shop />} />
             {/* -- Officials Routes -- */}
             <Route path="/officials" element={<OfficialsDashboard />} />
-            <Route path="/officials/create" element={<EventForm />} />
+            <Route path="/officials/event/create" element={<EventForm />} />
+            <Route path="/officials/franchisee/create" element={<FranchiseeForm />} />
             <Route
               path="/officials/report/:id"
               element={<OfficialsReportDisplay />}

@@ -184,9 +184,15 @@ export default function OfficialsDashboard() {
         <h1 className="dashboard-header__title">Officials Dashboard</h1>
         <button
           className="btn btn--primary"
-          onClick={() => navigate("/officials/create")}
+          onClick={() => navigate("/officials/event/create")}
         >
           Create New Event
+        </button>
+        <button
+          className="btn btn--primary"
+          onClick={() => navigate("/officials/franchisee/create")}
+        >
+          Add a franchisee
         </button>
       </header>
 
