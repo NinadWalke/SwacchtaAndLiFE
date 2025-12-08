@@ -349,14 +349,14 @@ export default function OfficialsDashboard() {
                               ? openOspSelection(r._id)
                               : toggleStatusDB(r._id)
                           }
-                          disabled={loading}
+                          disabled={loading | r.status === "allotted"}
                         >
                           {loading
                             ? "Processing"
                             : r.status === "pending"
                             ? "Allot Report"
                             : r.status === "allotted"
-                            ? "Mark Resolved"
+                            ? "Report Allotted"
                             : "Close Report"}
                         </button>
                       </td>

@@ -115,8 +115,8 @@ export default function Home() {
       <section className="home__hero" style={inlineHeroStyle}>
         <div className="home__hero-content">
           {/* SEO Improvement: Using h1 for the primary page title */}
-          <h1 className="home__hero-title">Empowering Clean Cities</h1>
-          <p className="home__hero-subtitle">
+          <h1 className="home__hero-title" style={{color: "white"}}>Empowering Clean Cities</h1>
+          <p className="home__hero-subtitle" style={{color: "white"}}>
             Swacchta&Life is a smart waste management platform that leverages
             machine learning and citizen participation for sustainable urban
             cleanliness. Join us in building a cleaner, greener future.

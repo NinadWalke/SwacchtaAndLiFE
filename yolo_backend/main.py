@@ -39,7 +39,7 @@ async def scan_image(file: UploadFile = File(...)):
     print(f"Uploaded file saved at: {file_path}")
 
     # 2. Run Inference using YOLO
-    results = model(file_path, conf=0.2,iou=0.5, augment=True)
+    results = model(file_path, conf=0.4,iou=0.5, augment=True)
     result = results[0]  # Get the first result
 
     # 3. Check if any objects/garbage were detected
