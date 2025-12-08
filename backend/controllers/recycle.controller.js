@@ -383,7 +383,7 @@ module.exports.rejectSubmission = async (req, res) => {
     }
 
     const submissionId = req.params.id;
-    const { reason } = req.body;
+     const reason = req.body?.reason || "Rejected by franchisee";
 
     const franchisee = await Franchisee.findOne({ owner: userId });
     if (!franchisee) {
