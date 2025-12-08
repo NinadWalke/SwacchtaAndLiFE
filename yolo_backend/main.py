@@ -39,8 +39,7 @@ async def scan_image(file: UploadFile = File(...)):
     print(f"Uploaded file saved at: {file_path}")
 
     # 2. Run Inference using YOLO
-    # This automatically handles loading the image and predicting
-    results = model(file_path)
+    results = model(file_path, conf=0.2,iou=0.5, augment=True)
     result = results[0]  # Get the first result
 
     # 3. Check if any objects/garbage were detected
@@ -51,9 +50,7 @@ async def scan_image(file: UploadFile = File(...)):
             "objects_detected": False
         }, status_code=200)
 
-    # 4. Generate the "Pretty" Image
-    # .plot() draws the bounding boxes, class names, and confidence scores 
-    # using the specific colors you saw in Colab.
+    # 4. Annotate the image with detected boxes and labels  
     annotated_image = result.plot()
 
     # 5. Save the annotated image
