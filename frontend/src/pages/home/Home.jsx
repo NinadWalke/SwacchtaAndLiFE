@@ -22,6 +22,7 @@ const createMarkerIcon = (status) => {
 export default function Home() {
   const navigate = useNavigate();
   const [allReports, setAllReports] = useState([]);
+  const [franchisees, setFranchisees] = useState([]);
   const [events, setEvents] = useState([]);
   const images = [
     '/assets/HeroImg1.jpg',
