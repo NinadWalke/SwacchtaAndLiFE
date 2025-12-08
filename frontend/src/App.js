@@ -12,11 +12,15 @@ import Signup from "./pages/authentication/Signup";
 import Otp from "./pages/authentication/Otp";
 // Admin
 import AdminDashboard from "./pages/admin/AdminDashboard";
+// Franchisee Dashboard
+import FranchiseeDashboard from "./pages/franchisee_subadmin/FranchiseeDashboard.jsx";
+
 // Home
 import Home from "./pages/home/Home";
 // Profile
 import Profile from "./pages/profile/Profile";
 import MyReports from "./pages/profile/MyReports.jsx";
+import MyRecycleRequests from "./pages/profile/MyRecycleRequests.jsx";
 
 // Services
 import Upload from "./pages/services/report/Upload.jsx";
@@ -47,7 +51,6 @@ import EventForm from "./pages/subadmin/event_form/EventForm.jsx";
 
 // Auth Provider
 import { AuthProvider } from "./components/AuthContext";
-
 function App() {
   return (
     <div>
@@ -65,6 +68,7 @@ function App() {
             {/* -- User Profile --*/}
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/reports" element={<MyReports />} />
+            <Route path="/profile/recycle-requests" element={<MyRecycleRequests />} />
             {/* -- Core Routes -- */}
             <Route path="/upload" element={<Upload />} />
             <Route path="/osp" element={<OspDashboard />} />
@@ -78,6 +82,7 @@ function App() {
             <Route path="/events/:id" element={<EventDetail />} />
             <Route path="/events/:id/signup" element={<EventSignUpForm />} />
             <Route path="/recycle" element={<Recycle />} />
+            <Route path="/franchisee-dashboard" element={<FranchiseeDashboard />} />
             <Route path="/shop" element={<Shop />} />
             {/* -- Officials Routes -- */}
             <Route path="/officials" element={<OfficialsDashboard />} />

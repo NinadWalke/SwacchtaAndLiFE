@@ -1,0 +1,124 @@
+/* -------------------------------------------
+   MyRecycleRequests.css
+   Matches the eco-minimalist theme used in other forms
+-------------------------------------------- */
+
+:root {
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Lato', sans-serif;
+
+  --color-background: #f8f9fa;
+  --color-text: #34495e;
+  --color-primary-green: #0a6847;
+  --color-accent-green: #77b0aa;
+
+  --color-white: #ffffff;
+  --color-border: #dbe2e9;
+
+  --color-pending: #f1c40f;
+  --color-approved: #2ecc71;
+  --color-rejected: #e74c3c;
+
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Page wrapper */
+.my-requests-page {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  background: linear-gradient(135deg, var(--color-background), #eef2f5);
+  min-height: 100vh;
+}
+
+/* Card container */
+.my-requests-card {
+  width: 100%;
+  max-width: 700px;
+  background: var(--color-white);
+  padding: 2.5rem;
+  border-radius: 14px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
+}
+
+/* Title */
+.my-requests-title {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: var(--color-primary-green);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.loading-text,
+.empty-state {
+  text-align: center;
+  color: var(--color-text);
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+/* Requests list */
+.requests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Request card */
+.request-item {
+  padding: 1.25rem;
+  background: var(--color-white);
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.request-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Header */
+.request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.request-waste-type {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-primary-green);
+  margin: 0;
+}
+
+/* Status badges */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.status-pending {
+  background-color: var(--color-pending);
+}
+
+.status-approved {
+  background-color: var(--color-approved);
+}
+
+.status-rejected {
+  background-color: var(--color-rejected);
+}
+
+/* Fields */
+.request-field {
+  margin: 0.4rem 0;
+  color: var(--color-text);
+  font-family: var(--font-body);
+}

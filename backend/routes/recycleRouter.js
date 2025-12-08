@@ -3,24 +3,31 @@ const router = express.Router();
 const recycleController = require('../controllers/recycle.controller');
 const wrapASync = require('../utils/wrapAsync');
 
+// Franchisee listing
 router.get('/franchisees', wrapASync(recycleController.getAllFranchisees));
+router.get('/franchisees/near-me', wrapASync(recycleController.getNearbyFranchisees));
 
-// User: create a recycle request to a specific franchisee
+// Create recycle request
 router.post('/create', wrapASync(recycleController.createRecycleRequest));
 
-// User: get own recycle requests
+// User's own submissions
 router.get('/my-requests', wrapASync(recycleController.getMySubmissions));
 
-// Public/User: get waste types
+// Waste type public fetching
 router.get('/types', wrapASync(recycleController.getWasteTypes));
 
-// Franchisee admin: get requests for their franchisee
+// Admin: CRUD on waste types
+router.post('/types', wrapASync(recycleController.createWasteType));
+router.patch('/types/:id', wrapASync(recycleController.updateWasteType));
+router.delete('/types/:id', wrapASync(recycleController.deleteWasteType));
+
+// Franchisee waste types selection
+router.get('/franchisee/waste-types', wrapASync(recycleController.getFranchiseeWasteTypes));
+router.post('/franchisee/waste-types', wrapASync(recycleController.updateFranchiseeWasteTypes));
+
+// Franchisee managing requests
 router.get('/franchisee/requests', wrapASync(recycleController.getFranchiseeRequests));
-
-// Franchisee admin: approve a request
 router.patch('/franchisee/requests/:id/approve', wrapASync(recycleController.approveSubmission));
-
-// Franchisee admin: reject a request
 router.patch('/franchisee/requests/:id/reject', wrapASync(recycleController.rejectSubmission));
 
 module.exports = router;

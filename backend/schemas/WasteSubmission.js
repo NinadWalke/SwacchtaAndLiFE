@@ -28,7 +28,7 @@ const wasteSubmissionSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "assigned", "collected", "verified", "paid", "rejected"],
+      enum: ["pending", "approved", "collected", "verified", "paid", "rejected"],
       default: "pending",
     },
     images: [

@@ -56,7 +56,12 @@ const franchiseeSchema = new mongoose.Schema(
     balance: {
       type: Number,
       default: 0
-    }
+    },
+    acceptedWasteTypes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "WasteType"
+}]
+
   },
   { timestamps: true }
 );

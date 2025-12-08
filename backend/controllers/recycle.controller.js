@@ -1,6 +1,6 @@
 const User = require("../schemas/User");
-const WasteType = require("../schemas/WasteType");
 const WasteSubmission = require("../schemas/WasteSubmission");
+const WasteType = require("../schemas/WasteType");
 const Franchisee = require("../schemas/Franchisee");
 const { sendEmail } = require("../utils/emails"); // adjust path if needed
 
@@ -25,6 +25,35 @@ module.exports.getAllFranchisees = async (req, res) => {
   }
 };
 
+module.exports.getNearbyFranchisees = async (req, res) => {
+  try {
+    const { lat, lng, radiusKm = 25 } = req.query;
+
+    if (!lat || !lng) {
+      return res.status(400).json({ message: "Latitude and longitude are required" });
+    }
+
+    const radiusInRadians = radiusKm / 6371; // Earth radius km → radians
+
+    const franchisees = await Franchisee.find({
+      location: {
+        $geoWithin: {
+          $centerSphere: [[parseFloat(lng), parseFloat(lat)], radiusInRadians]
+        }
+      }
+    }).populate("owner", "fname lname email phone");
+
+    return res.status(200).json({
+      count: franchisees.length,
+      radiusKm: Number(radiusKm),
+      franchisees
+    });
+
+  } catch (err) {
+    console.error("Nearby franchisees error:", err);
+    return res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
 
 // POST /recycle/create
 // body: { wasteTypeId, franchiseeId, weightKg?, itemName?, itemDescription?, images? }
@@ -120,6 +149,62 @@ module.exports.getWasteTypes = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+module.exports.createWasteType = async (req, res) => {
+  const { name, description, pricePerKg } = req.body;
+
+  const type = await WasteType.create({
+    name,
+    description,
+    pricePerKg
+  });
+
+  return res.status(201).json({
+    message: "Waste type created successfully.",
+    type
+  });
+};
+module.exports.updateWasteType = async (req, res) => {
+  const { id } = req.params;
+
+  const updated = await WasteType.findByIdAndUpdate(id, req.body, {
+    new: true
+  });
+
+  return res.json({
+    message: "Waste type updated.",
+    type: updated
+  });
+};
+module.exports.deleteWasteType = async (req, res) => {
+  const { id } = req.params;
+  await WasteType.findByIdAndDelete(id);
+
+  return res.json({ message: "Waste type deleted successfully." });
+};
+module.exports.getFranchiseeWasteTypes = async (req, res) => {
+  const franchisee = await Franchisee.findOne({ owner: req.user._id })
+    .populate("acceptedWasteTypes");
+
+  if (!franchisee) return res.status(404).json({ message: "Franchisee not found." });
+
+  return res.json({
+    types: franchisee.acceptedWasteTypes
+  });
+};
+module.exports.updateFranchiseeWasteTypes = async (req, res) => {
+  const { types } = req.body;
+
+  const franchisee = await Franchisee.findOneAndUpdate(
+    { owner: req.user._id },
+    { acceptedWasteTypes: types },
+    { new: true }
+  );
+  
+  return res.json({
+    message: "Waste types updated for franchisee.",
+    types: franchisee.acceptedWasteTypes
+  });
+};
 
 // GET /recycle/franchisee/requests
 // Franchisee admin is logged in as User with role 'osp' (or similar)
@@ -137,6 +222,7 @@ module.exports.getFranchiseeRequests = async (req, res) => {
         .status(403)
         .json({ message: "No franchisee assigned to this account" });
     }
+    
 
     const submissions = await WasteSubmission.find({
       franchisee: franchisee._id,
@@ -144,7 +230,7 @@ module.exports.getFranchiseeRequests = async (req, res) => {
       .populate("user", "fname lname email phone")
       .populate("wasteType", "name")
       .sort({ createdAt: -1 });
-
+    
     return res.status(200).json(submissions);
   } catch (err) {
     console.error("Error fetching franchisee submissions:", err);
