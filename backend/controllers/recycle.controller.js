@@ -229,7 +229,7 @@ module.exports.getFranchiseeRequests = async (req, res) => {
 
     const submissions = await WasteSubmission.find({
       franchisee: franchisee._id,
-    })
+    }).populate('vendor')
       .populate("user", "fname lname email phone")
       .populate("wasteType", "name")
       .sort({ createdAt: -1 });

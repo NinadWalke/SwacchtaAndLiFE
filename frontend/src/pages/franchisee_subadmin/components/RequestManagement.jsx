@@ -42,21 +42,28 @@ function RequestManagement() {
       setMessage({ type: "success", text: "Request approved successfully!" });
       fetchRequests();
     } catch (err) {
-      setMessage({ type: "error", text: err?.response?.data?.message || "Failed to approve request." });
+      setMessage({
+        type: "error",
+        text: err?.response?.data?.message || "Failed to approve request.",
+      });
     }
     setActionLoading(null);
   };
 
   const handleReject = async (id) => {
-    if (!window.confirm("Are you sure you want to reject this request?")) return;
-    
+    if (!window.confirm("Are you sure you want to reject this request?"))
+      return;
+
     setActionLoading(id);
     try {
       await api.patch(`/recycle/franchisee/requests/${id}/reject`);
       setMessage({ type: "success", text: "Request rejected." });
       fetchRequests();
     } catch (err) {
-      setMessage({ type: "error", text: err?.response?.data?.message || "Failed to reject request." });
+      setMessage({
+        type: "error",
+        text: err?.response?.data?.message || "Failed to reject request.",
+      });
     }
     setActionLoading(null);
   };
@@ -69,16 +76,40 @@ function RequestManagement() {
 
     setActionLoading(selectedRequestId);
     try {
-      await api.patch(`/recycle/franchisee/requests/${selectedRequestId}/assign-vendor`, {
-        vendorId: vendorEmail,
-      });
+      await api.patch(
+        `/recycle/franchisee/requests/${selectedRequestId}/assign-vendor`,
+        {
+          vendorId: vendorEmail,
+        }
+      );
       setMessage({ type: "success", text: "Vendor assigned successfully!" });
       setShowVendorModal(false);
       setVendorEmail("");
       setSelectedRequestId(null);
       fetchRequests();
     } catch (err) {
-      setMessage({ type: "error", text: err?.response?.data?.message || "Failed to assign vendor." });
+      setMessage({
+        type: "error",
+        text: err?.response?.data?.message || "Failed to assign vendor.",
+      });
+    }
+    setActionLoading(null);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this submission?"))
+      return;
+
+    setActionLoading(id);
+    try {
+      await api.delete(`/waste-submission/${id}`);
+      setMessage({ type: "success", text: "Submission deleted successfully." });
+      fetchRequests();
+    } catch (err) {
+      setMessage({
+        type: "error",
+        text: err?.response?.data?.message || "Failed to delete submission.",
+      });
     }
     setActionLoading(null);
   };
@@ -97,7 +128,11 @@ function RequestManagement() {
   const statusConfig = {
     pending: { label: "Pending", icon: "⏳", color: "pending" },
     approved: { label: "Approved", icon: "✅", color: "approved" },
-    "vendor-assigned": { label: "Vendor Assigned", icon: "🚚", color: "vendor-assigned" },
+    "vendor-assigned": {
+      label: "Vendor Assigned",
+      icon: "🚚",
+      color: "vendor-assigned",
+    },
     collected: { label: "Collected", icon: "📦", color: "collected" },
     verified: { label: "Verified", icon: "✔️", color: "verified" },
     paid: { label: "Paid", icon: "💰", color: "paid" },
@@ -110,12 +145,12 @@ function RequestManagement() {
     "Glass Waste": "🍾",
     "Metal Waste": "🔧",
     "Paper & Cardboard": "📦",
-    "Battery Waste": "🔋"
+    "Battery Waste": "🔋",
   };
 
   const getStatusCounts = () => {
     const counts = { all: requests.length };
-    requests.forEach(req => {
+    requests.forEach((req) => {
       counts[req.status] = (counts[req.status] || 0) + 1;
     });
     return counts;
@@ -124,8 +159,8 @@ function RequestManagement() {
   const statusCounts = getStatusCounts();
 
   const filteredRequests = requests
-    .filter(req => filter === "all" || req.status === filter)
-    .filter(req => {
+    .filter((req) => filter === "all" || req.status === filter)
+    .filter((req) => {
       if (!searchTerm) return true;
       const search = searchTerm.toLowerCase();
       return (
@@ -142,7 +177,9 @@ function RequestManagement() {
       <div className="management-hero">
         <div className="hero-content-management">
           <h1 className="management-title">Request Management</h1>
-          <p className="management-subtitle">Review and manage recycling submissions from users</p>
+          <p className="management-subtitle">
+            Review and manage recycling submissions from users
+          </p>
         </div>
       </div>
 
@@ -158,21 +195,27 @@ function RequestManagement() {
         <div className="stat-card-management">
           <div className="stat-icon-management">⏳</div>
           <div className="stat-info-management">
-            <span className="stat-number-management">{statusCounts.pending || 0}</span>
+            <span className="stat-number-management">
+              {statusCounts.pending || 0}
+            </span>
             <span className="stat-label-management">Pending Review</span>
           </div>
         </div>
         <div className="stat-card-management">
           <div className="stat-icon-management">✅</div>
           <div className="stat-info-management">
-            <span className="stat-number-management">{statusCounts.approved || 0}</span>
+            <span className="stat-number-management">
+              {statusCounts.approved || 0}
+            </span>
             <span className="stat-label-management">Approved</span>
           </div>
         </div>
         <div className="stat-card-management">
           <div className="stat-icon-management">💰</div>
           <div className="stat-info-management">
-            <span className="stat-number-management">{statusCounts.paid || 0}</span>
+            <span className="stat-number-management">
+              {statusCounts.paid || 0}
+            </span>
             <span className="stat-label-management">Completed</span>
           </div>
         </div>
@@ -185,7 +228,9 @@ function RequestManagement() {
             {message.type === "success" ? "✅" : "⚠️"}
           </span>
           <span>{message.text}</span>
-          <button className="alert-close" onClick={() => setMessage(null)}>×</button>
+          <button className="alert-close" onClick={() => setMessage(null)}>
+            ×
+          </button>
         </div>
       )}
 
@@ -202,39 +247,55 @@ function RequestManagement() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           {searchTerm && (
-            <button className="clear-search" onClick={() => setSearchTerm("")}>×</button>
+            <button className="clear-search" onClick={() => setSearchTerm("")}>
+              ×
+            </button>
           )}
         </div>
 
         {/* Filter Tabs */}
         <div className="filter-tabs-management">
           <button
-            className={`filter-tab-management ${filter === "all" ? "active" : ""}`}
+            className={`filter-tab-management ${
+              filter === "all" ? "active" : ""
+            }`}
             onClick={() => setFilter("all")}
           >
             All Requests
             <span className="tab-badge">{statusCounts.all || 0}</span>
           </button>
           <button
-            className={`filter-tab-management ${filter === "pending" ? "active" : ""}`}
+            className={`filter-tab-management ${
+              filter === "pending" ? "active" : ""
+            }`}
             onClick={() => setFilter("pending")}
           >
             Pending
-            {statusCounts.pending > 0 && <span className="tab-badge">{statusCounts.pending}</span>}
+            {statusCounts.pending > 0 && (
+              <span className="tab-badge">{statusCounts.pending}</span>
+            )}
           </button>
           <button
-            className={`filter-tab-management ${filter === "approved" ? "active" : ""}`}
+            className={`filter-tab-management ${
+              filter === "approved" ? "active" : ""
+            }`}
             onClick={() => setFilter("approved")}
           >
             Approved
-            {statusCounts.approved > 0 && <span className="tab-badge">{statusCounts.approved}</span>}
+            {statusCounts.approved > 0 && (
+              <span className="tab-badge">{statusCounts.approved}</span>
+            )}
           </button>
           <button
-            className={`filter-tab-management ${filter === "rejected" ? "active" : ""}`}
+            className={`filter-tab-management ${
+              filter === "rejected" ? "active" : ""
+            }`}
             onClick={() => setFilter("rejected")}
           >
             Rejected
-            {statusCounts.rejected > 0 && <span className="tab-badge">{statusCounts.rejected}</span>}
+            {statusCounts.rejected > 0 && (
+              <span className="tab-badge">{statusCounts.rejected}</span>
+            )}
           </button>
         </div>
       </div>
@@ -253,15 +314,19 @@ function RequestManagement() {
             </div>
             <h3>{searchTerm ? "No matching requests" : "No requests yet"}</h3>
             <p>
-              {searchTerm 
-                ? "Try adjusting your search terms" 
+              {searchTerm
+                ? "Try adjusting your search terms"
                 : "Requests will appear here once users submit them"}
             </p>
           </div>
         ) : (
           <div className="requests-grid-management">
             {filteredRequests.map((req) => {
-              const statusInfo = statusConfig[req.status] || { label: req.status, icon: "📋", color: "default" };
+              const statusInfo = statusConfig[req.status] || {
+                label: req.status,
+                icon: "📋",
+                color: "default",
+              };
               const wasteIcon = wasteTypeIcons[req.wasteType?.name] || "♻️";
 
               return (
@@ -279,8 +344,12 @@ function RequestManagement() {
                         <p className="user-email">{req.user?.email || "N/A"}</p>
                       </div>
                     </div>
-                    <span className={`status-badge-management status-${statusInfo.color}`}>
-                      <span className="status-icon-badge">{statusInfo.icon}</span>
+                    <span
+                      className={`status-badge-management status-${statusInfo.color}`}
+                    >
+                      <span className="status-icon-badge">
+                        {statusInfo.icon}
+                      </span>
                       {statusInfo.label}
                     </span>
                   </div>
@@ -290,7 +359,9 @@ function RequestManagement() {
                     <div className="waste-type-info">
                       <span className="waste-icon-card">{wasteIcon}</span>
                       <div>
-                        <h4 className="waste-type-name">{req.wasteType?.name || "Unknown"}</h4>
+                        <h4 className="waste-type-name">
+                          {req.wasteType?.name || "Unknown"}
+                        </h4>
                         <p className="item-name-management">{req.itemName}</p>
                       </div>
                     </div>
@@ -312,14 +383,18 @@ function RequestManagement() {
                       <span className="detail-icon-box">⚖️</span>
                       <div>
                         <span className="detail-label-box">Weight</span>
-                        <span className="detail-value-box">{req.weightKg || 0} kg</span>
+                        <span className="detail-value-box">
+                          {req.weightKg || 0} kg
+                        </span>
                       </div>
                     </div>
                     <div className="detail-box">
                       <span className="detail-icon-box">💵</span>
                       <div>
                         <span className="detail-label-box">Est. Amount</span>
-                        <span className="detail-value-box amount">₹{req.estimatedAmount || 0}</span>
+                        <span className="detail-value-box amount">
+                          ₹{req.estimatedAmount || 0}
+                        </span>
                       </div>
                     </div>
                     <div className="detail-box full-width">
@@ -332,7 +407,7 @@ function RequestManagement() {
                             month: "short",
                             year: "numeric",
                             hour: "2-digit",
-                            minute: "2-digit"
+                            minute: "2-digit",
                           })}
                         </span>
                       </div>
@@ -344,7 +419,8 @@ function RequestManagement() {
                     <div className="vendor-assigned-info">
                       <span className="vendor-icon-info">👤</span>
                       <span>
-                        Vendor: {req.vendor.fname || "Unknown"} {req.vendor.lname || ""}
+                        Vendor: {req.vendor.fname || "Unknown"}{" "}
+                        {req.vendor.lname || ""}
                       </span>
                     </div>
                   )}
@@ -396,10 +472,26 @@ function RequestManagement() {
                       </>
                     ) : (
                       <div className="status-display">
-                        <span className="status-icon-display">{statusInfo.icon}</span>
+                        <span className="status-icon-display">
+                          {statusInfo.icon}
+                        </span>
                         <span>Status: {statusInfo.label}</span>
                       </div>
                     )}
+                    <button
+                      className="btn-action-modern delete"
+                      disabled={actionLoading === req._id}
+                      onClick={() => handleDelete(req._id)}
+                    >
+                      {actionLoading === req._id ? (
+                        <span className="btn-spinner"></span>
+                      ) : (
+                        <>
+                          <span>🗑️</span>
+                          Delete
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
               );
@@ -414,10 +506,14 @@ function RequestManagement() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>Assign Vendor</h3>
-              <button className="modal-close" onClick={closeVendorModal}>×</button>
+              <button className="modal-close" onClick={closeVendorModal}>
+                ×
+              </button>
             </div>
             <div className="modal-body">
-              <p className="modal-description">Enter the vendor's email address to assign them to this request.</p>
+              <p className="modal-description">
+                Enter the vendor's email address to assign them to this request.
+              </p>
               <div className="form-group-modal">
                 <label>Vendor Email</label>
                 <input
@@ -434,8 +530,8 @@ function RequestManagement() {
               <button className="btn-modal-cancel" onClick={closeVendorModal}>
                 Cancel
               </button>
-              <button 
-                className="btn-modal-confirm" 
+              <button
+                className="btn-modal-confirm"
                 onClick={handleAssignVendor}
                 disabled={!vendorEmail.trim() || actionLoading}
               >

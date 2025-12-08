@@ -49,7 +49,7 @@ const wasteSubmissionSchema = new mongoose.Schema(
     },
     vendor: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Vendor",
+      ref: "User", 
       default: null,
     },
 
