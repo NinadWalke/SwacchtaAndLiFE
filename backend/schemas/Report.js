@@ -47,6 +47,9 @@ const reportSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+reportSchema.index({ location: "2dsphere" });
+
 const Report = mongoose.model("Report", reportSchema);
+
 
 module.exports = Report;
