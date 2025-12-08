@@ -23,7 +23,30 @@ export default function Home() {
   const navigate = useNavigate();
   const [allReports, setAllReports] = useState([]);
   const [events, setEvents] = useState([]);
-  const [location, setLocation] = useState({ latitude: null, longitude: null }); // state for user location
+  
+  const images = [
+    '/assets/HeroImg1.jpg',
+    '/assets/HeroImg2.jpg',
+    '/assets/HeroImg3.jpg'
+  ];
+  const [currentImgIndex, setCurrentImgIndex] = useState(0);
+
+  useEffect(() => {
+    const slideshowTimer = setInterval(() => {
+      setCurrentImgIndex((prev) => (prev + 1) % images.length);
+    }, 5000); // Changes image every 5 seconds
+    
+    return () => clearInterval(slideshowTimer); // Cleanup timer
+  }, []);
+
+  const inlineHeroStyle = {
+    backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${images[currentImgIndex]})`,
+    transition: 'background-image 1.5s ease-in-out',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center'
+  };
+  
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
   const { user } = useAuth();
   useEffect(() => {
     const getReports = async () => {
@@ -78,7 +101,7 @@ export default function Home() {
     // Semantic main tag for the page content
     <main className="home-page">
       {/* --- HERO SECTION --- */}
-      <section className="home__hero">
+      <section className="home__hero" style={inlineHeroStyle}>
         <div className="home__hero-content">
           {/* SEO Improvement: Using h1 for the primary page title */}
           <h1 className="home__hero-title">Empowering Clean Cities</h1>

@@ -40,14 +40,22 @@
      typography create an impactful and modern first impression.
 */
 .home__hero {
-  background: linear-gradient(135deg, var(--color-highlight-bg), var(--color-white));
+  height: 90vh;
+  width: 100%;
   text-align: center;
   padding: 6rem 1.5rem;
+  position: relative;
+  background-size: cover;
+  background-position: center;
 }
 
 .home__hero-content {
   max-width: 800px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .home__hero-title {

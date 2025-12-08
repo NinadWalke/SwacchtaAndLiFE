@@ -33,6 +33,7 @@ import EventSignUpForm from "./pages/services/event/EventSignUpForm.jsx";
 
 //Training
 import Training from "./pages/services/training/training.jsx";
+import RecyclingGame from './pages/games/RecyclingGame';
 
 // Ecommerce
 import Shop from "./pages/services/shop/Shop.jsx";
@@ -82,6 +83,7 @@ function App() {
               element={<OfficialsReportDisplay />}
             />
             <Route path="/training" element={<Training />} />
+            <Route path="/game" element={<RecyclingGame />} />
             <Route path="*" element={<NotFound/>}/>
           </Routes>
           <Footer />
