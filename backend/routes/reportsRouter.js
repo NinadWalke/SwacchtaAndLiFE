@@ -1,25 +1,27 @@
 const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync");
-const multer = require('multer');
+const multer = require("multer");
 const { storage } = require("../utils/cloudconfig");
 const uploadImgCloudinary = multer({ storage });
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Controllers
 const reportsController = require("../controllers/reports.controller");
-
-// Upload middleware
-const uploadFields = uploadImgCloudinary.fields([
-  { name: "image", maxCount: 1 },
-  { name: "image2", maxCount: 1 },
-]);
 
 // -- /reports --
 // Get all reports
 router.get("/", wrapAsync(reportsController.getAllReports));
 
 // Create a new report (with images)
-router.post("/", uploadFields, wrapAsync(reportsController.createReport));
+router.post(
+  "/",
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "image2", maxCount: 1 },
+  ]),
+  wrapAsync(reportsController.createReport)
+);
 
 // Get reports created by logged-in user
 router.get("/my-reports", wrapAsync(reportsController.getMyReports));
@@ -38,6 +40,5 @@ router.post("/:id/assign", wrapAsync(reportsController.assignReportToOsp));
 
 // OSP marks report resolved
 router.post("/:id/resolve", wrapAsync(reportsController.ospResolveReport));
-
 
 module.exports = router;
