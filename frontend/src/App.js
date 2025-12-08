@@ -21,6 +21,7 @@ import MyReports from "./pages/profile/MyReports.jsx";
 // Services
 import Upload from "./pages/services/report/Upload.jsx";
 import OspDashboard from "./pages/osp/OspDashboard.jsx";
+import Recycle from "./pages/services/recycle/Recycle.jsx";
 
 // Committee Section
 import CommitteeForms from "./pages/services/committee/CommitteeForms.jsx";
@@ -73,6 +74,7 @@ function App() {
             <Route path="/events" element={<Event />} />
             <Route path="/events/:id" element={<EventDetail />} />
             <Route path="/events/:id/signup" element={<EventSignUpForm />} />
+            <Route path="/recycle" element={<Recycle />} />
             <Route path="/shop" element={<Shop />} />
             {/* -- Officials Routes -- */}
             <Route path="/officials" element={<OfficialsDashboard />} />
