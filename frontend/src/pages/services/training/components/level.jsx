@@ -23,61 +23,72 @@ export const LEVELS = [
   {
     id: "2",
     name: "Reduce vs Reuse vs Recycle",
-
     icon: "🍃",
     tag: "Active participant",
     badgeColor: "#22C55E",
     short: "Do small actions daily that build eco-habits.",
-    description[
-          'Hierarchy of waste:'
-   ' 1️⃣ Reduce → avoid waste before it’s created'
-    ' 2️⃣ Reuse → find a new use before throwing'
-    ' 3️⃣ Recycle → process waste only if needed'
-    ' Best step? Avoid waste first.'
-    ]
+    description: [
+      "1. Reduce → avoid waste before it's created",
+      "2. Reuse → find a new use before throwing",
+      "3. Recycle → process waste only if needed",
+      "Best step? Avoid waste first.",
+    ],
     tasks: [
-      "Use a reusable bottle or bag for 3 days and document it.",
-      "Segregate waste at home/hostel for 1 week.",
-      "Participate in 1 cleanup / campus activity or society drive.",
+      "Choose any one item (like plastic bottle, shopping bag, container) and reuse it creatively instead of throwing.",
     ],
   },
   {
     id: "3",
-    name: "Eco Advocate",
+    name: "Identifying Recyclable Plastics",
     icon: "🌱",
     tag: "Shares and influences others",
     badgeColor: "#16A34A",
-    short: "Start influencing friends and family with your actions.",
+    short: "Some plastics are recyclable while some are not.",
+    description: [
+      "Look for ♻️ recycling numbers:",
+      "Number 1, 2, 5 - Recyclable (Bottles, milk covers, food containers)",
+      "Number 3, 4, 6, 7 - Not recyclable (Plastic bags, Styrofoam, certain containers)",
+    ],
     tasks: [
-      "Host a mini awareness session with at least 3 people.",
-      "Create 1 social media story/post about sustainability.",
-      "Get 2 people to sign up on Green Sathi / your platform.",
+      "Check 5 plastic items around you and note whether they are recyclable or not.",
     ],
   },
   {
     id: "4",
-    name: "Sustainability Leader",
+    name: "Wet Waste & Compost Basics",
     icon: "🌳",
-    tag: "Leads drives, cleanup, events",
+    tag: "Organic waste management",
     badgeColor: "#15803D",
-    short: "Lead by example through drives and events.",
+    short: "Wet waste can be turned into compost instead of becoming landfill.",
+    description: [
+      "Good compost material:",
+      "✔ Vegetable peels",
+      "✔ Fruit waste",
+      "✔ Tea/coffee grounds",
+      "✔ Leftover food (non-oily preferred)",
+    ],
     tasks: [
-      "Lead or help organize 1 cleanup / collection drive.",
-      "Coordinate 1 eco-activity in college/society.",
-      "Submit a short report with photos of the activity.",
+      "Start composting wet waste from your home/hostel for one week.",
     ],
   },
   {
     id: "5",
-    name: "Zero Waste Ambassador",
+    name: "E-Waste Responsibility",
     icon: "🦋",
     tag: "Fully trained, certified & rewarded",
     badgeColor: "#22C55E",
-    short: "Commit to a low/zero waste lifestyle and mentor others.",
+    short: "Electronics contain harmful chemicals and must NEVER go in normal bins.",
+    description: [
+      "Examples of E-waste:",
+      "📱 Phones",
+      "🔌 Chargers",
+      "🪫 Batteries",
+      "⌚ Watches",
+      "🖱 Computer accessories",
+      "They must go to certified e-waste collection centers.",
+    ],
     tasks: [
-      "Create a 2-week low-waste challenge for yourself.",
-      "Mentor at least 2 Seed Learners to reach Green Sathi.",
-      "Submit a final reflection + proof (photos, logs, screenshots).",
+      "Collect 3–5 e-waste items from home/hostel and store them in a labeled container.",
     ],
   },
 ];
