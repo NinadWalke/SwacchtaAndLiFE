@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/AuthContext";
+import services from './components/services';
 import api from "../../utils/axiosConfig";
 // Import the new stylesheet
 import "./Home.css";
@@ -9,6 +10,7 @@ import "./Home.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+
 // Custom CSS-based marker icons
 const createMarkerIcon = (status) => {
   return L.divIcon({
@@ -34,9 +36,9 @@ export default function Home() {
   useEffect(() => {
     const slideshowTimer = setInterval(() => {
       setCurrentImgIndex((prev) => (prev + 1) % images.length);
-    }, 5000); // Changes image every 5 seconds
+    }, 5000);
     
-    return () => clearInterval(slideshowTimer); // Cleanup timer
+    return () => clearInterval(slideshowTimer);
   }, []);
 
   const inlineHeroStyle = {
@@ -48,6 +50,7 @@ export default function Home() {
   
   const [location, setLocation] = useState({ latitude: null, longitude: null });
   const { user } = useAuth();
+
   useEffect(() => {
     const getReports = async () => {
       try {
@@ -61,6 +64,7 @@ export default function Home() {
         alert("Could not fetch reports.");
       }
     };
+
     const getEvents = async () => {
       try {
         const res = await api.get("/events");
@@ -78,6 +82,7 @@ export default function Home() {
         alert("Could not fetch events.");
       }
     };
+
     const getUserLocation = async () => {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -93,6 +98,7 @@ export default function Home() {
         { enableHighAccuracy: true }
       );
     };
+
     const getFranchisees = async () => {
       try {
         const res = await api.get("/recycle/franchisees");
@@ -109,20 +115,17 @@ export default function Home() {
   }, []);
 
   return (
-    // Semantic main tag for the page content
     <main className="home-page">
       {/* --- HERO SECTION --- */}
       <section className="home__hero" style={inlineHeroStyle}>
         <div className="home__hero-content">
-          {/* SEO Improvement: Using h1 for the primary page title */}
-          <h1 className="home__hero-title" style={{color: "white"}}>Empowering Clean Cities</h1>
-          <p className="home__hero-subtitle" style={{color: "white"}}>
+          <h1 className="home__hero-title">Empowering Clean Cities</h1>
+          <p className="home__hero-subtitle">
             Swacchta&Life is a smart waste management platform that leverages
             machine learning and citizen participation for sustainable urban
             cleanliness. Join us in building a cleaner, greener future.
           </p>
 
-          {/* Cleaned up button container */}
           <div className="home__hero-actions">
             {!user ? (
               <>
@@ -141,6 +144,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+
       {/* --- MAP MODULE --- */}
       <section className="dashboard-module">
         <h2 className="module-header">Live Reports Map</h2>
@@ -224,13 +228,12 @@ export default function Home() {
                 </Popup>
               </Marker>
             ))}
-            {/* Franchisee Markers */}
             {franchisees.map((f) => (
               <Marker
                 key={f._id}
                 position={[
                   f.location.coordinates[1],
-                  f.location.coordinates[0],
+                                    f.location.coordinates[0],
                 ]}
                 icon={createMarkerIcon("franchisee")}
               >
@@ -256,54 +259,48 @@ export default function Home() {
           </MapContainer>
         )}
       </section>
-      {/* --- FEATURES SECTION --- */}
-      <section id="features" className="home__features">
-        {/* Professionalism: A dedicated header for the section provides context. */}
+
+      {/* --- SERVICES SECTION WITH FLIP CARDS --- */}
+      <section id="services" className="services-section">
         <div className="section-header">
-          <h2>A Modern Approach to Waste Management</h2>
+          <h2>Our Comprehensive Services</h2>
           <p>
-            We combine technology and community action to create a powerful,
-            transparent, and effective cleanliness solution.
+            Hover over each card to discover detailed information about how we're 
+            revolutionizing waste management through innovation and community engagement.
           </p>
         </div>
 
-        {/* Cleaned up grid container */}
-        <div className="home__features-grid">
-          {/* Card 1 */}
-          <div className="feature-card">
-            {/* Suggestion: Replace emojis with a consistent SVG icon set for a more professional look */}
-            <div className="feature-card__icon">🌱</div>
-            <h3 className="feature-card__title">Eco-Friendly Solutions</h3>
-            <p className="feature-card__text">
-              Promoting sustainable waste management practices for a healthier
-              environment.
-            </p>
-          </div>
+        <div className="flip-cards-grid">
+          {services.map((service) => (
+            <div key={service.id} className="flip-card">
+              <div className="flip-card-inner">
+                {/* Front Side */}
+                <div className="flip-card-front">
+                  <div className="card-icon">{service.icon}</div>
+                  <h3 className="card-title">{service.title}</h3>
+                  <p className="card-description">{service.frontDesc}</p>
+                  <span className="flip-hint">Hover to learn more</span>
+                </div>
 
-          {/* Card 2 */}
-          <div className="feature-card">
-            <div className="feature-card__icon">🤖</div>
-            <h3 className="feature-card__title">AI-Powered Insights</h3>
-            <p className="feature-card__text">
-              Utilize machine learning to optimize waste collection and
-              recycling processes.
-            </p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="feature-card">
-            <div className="feature-card__icon">👥</div>
-            <h3 className="feature-card__title">Citizen Engagement</h3>
-            <p className="feature-card__text">
-              Empower communities to participate and contribute to urban
-              cleanliness initiatives.
-            </p>
-          </div>
+                {/* Back Side */}
+                <div className="flip-card-back">
+                  <h3 className="card-back-title">{service.backTitle}</h3>
+                  <ul className="card-details-list">
+                    {service.backDetails.map((detail, index) => (
+                      <li key={index}>{detail}</li>
+                    ))}
+                  </ul>
+                  <div className="card-back-icon">{service.icon}</div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
+
+      {/* --- TRAINING SECTION --- */}
       <section id="training" className="training-features-section">
         <div className="training-content-wrapper">
-          {/* --- Section Header --- */}
           <header className="training-header">
             <h2 className="training-header-title">Start Your Green Journey</h2>
             <p className="training-header-subtitle">
@@ -313,9 +310,7 @@ export default function Home() {
             </p>
           </header>
 
-          {/* --- Practices Grid --- */}
           <div className="training-grid">
-            {/* Practice Card 1: Reduce */}
             <article className="training-card">
               <div className="training-card-icon">♻️</div>
               <h3 className="training-card-title">1. Reduce & Refuse</h3>
@@ -326,7 +321,6 @@ export default function Home() {
               </p>
             </article>
 
-            {/* Practice Card 2: Reuse */}
             <article className="training-card">
               <div className="training-card-icon">🔄</div>
               <h3 className="training-card-title">2. Reuse & Repurpose</h3>
@@ -337,7 +331,6 @@ export default function Home() {
               </p>
             </article>
 
-            {/* Practice Card 3: Recycle */}
             <article className="training-card">
               <div className="training-card-icon">🚮</div>
               <h3 className="training-card-title">3. Recycle Correctly</h3>
@@ -348,7 +341,6 @@ export default function Home() {
               </p>
             </article>
 
-            {/* Practice Card 4: Report (Ties to app) */}
             <article className="training-card">
               <div className="training-card-icon">📱</div>
               <h3 className="training-card-title">4. Report & Act</h3>

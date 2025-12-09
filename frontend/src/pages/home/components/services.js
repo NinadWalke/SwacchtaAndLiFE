@@ -1,0 +1,132 @@
+export default [
+  {
+    id: 1,
+    icon: "📱",
+    title: "Garbage Scanning & Tracking",
+    frontDesc: "Scan waste and track collection in real-time",
+    backTitle: "Smart Scanning",
+    backDetails: [
+      "Phone-based waste scanner",
+      "Identify waste types instantly",
+      "Assign collection tasks",
+      // 'Track garbage truck journey live'
+    ],
+  },
+  {
+    id: 2,
+    icon: "🤖",
+    title: "AI Waste Detection",
+    frontDesc: "YOLOv8 model for automatic waste classification",
+    backTitle: "Smart AI Technology",
+    backDetails: [
+      "Real-time waste classification",
+      "Automatic garbage identification",
+      "Accurate monitoring system",
+      // 'Efficient waste management'
+    ],
+  },
+  {
+    id: 3,
+    icon: "👥",
+    title: "Community Engagement",
+    frontDesc: "Join local communities for cleanup events",
+    backTitle: "Build Communities",
+    backDetails: [
+      "Create & join communities",
+      "Host cleaning events",
+      "Organize training sessions",
+      "Compete on leaderboards",
+    ],
+  },
+  {
+    id: 4,
+    icon: "🎉",
+    title: "Event Hosting & Participation",
+    frontDesc: "Host workshops and earn GreenCoins",
+    backTitle: "Community Events",
+    backDetails: [
+      "Organize cleanup drives",
+      "Host educational workshops",
+      "Register participants easily",
+      "Earn GreenCoins for activity",
+    ],
+  },
+  {
+    id: 5,
+    icon: "🛒",
+    title: "E-commerce Platform",
+    frontDesc: "Shop with GreenCoins for eco supplies",
+    backTitle: "Green Shopping",
+    backDetails: [
+      "Spend GreenCoins to shop",
+      "Buy cleaning supplies",
+      "Purchase compost bins",
+      "Get segregation tools",
+    ],
+  },
+  {
+    id: 6,
+    icon: "📚",
+    title: "Training & Learning",
+    frontDesc: "Educational videos and chatbot guidance",
+    backTitle: "Learn & Improve",
+    backDetails: [
+      "Educational video library",
+      "Dedicated chatbot support",
+      "Hazardous waste handling",
+      "Civic segregation habits",
+    ],
+  },
+  {
+    id: 7,
+    icon: "♻️",
+    title: "Waste Franchise Mediator",
+    frontDesc: "Recycle e-waste and batteries for money",
+    backTitle: "Recycling Hub",
+    backDetails: [
+      "E-waste collection service",
+      "Battery recycling program",
+      "Send to recycling companies",
+      "Earn money for waste items",
+    ],
+  },
+  {
+    id: 8,
+    icon: "🪙",
+    title: "GreenCoins Rewards System",
+    frontDesc: "Gamified points for environmental actions",
+    backTitle: "Earn Rewards",
+    backDetails: [
+      "Report garbage for coins",
+      "Earn from attending events",
+      "Sell waste for points",
+      "Use for shop discounts",
+    ],
+  },
+  {
+    id: 9,
+    icon: "🏆",
+    title: "Activity Leaderboard",
+    frontDesc: "Compete and rank based on contributions",
+    backTitle: "Competition Board",
+    backDetails: [
+      "Rank by task frequency",
+      "Total GreenCoins tracking",
+      "Community member rankings",
+      // 'Encourage consistent engagement'
+    ],
+  },
+  {
+    id: 10,
+    icon: "⚙️",
+    title: "Admin Management",
+    frontDesc: "Central system for task and event management",
+    backTitle: "Control Center",
+    backDetails: [
+      "Assign garbage truck tasks",
+      "Verify new communities",
+      "Approve event permissions",
+      "Ensure smooth operations",
+    ],
+  },
+];

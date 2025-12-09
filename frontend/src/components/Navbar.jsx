@@ -1,30 +1,56 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-// Import the new stylesheet
 import "./Navbar.css";
 
 export default function Navbar() {
   const location = useLocation();
   const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isHeroVisible, setIsHeroVisible] = useState(true);
 
   // Close mobile menu on route change
   useEffect(() => {
     setMenuOpen(false);
   }, [location]);
 
-  // Define navigation links in a structured way
+  // Track if we're on home page and if hero section is visible
+  useEffect(() => {
+    const isHomePage = location.pathname === "/";
+    
+    if (!isHomePage) {
+      setIsHeroVisible(false);
+      return;
+    }
+
+    const handleScroll = () => {
+      // Check if hero section is in view
+      const heroSection = document.querySelector('.home__hero');
+      if (heroSection) {
+        const heroBottom = heroSection.getBoundingClientRect().bottom;
+        // If hero bottom is above viewport top (scrolled past hero)
+        setIsHeroVisible(heroBottom > 0);
+      }
+    };
+
+    // Initial check
+    handleScroll();
+
+    // Add scroll listener
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [location.pathname]);
+
   const navLinks = [
-    // Note: It's generally better to have fewer top-level links.
-    // Consider a dropdown for user-specific items.
     { to: "/", label: "Home", type: "always" },
     { to: "/login", label: "Login", type: "guest" },
     { to: "/signup", label: "Signup", type: "guest" },
     { to: "/profile", label: "Profile", type: "user" },
     { to: "/upload", label: "Upload", type: "user" },
     { to: "/osp", label: "OSP", type: "user" },
-    // Grouping other links for potential future dropdown
     { to: "/events", label: "Events", type: "user" },
     { to: "/recycle", label: "Recycle & Earn", type: "user" },
     { to: "/franchisee-dashboard", label: "Franchisee Dashboard", type: "user" },
@@ -43,20 +69,17 @@ export default function Navbar() {
   });
 
   return (
-    <header className="navbar" style={{padding: 0}}>
+    <header className={`navbar ${isHeroVisible ? 'navbar--hero-mode' : 'navbar--compact'}`} style={{padding: 0}}>
       <div className="navbar__container">
-        {/* Brand/Logo - links to home */}
         <Link to="/" className="navbar__brand">
-          {/* Suggestion: Host your own SVG logo for better performance and quality */}
-          <img
-            src="Logo.png"
-            alt="Swacchta&Life Logo"
-            className="brand__logo"
-          />
-          {/* <h1 className="brand__title">Green Sathi</h1> */}
+          <div className="brand__logo">
+            <img
+              src={isHeroVisible ? "/Logo1.png" : "/Logo2.png"}
+              alt="Swacchta&Life Logo"
+            />
+          </div>
         </Link>
 
-        {/* Navigation Links */}
         <nav className={`navbar__nav ${menuOpen ? "navbar__nav--open" : ""}`}>
           {filteredLinks.map((link) => (
             <Link
@@ -69,7 +92,6 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Hamburger Toggle for Mobile */}
         <button
           className={`navbar__toggle ${menuOpen ? "navbar__toggle--open" : ""}`}
           onClick={() => setMenuOpen(!menuOpen)}

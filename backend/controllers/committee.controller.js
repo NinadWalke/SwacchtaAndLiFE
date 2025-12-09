@@ -142,10 +142,10 @@ exports.registerCommittee = async (req, res) => {
 
     await sendEmail(leaderEmail, "Committee Registration Received", emailHTML);
 
-    await sendSMS(
-      leaderPhone,
-      `Your committee "${committeeName}" has been put on hold for registration.\nCommittee ID: ${committee._id}\nWe'll contact you soon for verification.`
-    );
+    // await sendSMS(
+    //   leaderPhone,
+    //   `Your committee "${committeeName}" has been put on hold for registration.\nCommittee ID: ${committee._id}\nWe'll contact you soon for verification.`
+    // );
 
     return res.status(201).json({
       message: "Committee registered successfully. We'll get back to you soon!",

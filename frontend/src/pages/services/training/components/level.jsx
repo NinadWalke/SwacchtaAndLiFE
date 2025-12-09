@@ -1,6 +1,6 @@
 // src/data/levels.js
 import React from "react";
-import "./level.css";   
+import "./level.css";
 
 export const LEVELS = [
   {
@@ -17,7 +17,7 @@ export const LEVELS = [
       "🟣 E-Waste — chargers, wires, broken electronics",
     ],
     tasks: [
-      "Sort ten random waste items from your home/hostel into four categories."
+      "Sort ten random waste items from your home/hostel into four categories.",
     ],
   },
   {
