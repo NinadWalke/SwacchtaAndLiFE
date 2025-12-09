@@ -1,0 +1,330 @@
+/* ===== Color Scheme ===== */
+:root {
+  --primary-green: #16a34a;
+  --primary-teal: #14b8a6;
+  --accent-green: #22c55e;
+  --light-green: #a3e635;
+  --dark-bg: #020617;
+  --card-bg: #0f172a;
+  --text-primary: #f9fafb;
+  --text-muted: #9ca3af;
+  --border-color: rgba(34, 197, 94, 0.3);
+}
+
+/* Wrapper */
+.levels-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 100%);
+  min-height: 100vh;
+}
+
+/* Header */
+.levels-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.levels-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.8rem;
+  color: var(--primary-green);
+}
+
+.levels-subtitle {
+  font-size: 0.95rem;
+  max-width: 600px;
+  margin: 0 auto;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Cards Grid */
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* Individual card */
+.level-card {
+  position: relative;
+  background: linear-gradient(135deg, #0f4c3a 0%, #052e16 100%);
+  border-radius: 1.5rem;
+  padding: 1.75rem;
+  border: 2px solid var(--border-color);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.level-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--light-green), var(--accent-green));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.level-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--light-green);
+  box-shadow: 0 20px 40px rgba(34, 197, 94, 0.25);
+  background: linear-gradient(135deg, #0d6b4f 0%, #0f4c3a 100%);
+}
+
+.level-card:hover::before {
+  transform: scaleX(1);
+}
+
+.level-rank {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--light-green);
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.level-icon {
+  font-size: 2.4rem;
+  margin: 0.5rem 0;
+}
+
+.level-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0.25rem 0;
+  color: var(--text-primary);
+}
+
+.level-tag {
+  display: inline-block;
+  border-radius: 999px;
+  border: 2px solid;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  width: fit-content;
+  background: rgba(16, 185, 129, 0.1);
+  border-color: var(--primary-teal);
+  color: var(--primary-teal);
+}
+
+.level-short {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  flex: 1;
+  margin-top: 0.5rem;
+}
+
+/* Footer inside card */
+.level-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: #e5e7eb;
+}
+
+.level-tasks-count {
+  opacity: 0.8;
+}
+
+.level-cta {
+  font-weight: 500;
+  font-size: 0.78rem;
+}
+
+/* Badge */
+.level-badge {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.9rem;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(130, 255, 176, 0.1);
+  border: 1px solid rgba(144, 255, 80, 0.8);
+  color: #bbf7d0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.level-badge.pro {
+  background: rgba(144, 255, 80, 0.8);
+  border-color: rgba(56, 189, 248, 0.85);
+}
+
+/* Detail page */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: #a3e635;
+  margin-bottom: 1rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.level-detail-card {
+  background: radial-gradient(circle at top left, #052e16 0, #020617 50%);
+  border-radius: 1.5rem;
+  padding: 1.75rem 1.5rem 2rem;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  box-shadow: 0 0 18px rgba(22, 163, 74, 0.35);
+}
+
+.level-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.level-detail-icon {
+  font-size: 2.4rem;
+}
+
+.level-detail-description {
+  font-size: 0.95rem;
+  color: #e5e7eb;
+  margin-bottom: 1.5rem;
+}
+
+/* Sections */
+.level-section {
+  margin-bottom: 1.5rem;
+}
+
+.level-section h2 {
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.section-hint {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-bottom: 0.65rem;
+}
+
+/* Tasks list */
+.tasks-list {
+  padding-left: 1.2rem;
+  margin: 0.3rem 0 0;
+  font-size: 0.88rem;
+}
+
+.tasks-list li {
+  margin-bottom: 0.35rem;
+}
+
+/* Proof form */
+.proof-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.file-input-label {
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.file-input {
+  font-size: 0.8rem;
+}
+
+.files-preview {
+  list-style: disc;
+  padding-left: 1.2rem;
+  font-size: 0.8rem;
+  color: #d1d5db;
+}
+
+.notes-label {
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.notes-label textarea {
+  min-height: 90px;
+  padding: 0.55rem 0.6rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(55, 65, 81, 0.9);
+  background-color: rgba(15, 23, 42, 0.9);
+  color: #f9fafb;
+  font-size: 0.85rem;
+  resize: vertical;
+}
+
+.notes-label textarea:focus {
+  outline: none;
+  border-color: #a3e635;
+  box-shadow: 0 0 0 1px rgba(190, 242, 100, 0.7);
+}
+
+/* Primary button */
+.btn-primary {
+  align-self: flex-start;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: radial-gradient(circle at top left, #a3e635, #22c55e);
+  color: rgba(144, 255, 80, 0.8);
+  box-shadow: 0 0 15px rgba(190, 242, 100, 0.5);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px rgba(190, 242, 100, 0.8);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .levels-wrapper {
+    padding: 1.5rem 1.1rem 2.5rem;
+  }
+
+  .level-detail-card {
+    padding: 1.5rem 1.1rem 1.6rem;
+  }
+
+  .level-detail-header {
+    align-items: flex-start;
+  }
+}
