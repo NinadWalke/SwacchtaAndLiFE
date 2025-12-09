@@ -1,41 +1,225 @@
+:root {
+  /* Colors from your scheme */
+  --color-background: #f8f9fa;
+  --color-text: #34495e;
+  --color-primary-green: #0a6847;
+  --color-accent-green: #77b0aa;
+  --color-highlight-bg: #f0fdf4;
+  --color-white: #ffffff;
+  --color-border: #e0e0e0;
+  --color-shadow: rgba(0, 0, 0, 0.06);
+
+  /* Design Variables */
+  --border-radius: 12px;
+  --shadow-sm: 0 4px 12px var(--color-shadow);
+  --transition-smooth: all 0.3s ease-in-out;
+}
+
+/* Global Styles (Assumed context, adjusted for scheme) */
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+}
+
+.loading {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: bold;
+  transition: var(--transition-smooth);
+  border: none;
+}
+
+.btn--primary {
+  background-color: var(--color-primary-green);
+  color: var(--color-white);
+}
+
+.btn--primary:hover {
+  background-color: #084e36; /* Darker shade for hover */
+}
+
+/* OspDashboard Layout */
 .osp-dashboard {
-    padding: 2rem;
-  }
-  
-  .osp-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 2rem;
-  }
-  
-  .stats {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  
-  .stat-card {
-    background: white;
-    padding: 1rem;
-    border-radius: 10px;
-    flex: 1;
-    text-align: center;
-  }
-  
-  .dashboard-module {
-    background: white;
-    padding: 1.2rem;
-    border-radius: 10px;
-    margin-bottom: 2rem;
-  }
-  
-  .reports-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .reports-table td, .reports-table th {
-    padding: 10px;
-    border-bottom: 1px solid #e5e5e5;
-  }
-  
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.osp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap : 1rem;
+}
+
+.osp-header h1 {
+  font-size: 2rem;
+  margin: 0;
+  color: var(--color-primary-green);
+  /* Add this to prevent it from growing too much */
+  white-space: nowrap; 
+}
+
+/* Stats Section */
+.stats {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--color-white);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  flex: 1;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  border-left: 5px solid var(--color-accent-green);
+}
+
+.stat-card h2 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
+  opacity: 0.8;
+}
+
+.stat-card p {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+  color: var(--color-primary-green);
+}
+
+/* Dashboard Module (Map & Table containers) */
+.dashboard-module {
+  background: var(--color-white);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 2rem;
+}
+
+.dashboard-module h2 {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--color-highlight-bg);
+  padding-bottom: 0.5rem;
+}
+
+/* Map */
+.map-container-wrapper {
+  overflow: hidden; /* Ensures MapContainer respects border-radius */
+}
+
+.location-info {
+  text-align: center;
+  padding: 2rem;
+  font-style: italic;
+  color: var(--color-text);
+  background-color: var(--color-highlight-bg);
+  border-radius: 8px;
+}
+
+/* Map Marker Customization (Leaflet) */
+.marker-pin {
+  background-color: var(--color-primary-green);
+  border: 3px solid var(--color-white);
+  border-radius: 50% 50% 50% 0;
+  width: 30px;
+  height: 30px;
+  transform: rotate(-45deg);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.marker-pin.assigned:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-white);
+  border-radius: 50%;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.popup-btn {
+  margin-top: 10px;
+  display: block;
+  width: 100%;
+  text-align: center;
+  background-color: var(--color-accent-green);
+  color: var(--color-white);
+  padding: 5px 10px;
+  font-size: 0.8rem;
+}
+
+.popup-btn:hover {
+  background-color: #639893;
+}
+
+/* Table */
+.reports-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.reports-table thead tr {
+  background-color: var(--color-highlight-bg);
+  color: var(--color-text-dark);
+}
+
+.reports-table th, .reports-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.reports-table tbody tr:hover {
+  background-color: #f0f4f7; /* Light hover for table rows */
+}
+
+.reports-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.status-tag {
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  display: inline-block;
+}
+
+.status-tag.status-allotted {
+  background-color: #ffeaa7; /* Yellowish */
+  color: #c08702;
+}
+
+.status-tag.status-resolved {
+  background-color: #b8e994; /* Light Green */
+  color: var(--color-primary-green);
+}
+
+.resolved-text {
+  color: var(--color-primary-green);
+  font-weight: 500;
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -19,7 +19,6 @@ export default function OspDashboard() {
   const [isOnDuty, setIsOnDuty] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Fetch assigned reports + duty status
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -49,7 +48,6 @@ export default function OspDashboard() {
     fetchData();
   }, []);
 
-  // Toggle duty status
   const toggleDuty = async () => {
     try {
       const res = await api.post("/osp/toggle-duty");
@@ -61,10 +59,9 @@ export default function OspDashboard() {
     }
   };
 
-  // Mark report resolved
   const markResolved = async (id) => {
     try {
-      const res = await api.post(`/reports/${id}/resolve`);
+      await api.post(`/reports/${id}/resolve`);
       setAssignedReports((prev) =>
         prev.map((r) => (r._id === id ? { ...r, status: "resolved" } : r))
       );
@@ -93,7 +90,6 @@ export default function OspDashboard() {
         </button>
       </header>
 
-      {/* Stats */}
       <section className="stats">
         <div className="stat-card">
           <h2>Assigned Reports</h2>
@@ -105,11 +101,9 @@ export default function OspDashboard() {
         </div>
       </section>
 
-      {/* Map */}
-      <section className="dashboard-module">
+      <section className="dashboard-module map-container-wrapper">
         <h2>Your Assigned Reports</h2>
 
-        {/* Render map ONLY after location is set */}
         {location.latitude && location.longitude ? (
           <MapContainer
             center={[location.latitude, location.longitude]}
@@ -130,16 +124,23 @@ export default function OspDashboard() {
                 <Popup>
                   <strong>Report #{r._id.slice(-6)}</strong> <br />
                   Status: {r.status}
+                  {r.status === "allotted" && (
+                    <button
+                      className="btn btn--secondary popup-btn"
+                      onClick={() => markResolved(r._id)}
+                    >
+                      Resolve
+                    </button>
+                  )}
                 </Popup>
               </Marker>
             ))}
           </MapContainer>
         ) : (
-          <div>Fetching location...</div>
+          <div className="location-info">Fetching location...</div>
         )}
       </section>
 
-      {/* Table */}
       <section className="dashboard-module">
         <h2>Assigned Reports List</h2>
         <table className="reports-table">
@@ -157,7 +158,9 @@ export default function OspDashboard() {
               <tr key={r._id}>
                 <td>{r._id.slice(-6)}...</td>
                 <td>{new Date(r.time).toLocaleString()}</td>
-                <td>{r.status}</td>
+                <td className={`status-tag status-${r.status}`}>
+                  {r.status}
+                </td>
                 <td>
                   {r.status === "allotted" ? (
                     <button
@@ -167,7 +170,7 @@ export default function OspDashboard() {
                       Mark Resolved
                     </button>
                   ) : (
-                    "Resolved"
+                    <span className="resolved-text">Resolved</span>
                   )}
                 </td>
               </tr>

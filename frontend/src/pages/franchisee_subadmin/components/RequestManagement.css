@@ -396,7 +396,7 @@
 
 /* Empty State */
 .empty-state-management {
-  background: white;
+  background: var(--color-background);
   padding: 4rem 2rem;
   border-radius: 20px;
   text-align: center;

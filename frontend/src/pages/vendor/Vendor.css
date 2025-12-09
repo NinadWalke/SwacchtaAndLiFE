@@ -1,16 +1,21 @@
 .vendor-dashboard {
-  padding: 20px;
+  padding: 10vh;
   max-width: 900px;
+  height: 90vh;
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .vendor-title {
-  font-size: 32px;
+  font-size: 3rem;
   margin-bottom: 10px;
 }
 
 .vendor-subtitle {
-  color: #666;
+font-size: 1.5rem;
+  color: var(--color-text);
   margin-bottom: 20px;
 }
 
