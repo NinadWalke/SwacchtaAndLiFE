@@ -203,7 +203,6 @@ function RequestManagement() {
 
   return (
     <div className="request-management-page">
-      {/* Hero Section */}
       <div className="management-hero">
         <div className="hero-content-management">
           <h1 className="management-title">Request Management</h1>
@@ -213,7 +212,6 @@ function RequestManagement() {
         </div>
       </div>
 
-      {/* Stats Overview */}
       <div className="management-stats">
         <div className="stat-card-management">
           <div className="stat-icon-management">📊</div>
@@ -251,7 +249,6 @@ function RequestManagement() {
         </div>
       </div>
 
-      {/* Message Alert */}
       {message && (
         <div className={`alert-message alert-${message.type}`}>
           <span className="alert-icon">
@@ -264,9 +261,7 @@ function RequestManagement() {
         </div>
       )}
 
-      {/* Controls Section */}
       <div className="controls-section">
-        {/* Search Bar */}
         <div className="search-container">
           <span className="search-icon">🔍</span>
           <input
@@ -283,7 +278,6 @@ function RequestManagement() {
           )}
         </div>
 
-        {/* Filter Tabs */}
         <div className="filter-tabs-management">
           <button
             className={`filter-tab-management ${
@@ -330,7 +324,6 @@ function RequestManagement() {
         </div>
       </div>
 
-      {/* Requests Content */}
       <div className="requests-content">
         {loading ? (
           <div className="loading-state-management">
@@ -361,7 +354,6 @@ function RequestManagement() {
 
               return (
                 <div key={req._id} className="request-card-management">
-                  {/* Card Header */}
                   <div className="card-header-management">
                     <div className="user-info-section">
                       <div className="user-avatar">
@@ -384,7 +376,6 @@ function RequestManagement() {
                     </span>
                   </div>
 
-                  {/* Waste Type Info */}
                   <div className="waste-info-section">
                     <div className="waste-type-info">
                       <span className="waste-icon-card">{wasteIcon}</span>
@@ -400,14 +391,12 @@ function RequestManagement() {
                     )}
                   </div>
 
-                  {/* Item Description */}
                   {req.itemDescription && (
                     <div className="description-section">
                       <p>{req.itemDescription}</p>
                     </div>
                   )}
 
-                  {/* Details Grid */}
                   <div className="details-grid-management">
                     <div className="detail-box">
                       <span className="detail-icon-box">⚖️</span>
@@ -444,7 +433,6 @@ function RequestManagement() {
                     </div>
                   </div>
 
-                  {/* Vendor Info if assigned */}
                   {req.vendor && (
                     <div className="vendor-assigned-info">
                       <span className="vendor-icon-info">👤</span>
@@ -455,7 +443,6 @@ function RequestManagement() {
                     </div>
                   )}
 
-                  {/* Actions */}
                   <div className="actions-section">
                     {req.status === "pending" ? (
                       <>
@@ -523,25 +510,24 @@ function RequestManagement() {
                       )}
                     </button>
                     {req.status === "collected" && (
-  <button
-    className="btn-action-modern verify"
-    disabled={actionLoading === req._id}
-    onClick={() => handleVerify(req._id)}
-  >
-    {actionLoading === req._id ? "Verifying..." : "Verify Collection"}
-  </button>
-)}
+                      <button
+                        className="btn-action-modern verify"
+                        disabled={actionLoading === req._id}
+                        onClick={() => handleVerify(req._id)}
+                      >
+                        {actionLoading === req._id ? "Verifying..." : "Verify Collection"}
+                      </button>
+                    )}
 
-{req.status === "verified" && (
-  <button
-    className="btn-action-modern pay"
-    disabled={actionLoading === req._id}
-    onClick={() => handlePay(req._id)}
-  >
-    {actionLoading === req._id ? "Paying..." : "Mark Paid"}
-  </button>
-)}
-
+                    {req.status === "verified" && (
+                      <button
+                        className="btn-action-modern pay"
+                        disabled={actionLoading === req._id}
+                        onClick={() => handlePay(req._id)}
+                      >
+                        {actionLoading === req._id ? "Paying..." : "Mark Paid"}
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -550,7 +536,6 @@ function RequestManagement() {
         )}
       </div>
 
-      {/* Vendor Assignment Modal */}
       {showVendorModal && (
         <div className="modal-overlay" onClick={closeVendorModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>

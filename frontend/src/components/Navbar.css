@@ -1,17 +1,3 @@
-/* 1. THEME & FONT VARIABLES */
-:root {
-  --font-heading: 'Poppins', sans-serif;
-  --font-body: 'Lato', sans-serif;
-  --color-background: #f8f9fa;
-  --color-text: #34495e;
-  --color-primary-green: #0a6847; 
-  --color-accent-green: #77b0aa;
-  --color-white: #ffffff; 
-  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
-  --transition-smooth: all 0.3s ease-in-out;
-}
-
-/* 2. MAIN NAVBAR CONTAINER */
 .navbar {
   background-color: var(--color-white);
   position: sticky;
@@ -19,19 +5,15 @@
   left: 0;
   width: 100%;
   z-index: 1000;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, 
-              rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, 
-              rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  box-shadow: var(--shadow-md);
   transition: height 0.3s ease-in-out;
 }
 
-/* Hero mode - larger navbar with overflowing logo */
 .navbar--hero-mode {
   height: 10vh;
   overflow: visible;
 }
 
-/* Compact mode - normal navbar with contained logo */
 .navbar--compact {
   height: 10vh;
   overflow: hidden;
@@ -48,7 +30,6 @@
   overflow: visible;
 }
 
-/* 3. BRAND LOGO & TITLE */
 .navbar__brand {
   display: flex;
   gap: 0.75rem;
@@ -56,16 +37,14 @@
   position: relative; 
   align-self: flex-start;
   z-index: 1001;
-  transition: all 0.3s ease-in-out;
+  transition: var(--transition-smooth);
 }
 
-/* Hero mode brand positioning */
 .navbar--hero-mode .navbar__brand {
   margin-left: 1.5vh;
   margin-top: 1.5vh;
 }
 
-/* Compact mode brand positioning */
 .navbar--compact .navbar__brand {
   margin-left: 1vh;
   margin-top: 0;
@@ -82,16 +61,14 @@
   filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.1));
   position: relative;
   z-index: 10;
-  transition: all 0.3s ease-in-out;
+  transition: var(--transition-smooth);
 }
 
-/* Hero mode logo - large and overflowing */
 .navbar--hero-mode .brand__logo {
   width: 17vh;
   height: 17vh;
 }
 
-/* Compact mode logo - fits within navbar, no circle */
 .navbar--compact .brand__logo {
   width: 8vh;
   height: 8vh;
@@ -106,10 +83,9 @@
   height: 120%;
   border-radius: 50%;
   object-fit: contain;
-  transition: all 0.3s ease-in-out;
+  transition: var(--transition-smooth);
 }
 
-/* Remove border-radius from image in compact mode */
 .navbar--compact .brand__logo img {
   border-radius: 0;
   width: 100%;
@@ -124,7 +100,6 @@
   margin: 0;
 }
 
-/* 4. NAVIGATION LINKS (DESKTOP) */
 .navbar__nav {
   display: flex;
   align-items: stretch;
@@ -153,7 +128,6 @@
   color: var(--color-accent-green);
 }
 
-/* Modern underline effect for the active link */
 .nav__link::after {
   content: '';
   position: absolute;
@@ -171,20 +145,20 @@
 
 .nav__logout-btn {
   background-color: transparent;
-  color: var(--color-danger);
-  border: 2px solid var(--color-danger);
+  color: #e74c3c;
+  border: 2px solid #e74c3c;
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   cursor: pointer;
   font-weight: 600;
+  transition: var(--transition-smooth);
 }
 
 .nav__logout-btn:hover {
-  background-color: var(--color-danger);
+  background-color: #e74c3c;
   color: var(--color-white);
 }
 
-/* 5. HAMBURGER TOGGLE (MOBILE) */
 .navbar__toggle {
   display: none;
   background: none;
@@ -205,20 +179,30 @@
   border-radius: 3px;
   position: absolute;
   left: 0;
-  transition: all 0.35s ease-in-out;
+  transition: var(--transition-smooth);
 }
 
-.hamburger__line--1 { top: 0; }
-.hamburger__line--2 { top: 50%; transform: translateY(-50%); }
-.hamburger__line--3 { bottom: 0; }
+.hamburger__line--1 { 
+  top: 0; 
+}
 
-/* Animation for hamburger to 'X' */
+.hamburger__line--2 { 
+  top: 50%; 
+  transform: translateY(-50%); 
+}
+
+.hamburger__line--3 { 
+  bottom: 0; 
+}
+
 .navbar__toggle--open .hamburger__line--1 {
   transform: translateY(10.5px) rotate(45deg);
 }
+
 .navbar__toggle--open .hamburger__line--2 {
   opacity: 0;
 }
+
 .navbar__toggle--open .hamburger__line--3 {
   transform: translateY(-10.5px) rotate(-45deg);
 }
@@ -228,17 +212,15 @@
   margin-top: 1vh;
   height: 17vh;
   width: 17vh;
-  transition: all 0.3s ease-in-out;
+  transition: var(--transition-smooth);
 }
 
-/* Adjust center div for compact mode */
 .navbar--compact .center-div {
   height: 8vh;
   width: 8vh;
   margin-top: 0;
 }
 
-/* 6. RESPONSIVE STYLES (MOBILE) */
 @media (max-width: 992px) {
   .navbar__toggle {
     display: block;
@@ -270,7 +252,6 @@
     display: none;
   }
 
-  /* Mobile adjustments for both modes */
   .navbar--hero-mode,
   .navbar--compact {
     height: 8vh;

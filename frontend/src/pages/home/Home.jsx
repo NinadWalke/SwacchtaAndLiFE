@@ -486,6 +486,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+      
+      
 
       {/* --- FOOTER --- */}
       <footer className="home__footer">

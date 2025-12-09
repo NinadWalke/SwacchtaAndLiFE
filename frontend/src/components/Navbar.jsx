@@ -9,12 +9,10 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isHeroVisible, setIsHeroVisible] = useState(true);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMenuOpen(false);
   }, [location]);
 
-  // Track if we're on home page and if hero section is visible
   useEffect(() => {
     const isHomePage = location.pathname === "/";
     
@@ -24,19 +22,14 @@ export default function Navbar() {
     }
 
     const handleScroll = () => {
-      // Check if hero section is in view
       const heroSection = document.querySelector('.home__hero');
       if (heroSection) {
         const heroBottom = heroSection.getBoundingClientRect().bottom;
-        // If hero bottom is above viewport top (scrolled past hero)
         setIsHeroVisible(heroBottom > 0);
       }
     };
 
-    // Initial check
     handleScroll();
-
-    // Add scroll listener
     window.addEventListener('scroll', handleScroll);
     
     return () => {
@@ -102,9 +95,7 @@ export default function Navbar() {
           <span className="hamburger__line hamburger__line--3"></span>
         </button>
         
-        <div className="center-div">
-         {/* it is just for centering navlinks */}
-        </div>
+        <div className="center-div"></div>
       </div>
     </header>
   );

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from '../../utils/axiosConfig';
-// Import the new stylesheet
 import './Signup.css';
 
 export default function Signup() {
@@ -33,7 +32,6 @@ export default function Signup() {
     
     setIsSubmitting(true);
     try {
-      // Destructure only the fields needed for the API call
       const { fname, lname, email, username, password, address, gender, dob, phone, aadhar } = formData;
       const res = await api.post("/auth/sign-up", {
         fname, lname, email, username: username?.trim().toLowerCase(), password,
@@ -49,7 +47,6 @@ export default function Signup() {
     }
   };
   
-  // Set max attribute for DOB input to today's date
   const today = new Date('2025-10-12T23:21:51Z').toISOString().split('T')[0];
 
   return (
