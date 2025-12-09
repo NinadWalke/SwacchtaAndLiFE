@@ -32,3 +32,4 @@ router.patch('/franchisee/requests/:id/approve', wrapASync(recycleController.app
 router.patch('/franchisee/requests/:id/reject', wrapASync(recycleController.rejectSubmission));
 
 module.exports = router;
+    
