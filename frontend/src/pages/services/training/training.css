@@ -802,3 +802,11 @@
   background: #084d35;
   transform: translateY(-2px);
 }
+
+.game-card.coming-soon {
+  opacity: 0.8;
+  border: 2px dashed #aaa;
+}
+.game-card.coming-soon .game-icon {
+  opacity: 0.7;
+}
