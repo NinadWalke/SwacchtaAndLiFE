@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from '../../utils/axiosConfig';
 import { useAuth } from '../../components/AuthContext';
-// Import the new stylesheet
 import './Login.css';
 
 export default function Login() {
@@ -45,7 +44,7 @@ export default function Login() {
             <label className="form__label" htmlFor="username">Username</label>
             <input
               id="username"
-              type="text" // Corrected from "username"
+              type="text"
               className="form__input"
               placeholder="Enter your username"
               value={username}

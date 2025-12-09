@@ -11,13 +11,11 @@ export default function Navbar() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMenuOpen(false);
     setServicesOpen(false);
   }, [location]);
 
-  // Track if we're on home page and if hero section is visible
   useEffect(() => {
     const isHomePage = location.pathname === "/";
     
@@ -154,9 +152,7 @@ export default function Navbar() {
           <span className="hamburger__line hamburger__line--3"></span>
         </button>
         
-        <div className="center-div">
-         {/* it is just for centering navlinks */}
-        </div>
+        <div className="center-div"></div>
       </div>
     </header>
   );
