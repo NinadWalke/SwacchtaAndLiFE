@@ -1,6 +1,6 @@
 // src/data/levels.js
 import React from "react";
-import "./level.css";   
+import "./level.css";
 
 export const LEVELS = [
   {
@@ -17,7 +17,7 @@ export const LEVELS = [
       "🟣 E-Waste — chargers, wires, broken electronics",
     ],
     tasks: [
-      "Sort ten random waste items from your home/hostel into four categories."
+      "Sort ten random waste items from your home/hostel into four categories.",
     ],
   },
   {
@@ -28,13 +28,13 @@ export const LEVELS = [
     tag: "Active participant",
     badgeColor: "#22C55E",
     short: "Do small actions daily that build eco-habits.",
-    description[
-          'Hierarchy of waste:'
-   ' 1️⃣ Reduce → avoid waste before it’s created'
-    ' 2️⃣ Reuse → find a new use before throwing'
-    ' 3️⃣ Recycle → process waste only if needed'
-    ' Best step? Avoid waste first.'
-    ]
+    description: [
+      "Hierarchy of waste:",
+      " 1️⃣ Reduce → avoid waste before it’s created",
+      " 2️⃣ Reuse → find a new use before throwing",
+      " 3️⃣ Recycle → process waste only if needed",
+      " Best step? Avoid waste first.",
+    ],
     tasks: [
       "Use a reusable bottle or bag for 3 days and document it.",
       "Segregate waste at home/hostel for 1 week.",
