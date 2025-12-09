@@ -9,18 +9,12 @@ export default function Training() {
   return (
     <div className="training-container">
 
-      {/* -------- HEADER & CHATBOT -------- */}
-      <div className="training-header">
-        <h1 className="training-title">Training & Awareness</h1>
-        <Chatbot />
-      </div>
-
       {/* -------- LEVEL SECTION -------- */}
       <section className="levels-section">
         <div className="levels-header">
-          <h2 className="levels-title">Learning Levels</h2>
+          <h2 className="levels-title">GREEN MISSIONS</h2>
           <p className="levels-subtitle">
-            Start from Level 1 and progress by completing real actions and uploading proof.
+            Complete tasks to earn GREEN COINS.
           </p>
         </div>
 
