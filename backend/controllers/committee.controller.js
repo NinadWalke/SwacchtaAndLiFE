@@ -208,7 +208,7 @@ exports.loginCommittee = async (req, res) => {
 
 // Get committee details (protected route)
 exports.getCommitteeProfile = async (req, res) => {
-  const committee = await Committee.findById(req.user.committeeId);
+  const committee = await Committee.findById(req.user.committeeId).populate("members");
   return res.json({ committee });
 };
 
