@@ -27,6 +27,13 @@
   --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.1);
   --transition-smooth: all 0.3s ease-in-out;
+  
+  /* Neutrals */
+  --color-text-dark: #333;
+  --color-text-light: #ffffff;
+  --color-background-light: #f7fafc;
+  --color-border-light: #e2e8f0;
+  --color-shadow: rgba(0, 0, 0, 0.05);
 }
 
 /* 3. PAGE CONTAINER */
@@ -36,48 +43,50 @@
 }
 
 /* 4. HERO SECTION STYLES
-   - Visual Appeal: A soft gradient background and centered, well-spaced
-     typography create an impactful and modern first impression.
+   - Visual Appeal: Content aligned to left with vertical centering
 */
 .home__hero {
-  height: 90vh;
   width: 100%;
-  text-align: center;
-  padding: 6rem 1.5rem;
+  min-height: 90vh;
+  display: flex;
+  align-items: center; /* Vertically center */
+  justify-content: flex-start; /* Align to left */
+  padding-left: 20vh; /* 20vh from left */
+  padding-right: 2vh;
   position: relative;
   background-size: cover;
   background-position: center;
 }
 
 .home__hero-content {
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  max-width: 600px;
+  color: var(--color-white);
+  text-align: left; /* Left align all text */
+  z-index: 2;
 }
 
 .home__hero-title {
   font-family: var(--font-heading);
-  font-size: clamp(2.5rem, 5vw, 3.5rem); /* Responsive font size */
-  color: var(--color-primary-green);
-  margin-bottom: 1rem;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  color: var(--color-white);
 }
 
 .home__hero-subtitle {
-  font-size: 1.2rem;
-  line-height: 1.7;
-  color: var(--color-text);
-  margin-bottom: 2.5rem;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: var(--color-white);
 }
 
 .home__hero-actions {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-  flex-wrap: wrap; /* Allows buttons to stack on smaller screens */
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* Align buttons to left */
 }
 
 /* 5. REUSABLE BUTTON STYLES
@@ -121,122 +130,229 @@
   box-shadow: var(--shadow-md);
 }
 
-/* 6. FEATURES SECTION
-   - Professionalism: A dedicated section header and a clean grid layout
-     present information in a structured, easy-to-digest format.
-*/
-.home__features {
+/* 6. SERVICES SECTION WITH FLIP CARDS */
+.services-section {
+  width: 100%;
+  min-height: 90vh;
   padding: 5rem 1.5rem;
-  background-color: var(--color-white);
+  align-items: center;
+  background-color: var(--color-white, #ffffff);
 }
 
 .section-header {
   text-align: center;
-  max-width: 700px;
-  margin: 0 auto 4rem auto;
+  margin-bottom: 3rem;
 }
 
 .section-header h2 {
-  font-size: clamp(2rem, 4vw, 2.5rem);
-  color: var(--color-primary-green);
-  margin-bottom: 0.5rem;
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: 2.5rem;
+  color: var(--color-primary-green, #0a6847);
+  margin: 0 0 0.75rem 0;
 }
 
 .section-header p {
   font-size: 1.1rem;
   color: #555;
-}
-
-.home__features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
+  line-height: 1.6;
+  max-width: 700px;
   margin: 0 auto;
 }
 
-/* 7. FEATURE CARD STYLES
-   - Thematic Relevance: The clean design with green accents reinforces the
-     eco-tech theme. The hover effect adds a modern, interactive feel.
-*/
-.feature-card {
-  background-color: var(--color-background);
-  padding: 2.5rem 2rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius);
+/* Flip Cards Grid - 5 columns layout */
+.flip-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Flip Card Container */
+.flip-card {
+  background-color: transparent;
+  perspective: 1000px;
+  height: 280px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
   text-align: center;
-  transition: var(--transition-smooth);
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
 }
 
-.feature-card:hover {
-  transform: translateY(-10px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--color-accent-green);
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
 }
 
-.feature-card__icon {
+/* Front and Back Shared Styles */
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: var(--border-radius, 12px);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Front Side */
+.flip-card-front {
+  background: linear-gradient(135deg, #f8fafb 0%, #ffffff 100%);
+  border: 2px solid var(--color-border, #e5e7eb);
+}
+
+.flip-card-front .card-icon {
   font-size: 3rem;
   line-height: 1;
-  margin-bottom: 1.5rem;
-  color: var(--color-primary-green);
+  margin-bottom: 1rem;
+  color: var(--color-primary-green, #10b981);
 }
 
-.feature-card__title {
-  font-family: var(--font-heading);
-  font-size: 1.4rem;
+.flip-card-front .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text, #1f2937);
   margin-bottom: 0.75rem;
-  color: var(--color-text);
+  font-family: var(--font-heading, 'Inter', sans-serif);
 }
 
-.feature-card__text {
-  line-height: 1.6;
+.card-description {
+  font-size: 0.95rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin-bottom: 1rem;
 }
 
-/* 8. FOOTER STYLES */
-.home__footer {
-  text-align: center;
-  padding: 2rem 1.5rem;
-  background-color: #eef2f5;
-  border-top: 1px solid var(--color-border);
-  color: #6c757d;
+.flip-hint {
+  font-size: 0.8rem;
+  color: var(--color-primary-green, #10b981);
+  font-weight: 500;
+  margin-top: auto;
+  opacity: 0.7;
 }
 
-/* ---------- Training ------------ */
-/* --- Root Variables (Add if not already in home.css) --- */
-:root {
-  --color-primary-green: #0a6847;
-  --color-accent-green: #77b0aa;
+/* Back Side */
+.flip-card-back {
+  background: linear-gradient(135deg, var(--color-primary-green, #10b981) 0%, var(--color-accent-green, #059669) 100%);
+  color: white;
+  transform: rotateY(180deg);
+  border: 2px solid var(--color-primary-green, #10b981);
+}
+
+.card-back-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: white;
+}
+
+.card-details-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.card-details-list li {
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.card-details-list li:last-child {
+  border-bottom: none;
+}
+
+.card-details-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: white;
+  font-weight: bold;
+}
+
+.card-back-icon {
+  font-size: 2rem;
+  margin-top: auto;
+  opacity: 0.3;
+}
+
+/* Responsive Design for Flip Cards */
+@media (max-width: 1400px) {
+  .flip-cards-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 1200px) {
+  .flip-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .flip-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
   
-  /* Neutrals */
-  --color-text-dark: #333;
-  --color-text-light: #ffffff;
-  --color-background-light: #f7fafc;
-  --color-border-light: #e2e8f0;
-  --color-shadow: rgba(0, 0, 0, 0.05);
+  .flip-card {
+    height: 260px;
+  }
 }
 
-/* ===============================================
-  Training / Green Practices Section
-===============================================
-*/
+@media (max-width: 600px) {
+  .flip-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .flip-card {
+    height: 240px;
+  }
+  
+  .services-section {
+    padding: 3rem 1rem;
+  }
+  
+  .flip-card-front .card-title {
+    font-size: 1.1rem;
+  }
+  
+  .card-description {
+    font-size: 0.9rem;
+  }
+}
 
-/* --- Section Layout --- */
+/* 7. TRAINING / GREEN PRACTICES SECTION */
 .training-features-section {
   width: 100%;
-  padding: 4rem 1rem; /* Generous padding for a "feature" section */
-  background-color: var(--color-background-light); /* Light bg to separate from other content */
+  padding: 4rem 1rem;
+  background-color: var(--color-background-light);
 }
 
 .training-content-wrapper {
   width: 100%;
-  max-width: 1200px; /* Standard max-width for desktop */
-  margin: 0 auto; /* Center the content */
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* --- Section Header --- */
 .training-header {
   text-align: center;
-  margin-bottom: 3rem; /* Space between header and grid */
+  margin-bottom: 3rem;
 }
 
 .training-header-title {
@@ -250,25 +366,22 @@
   font-size: 1.1rem;
   color: #555;
   line-height: 1.6;
-  max-width: 700px; /* Keeps the subtitle readable */
+  max-width: 700px;
   margin: 0 auto;
 }
 
-/* --- Practices Grid --- */
 .training-grid {
   display: grid;
-  gap: 1.5rem; /* Gap for mobile (single column) */
-  /* Mobile-first: default is 1 column */
+  gap: 1.5rem;
 }
 
-/* --- Practice Card --- */
 .training-card {
   background-color: var(--color-text-light);
   border-radius: 12px;
   padding: 2rem;
   border: 1px solid var(--color-border-light);
   box-shadow: 0 4px 15px var(--color-shadow);
-  text-align: center; /* Center text for mobile */
+  text-align: center;
   transition: 
     transform 0.3s ease, 
     box-shadow 0.3s ease;
@@ -279,7 +392,6 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* Card Content */
 .training-card-icon {
   font-size: 3rem;
   line-height: 1;
@@ -299,9 +411,43 @@
   line-height: 1.6;
 }
 
-/* --- Responsive Breakpoints (Mobile-First) --- */
+/* 8. FOOTER STYLES */
+.home__footer {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background-color: #eef2f5;
+  border-top: 1px solid var(--color-border);
+  color: #6c757d;
+}
 
-/* Tablet: 2x2 Grid */
+/* ===============================================
+   RESPONSIVE BREAKPOINTS
+=============================================== */
+
+/* Hero Section Mobile */
+@media (max-width: 768px) {
+  .home__hero {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    min-height: 70vh;
+  }
+
+  .home__hero-content {
+    max-width: 100%;
+  }
+
+  .home__hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .home__hero-actions .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Training Section - Tablet: 2x2 Grid */
 @media (min-width: 768px) {
   .training-features-section {
     padding: 5rem 2rem;
@@ -316,19 +462,18 @@
   }
 
   .training-grid {
-    grid-template-columns: 1fr 1fr; /* 2 columns */
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
   }
 }
 
-/* Desktop: 4-Column Grid */
+/* Training Section - Desktop: 4-Column Grid */
 @media (min-width: 1024px) {
   .training-grid {
-    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .training-card {
-    /* Align text left for better readability in columns */
-    text-align: left; 
+    text-align: left;
   }
 }

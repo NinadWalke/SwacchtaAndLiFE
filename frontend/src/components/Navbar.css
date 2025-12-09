@@ -1,66 +1,78 @@
-/* ---
-  Component Stylesheet for Navbar
-  Applying the "Eco-Minimalism" Design System
---- */
-
 /* 1. THEME & FONT VARIABLES */
 :root {
-    --font-heading: 'Poppins', sans-serif;
-    --font-body: 'Lato', sans-serif;
-    --color-background: #f8f9fa;
-    --color-text: #34495e;
-    --color-primary-green: #0a6847; 
-    --color-accent-green: #77b0aa;
-    --color-white: #ffffff; 
-    --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
-    --transition-smooth: all 0.3s ease-in-out;
-  }
-  
-  /* 2. MAIN NAVBAR CONTAINER
-     - UX Enhancement: 'position: sticky' keeps the navbar accessible at all times.
-       The subtle shadow separates it from the content below.
-  */
-  .navbar {
-    background-color: var(--color-white);
-    /* padding: 0.75rem 0; */
-    position: sticky;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 10vh;
-    overflow: visible;
-    z-index: 1000;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-  }
-  
-  .navbar__container {
-    height: 100%;
-    display: flex;
-    width: 100vw;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    /* max-width: 1200px; Consistent with other pages */
-    margin: 0 auto;
-    overflow: visible;
-  }
-  
-  /* 3. BRAND LOGO & TITLE */
-  .navbar__brand {
-    display: flex;
-    gap: 0.75rem;
-    text-decoration: none;
-    position: relative; 
-    margin-left: 1.5vh;
-    margin-top: 1.5vh;
-    /* top: 15px; Adjust this value to push the logo downwards */
-    align-self: flex-start; /* Keeps the link anchor from stretching the nav height */
-    z-index: 1001; /* Keeps logo above the rest of the content */
-  }
-  
-  .brand__logo {
-    width: 17vh;
-    height: 17vh;
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Lato', sans-serif;
+  --color-background: #f8f9fa;
+  --color-text: #34495e;
+  --color-primary-green: #0a6847; 
+  --color-accent-green: #77b0aa;
+  --color-white: #ffffff; 
+  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --transition-smooth: all 0.3s ease-in-out;
+}
+
+/* 2. MAIN NAVBAR CONTAINER */
+.navbar {
+  background-color: var(--color-white);
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, 
+              rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, 
+              rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  transition: height 0.3s ease-in-out;
+}
+
+/* Hero mode - larger navbar with overflowing logo */
+.navbar--hero-mode {
+  height: 10vh;
+  overflow: visible;
+}
+
+/* Compact mode - normal navbar with contained logo */
+.navbar--compact {
+  height: 10vh;
+  overflow: hidden;
+}
+
+.navbar__container {
+  height: 100%;
+  display: flex;
+  width: 100vw;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+/* 3. BRAND LOGO & TITLE */
+.navbar__brand {
+  display: flex;
+  gap: 0.75rem;
+  text-decoration: none;
+  position: relative; 
+  align-self: flex-start;
+  z-index: 1001;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hero mode brand positioning */
+.navbar--hero-mode .navbar__brand {
+  margin-left: 1.5vh;
+  margin-top: 1.5vh;
+}
+
+/* Compact mode brand positioning */
+.navbar--compact .navbar__brand {
+  margin-left: 1vh;
+  margin-top: 0;
+  align-self: center;
+}
+
+.brand__logo {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -70,157 +82,223 @@
   filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.1));
   position: relative;
   z-index: 10;
-  }
-  
-  .brand__logo img   {
-    width: 120%;
-    height: 120%;
-    border-radius: 50%;
-    object-fit: contain;
-  }
-  
-  .brand__title {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-primary-green);
-    margin: 0; /* Reset default heading margin */
-  }
-  
-  /* 4. NAVIGATION LINKS (DESKTOP) */
-  .navbar__nav {
-    display: flex;
-  align-items: stretch; /* CHANGE: Ensure links can stretch to full height */
-  height: 100%;        /* NEW: Fill the container height */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hero mode logo - large and overflowing */
+.navbar--hero-mode .brand__logo {
+  width: 17vh;
+  height: 17vh;
+}
+
+/* Compact mode logo - fits within navbar, no circle */
+.navbar--compact .brand__logo {
+  width: 8vh;
+  height: 8vh;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  filter: none;
+}
+
+.brand__logo img {
+  width: 120%;
+  height: 120%;
+  border-radius: 50%;
+  object-fit: contain;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Remove border-radius from image in compact mode */
+.navbar--compact .brand__logo img {
+  border-radius: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.brand__title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary-green);
+  margin: 0;
+}
+
+/* 4. NAVIGATION LINKS (DESKTOP) */
+.navbar__nav {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
   gap: 1.5rem;
   list-style: none;
-    
-  }
-  
-  .nav__link {
-    font-family: var(--font-heading);
-    font-weight: 600;
-    font-size: 2vh;
-    color: var(--color-text);
-    text-decoration: none;
-    padding: 0.5rem 0;
-    position: relative;
-    transition: var(--transition-smooth);
-    display: flex;
-    align-items: center;
-    padding: 0 0.5rem;
-    height: 100%;
-    text-transform: uppercase;
-  }
-  
-  .nav__link:hover {
-    color: var(--color-accent-green);
-  }
-  
-  /* Modern underline effect for the active link */
-  .nav__link::after {
-    content: '';
+}
+
+.nav__link {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 2vh;
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
+  height: 100%;
+  text-transform: uppercase;
+}
+
+.nav__link:hover {
+  color: var(--color-accent-green);
+}
+
+/* Modern underline effect for the active link */
+.nav__link::after {
+  content: '';
   position: absolute;
-  bottom: 0;           /* Sticks to the exact bottom of the 10vh container */
+  bottom: 0;
   left: 0;
   width: 0;
-  height: 5px;         /* Slightly thicker for visibility on the edge */
+  height: 5px;
   background-color: var(--color-accent-green);
   transition: width 0.3s ease;
-  }
-  
-  .nav__link.active::after {
-    width: 100%;
-  }
-  
-  .nav__logout-btn {
-    /* Style the logout button differently */
-    background-color: transparent;
-    color: var(--color-danger);
-    border: 2px solid var(--color-danger);
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-  }
-  .nav__logout-btn:hover {
-    background-color: var(--color-danger);
-    color: var(--color-white);
-  }
-  
-  /* 5. HAMBURGER TOGGLE (MOBILE) */
+}
+
+.nav__link.active::after {
+  width: 100%;
+}
+
+.nav__logout-btn {
+  background-color: transparent;
+  color: var(--color-danger);
+  border: 2px solid var(--color-danger);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.nav__logout-btn:hover {
+  background-color: var(--color-danger);
+  color: var(--color-white);
+}
+
+/* 5. HAMBURGER TOGGLE (MOBILE) */
+.navbar__toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+  width: 30px;
+  height: 24px;
+  position: relative;
+}
+
+.hamburger__line {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: var(--color-primary-green);
+  border-radius: 3px;
+  position: absolute;
+  left: 0;
+  transition: all 0.35s ease-in-out;
+}
+
+.hamburger__line--1 { top: 0; }
+.hamburger__line--2 { top: 50%; transform: translateY(-50%); }
+.hamburger__line--3 { bottom: 0; }
+
+/* Animation for hamburger to 'X' */
+.navbar__toggle--open .hamburger__line--1 {
+  transform: translateY(10.5px) rotate(45deg);
+}
+.navbar__toggle--open .hamburger__line--2 {
+  opacity: 0;
+}
+.navbar__toggle--open .hamburger__line--3 {
+  transform: translateY(-10.5px) rotate(-45deg);
+}
+
+.center-div {
+  margin-right: 1vh;
+  margin-top: 1vh;
+  height: 17vh;
+  width: 17vh;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Adjust center div for compact mode */
+.navbar--compact .center-div {
+  height: 8vh;
+  width: 8vh;
+  margin-top: 0;
+}
+
+/* 6. RESPONSIVE STYLES (MOBILE) */
+@media (max-width: 992px) {
   .navbar__toggle {
-    display: none; /* Hidden on desktop */
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    z-index: 1001; /* Ensure it's above the mobile nav background */
-    width: 30px;
-    height: 24px;
-    position: relative;
-  }
-  
-  .hamburger__line {
     display: block;
+  }
+
+  .navbar__nav {
+    position: fixed;
+    top: 0;
+    left: -100%;
     width: 100%;
-    height: 3px;
-    background-color: var(--color-primary-green);
-    border-radius: 3px;
-    position: absolute;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    background-color: var(--color-white);
+    transition: left 0.35s ease-in-out;
+  }
+
+  .navbar__nav--open {
     left: 0;
-    transition: all 0.35s ease-in-out;
   }
-  
-  .hamburger__line--1 { top: 0; }
-  .hamburger__line--2 { top: 50%; transform: translateY(-50%); }
-  .hamburger__line--3 { bottom: 0; }
-  
-  /* Animation for hamburger to 'X' */
-  .navbar__toggle--open .hamburger__line--1 {
-    transform: translateY(10.5px) rotate(45deg);
-  }
-  .navbar__toggle--open .hamburger__line--2 {
-    opacity: 0;
-  }
-  .navbar__toggle--open .hamburger__line--3 {
-    transform: translateY(-10.5px) rotate(-45deg);
+
+  .nav__link {
+    font-size: 1.5rem;
   }
   
   .center-div {
-    margin-right: 1vh;
-    margin-top: 1vh;
-    height: 17vh;
-    width: 17vh;
-    
+    display: none;
   }
-  
-  
-  /* 6. RESPONSIVE STYLES (MOBILE) */
-  @media (max-width: 992px) { /* A wider breakpoint for this many links */
-    .navbar__toggle {
-      display: block;
-    }
-  
-    .navbar__nav {
-      position: fixed;
-      top: 0;
-      left: -100%; /* Start off-screen */
-      width: 100%;
-      height: 100vh;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 2rem;
-      background-color: var(--color-white);
-      transition: left 0.35s ease-in-out;
-    }
-  
-    .navbar__nav--open {
-      left: 0; /* Slide in */
-    }
-  
-    .nav__link {
-      font-size: 1.5rem;
-    }
+
+  /* Mobile adjustments for both modes */
+  .navbar--hero-mode,
+  .navbar--compact {
+    height: 8vh;
   }
+
+  .navbar--hero-mode .brand__logo {
+    width: 6vh;
+    height: 6vh;
+    border-width: 3px;
+  }
+
+  .navbar--compact .brand__logo {
+    width: 6vh;
+    height: 6vh;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    padding: 0.5vh;
+  }
+
+  .navbar--compact .brand__logo img {
+    border-radius: 0;
+  }
+
+  .navbar--hero-mode .navbar__brand,
+  .navbar--compact .navbar__brand {
+    margin-left: 1vh;
+    margin-top: 0;
+    align-self: center;
+  }
+}
