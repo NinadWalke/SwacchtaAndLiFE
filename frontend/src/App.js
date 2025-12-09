@@ -44,6 +44,9 @@ import Training from "./pages/services/training/training.jsx";
 import LevelDetail from "./pages/services/training/components/levelhub.jsx";
 import RecyclingGame from './pages/games/RecyclingGame';
 
+// Carbon Footprint
+import CarbonFootprintDash from "./pages/cfdash/cfdash.jsx";
+
 // Ecommerce
 import Shop from "./pages/services/shop/Shop.jsx";
 // Subadmin
@@ -97,6 +100,7 @@ function App() {
             <Route path="/training" element={<Training />} />
             <Route path="/training/levels/:id" element={<LevelDetail />} />
             <Route path="/training/game" element={<RecyclingGame />} />
+            <Route path="/cfdash" element={<CarbonFootprintDash />} />
             <Route path="*" element={<NotFound/>}/>
           </Routes>
           <Footer />

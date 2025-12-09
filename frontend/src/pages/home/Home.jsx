@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/AuthContext";
 import services from './components/services';
 import api from "../../utils/axiosConfig";
+import CarbonFootprintDash from "../cfdash/cfdash";
 // Import the new stylesheet
 import "./Home.css";
 
@@ -298,60 +299,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- TRAINING SECTION --- */}
-      <section id="training" className="training-features-section">
-        <div className="training-content-wrapper">
-          <header className="training-header">
-            <h2 className="training-header-title">Start Your Green Journey</h2>
-            <p className="training-header-subtitle">
-              Simple changes in your daily routine can make a massive
-              difference. Here are some key practices to help our community and
-              planet thrive.
-            </p>
-          </header>
-
-          <div className="training-grid">
-            <article className="training-card">
-              <div className="training-card-icon">♻️</div>
-              <h3 className="training-card-title">1. Reduce & Refuse</h3>
-              <p className="training-card-text">
-                The best way to manage waste is to not create it. Refuse
-                single-use plastics like straws, bags, and cutlery. Opt for
-                reusable water bottles, coffee cups, and shopping bags.
-              </p>
-            </article>
-
-            <article className="training-card">
-              <div className="training-card-icon">🔄</div>
-              <h3 className="training-card-title">2. Reuse & Repurpose</h3>
-              <p className="training-card-text">
-                Before you toss it, think: can this be used again? Glass jars
-                make great storage containers. Old clothes can become cleaning
-                rags. Get creative and give items a second life.
-              </p>
-            </article>
-
-            <article className="training-card">
-              <div className="training-card-icon">🚮</div>
-              <h3 className="training-card-title">3. Recycle Correctly</h3>
-              <p className="training-card-text">
-                Recycling is powerful, but only when done right. Learn your
-                local rules. Clean your recyclables and avoid
-                "wish-cycling"—when in doubt, throw it out in the general waste.
-              </p>
-            </article>
-
-            <article className="training-card">
-              <div className="training-card-icon">📱</div>
-              <h3 className="training-card-title">4. Report & Act</h3>
-              <p className="training-card-text">
-                Be the eyes of your community. When you see illegal dumping,
-                overflowing bins, or litter, use this app to report it. Your
-                action helps keep our public spaces clean.
-              </p>
-            </article>
-          </div>
-        </div>
+      {/* --- CARBON FOOTPRINT CALCULATOR --- */}
+      <section className="carbon-calculator-section">
+        <CarbonFootprintDash />
       </section>
       
       
