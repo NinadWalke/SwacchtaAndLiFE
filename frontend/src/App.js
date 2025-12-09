@@ -41,6 +41,7 @@ import FranchiseeForm from "./pages/subadmin/franchisee_form/FranchiseeForm.jsx"
 
 //Training
 import Training from "./pages/services/training/training.jsx";
+import LevelDetail from "./pages/services/training/components/levelhub.jsx";
 import RecyclingGame from './pages/games/RecyclingGame';
 
 // Ecommerce
@@ -94,6 +95,7 @@ function App() {
               element={<OfficialsReportDisplay />}
             />
             <Route path="/training" element={<Training />} />
+            <Route path="/training/levels/:id" element={<LevelDetail />} />
             <Route path="/game" element={<RecyclingGame />} />
             <Route path="*" element={<NotFound/>}/>
           </Routes>
