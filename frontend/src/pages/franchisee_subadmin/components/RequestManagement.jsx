@@ -487,7 +487,8 @@ function RequestManagement() {
                           </button>
                         )}
                       </>
-                    ) : (
+                    ) 
+                    : (
                       <div className="status-display">
                         <span className="status-icon-display">
                           {statusInfo.icon}
@@ -509,7 +510,7 @@ function RequestManagement() {
                         </>
                       )}
                     </button>
-                    {req.status === "collected" && (
+                    {(req.status === "collected" || req.status === "approved") && (
                       <button
                         className="btn-action-modern verify"
                         disabled={actionLoading === req._id}

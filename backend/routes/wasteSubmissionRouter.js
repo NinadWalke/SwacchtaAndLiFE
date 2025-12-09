@@ -24,13 +24,13 @@ router.patch(
   wrapAsync(wasteSubmissionController.payVendor)
 );
 
+router.patch("/requests/:id/collected", wrapAsync(wasteSubmissionController.markCollected));
+
 
 // READ ONE
 router.get("/:id", wrapAsync(wasteSubmissionController.getSubmissionById));
 
 // DELETE
 router.delete("/:id", wrapAsync(wasteSubmissionController.deleteSubmission));
-
-router.patch("/requests/:id/collected", wrapAsync(wasteSubmissionController.markCollected));
 
 module.exports = router;

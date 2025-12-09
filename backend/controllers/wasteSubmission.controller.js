@@ -210,7 +210,7 @@ module.exports.verifySubmission = async (req, res) => {
     return res.status(404).json({ message: "Submission not found" });
   }
 
-  if (submission.status !== "collected") {
+  if (!["approved", "collected"].includes(submission.status)) {
     return res.status(400).json({
       message: "Only collected requests can be verified",
     });
