@@ -64,6 +64,22 @@ export default function Training() {
               Play Now →
             </Link>
           </div>
+          <div className="game-card coming-soon">
+            <div className="game-icon">⏳</div>
+            <h3 className="game-name">More Games Coming Soon</h3>
+            <p className="game-desc">
+              We're building interactive environmental challenges, quizzes, and
+              sorting mini-games to help you learn while having fun. Stay tuned!
+            </p>
+
+            <button
+              className="game-btn"
+              disabled
+              style={{ opacity: 0.6, cursor: "not-allowed" }}
+            >
+              Coming Soon
+            </button>
+          </div>
         </div>
       </section>
     </div>
