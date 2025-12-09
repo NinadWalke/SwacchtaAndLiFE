@@ -720,3 +720,85 @@
   color: #f44336; /* red */
 }
 
+/* ================================
+   GAMES SECTION
+================================*/
+
+.games-section {
+  margin-top: 50px;
+  padding: 40px 0;
+}
+
+.games-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.games-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0a6847;
+}
+
+.games-subtitle {
+  font-size: 1rem;
+  color: #555;
+  max-width: 650px;
+  margin: 10px auto 0;
+}
+
+.games-content {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.game-card {
+  background: #fff;
+  padding: 24px;
+  width: 320px;
+  border-radius: 18px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  transition: all 0.25s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+}
+
+.game-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.game-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0a6847;
+  margin-bottom: 10px;
+}
+
+.game-desc {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.game-btn {
+  display: inline-block;
+  padding: 12px 16px;
+  background: #0a6847;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.game-btn:hover {
+  background: #084d35;
+  transform: translateY(-2px);
+}

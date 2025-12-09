@@ -96,7 +96,7 @@ function App() {
             />
             <Route path="/training" element={<Training />} />
             <Route path="/training/levels/:id" element={<LevelDetail />} />
-            <Route path="/game" element={<RecyclingGame />} />
+            <Route path="/training/game" element={<RecyclingGame />} />
             <Route path="*" element={<NotFound/>}/>
           </Routes>
           <Footer />

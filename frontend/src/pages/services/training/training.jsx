@@ -3,12 +3,11 @@ import "./training.css";
 
 import Chatbot from "./components/Chatbot";
 import { LEVELS } from "./components/level"; // data array
-import { Link } from "react-router-dom";     // navigation for each level card
+import { Link } from "react-router-dom"; // navigation for each level card
 
 export default function Training() {
   return (
     <div className="training-container">
-
       {/* -------- HEADER & CHATBOT -------- */}
       <div className="training-header">
         <h1 className="training-title">Training & Awareness</h1>
@@ -20,7 +19,8 @@ export default function Training() {
         <div className="levels-header">
           <h2 className="levels-title">Learning Levels</h2>
           <p className="levels-subtitle">
-            Start from Level 1 and progress by completing real actions and uploading proof.
+            Start from Level 1 and progress by completing real actions and
+            uploading proof.
           </p>
         </div>
 
@@ -29,7 +29,7 @@ export default function Training() {
           {LEVELS.map((level) => (
             <Link
               key={level.id}
-              to={`/training/levels/${level.id}`}  // Use this if your route is training-based
+              to={`/training/levels/${level.id}`} // Use this if your route is training-based
               className="level-card"
             >
               <div className="level-rank">Level {level.id}</div>
@@ -39,6 +39,31 @@ export default function Training() {
               <p className="level-short">{level.short}</p>
             </Link>
           ))}
+        </div>
+      </section>
+      {/* -------- GAMES SECTION -------- */}
+      <section className="games-section">
+        <div className="games-header">
+          <h2 className="games-title">Educational Games</h2>
+          <p className="games-subtitle">
+            Fun and interactive games for children to learn waste management,
+            segregation, and recycling.
+          </p>
+        </div>
+
+        <div className="games-content">
+          <div className="game-card">
+            <div className="game-icon">🎮</div>
+            <h3 className="game-name">Recycling Rush</h3>
+            <p className="game-desc">
+              Drag and drop waste items into the correct bins. Learn
+              biodegradable, recyclable, hazardous, and mixed waste categories.
+            </p>
+
+            <Link to="/training/game" className="game-btn">
+              Play Now →
+            </Link>
+          </div>
         </div>
       </section>
     </div>
