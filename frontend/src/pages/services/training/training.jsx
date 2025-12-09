@@ -8,19 +8,12 @@ import { Link } from "react-router-dom"; // navigation for each level card
 export default function Training() {
   return (
     <div className="training-container">
-      {/* -------- HEADER & CHATBOT -------- */}
-      <div className="training-header">
-        <h1 className="training-title">Training & Awareness</h1>
-        <Chatbot />
-      </div>
-
       {/* -------- LEVEL SECTION -------- */}
       <section className="levels-section">
         <div className="levels-header">
-          <h2 className="levels-title">Learning Levels</h2>
+          <h2 className="levels-title">GREEN MISSIONS</h2>
           <p className="levels-subtitle">
-            Start from Level 1 and progress by completing real actions and
-            uploading proof.
+            Complete tasks to earn GREEN COINS.
           </p>
         </div>
 
@@ -63,6 +56,22 @@ export default function Training() {
             <Link to="/training/game" className="game-btn">
               Play Now →
             </Link>
+          </div>
+          <div className="game-card coming-soon">
+            <div className="game-icon">⏳</div>
+            <h3 className="game-name">More Games Coming Soon</h3>
+            <p className="game-desc">
+              We're building interactive environmental challenges, quizzes, and
+              sorting mini-games to help you learn while having fun. Stay tuned!
+            </p>
+
+            <button
+              className="game-btn"
+              disabled
+              style={{ opacity: 0.6, cursor: "not-allowed" }}
+            >
+              Coming Soon
+            </button>
           </div>
         </div>
       </section>

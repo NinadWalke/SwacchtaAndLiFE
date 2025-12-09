@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import "./Navbar.css";
@@ -8,9 +8,12 @@ export default function Navbar() {
   const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isHeroVisible, setIsHeroVisible] = useState(true);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     setMenuOpen(false);
+    setServicesOpen(false);
   }, [location]);
 
   useEffect(() => {
@@ -37,21 +40,38 @@ export default function Navbar() {
     };
   }, [location.pathname]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setServicesOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const navLinks = [
     { to: "/", label: "Home", type: "always" },
     { to: "/login", label: "Login", type: "guest" },
     { to: "/signup", label: "Signup", type: "guest" },
     { to: "/profile", label: "Profile", type: "user" },
-    { to: "/upload", label: "Upload", type: "user" },
     { to: "/osp", label: "OSP", type: "user" },
-    { to: "/events", label: "Events", type: "user" },
-    { to: "/recycle", label: "Recycle & Earn", type: "user" },
     { to: "/franchisee-dashboard", label: "Franchisee Dashboard", type: "user" },
-    { to: "/training", label: "Training", type: "user" },
-    { to: "/committee", label: "Committee", type: "user" },
-    { to: "/shop", label: "Shop", type: "user" },
     { to: "/officials", label: "Officials", type: "user" },
     { to: "/vendor", label: "Vendor", type: "user" }, 
+  ];
+
+  const serviceLinks = [
+    { to: "/upload", label: "Upload" },
+    { to: "/events", label: "Events" },
+    { to: "/recycle", label: "Recycle & Earn" },
+    { to: "/training", label: "Training" },
+    { to: "/committee", label: "Committee" },
+    { to: "/shop", label: "Shop" },
   ];
 
   const filteredLinks = navLinks.filter(link => {
@@ -60,6 +80,8 @@ export default function Navbar() {
     if (!user && link.type === "guest") return true;
     return false;
   });
+
+  const isServiceActive = serviceLinks.some(link => location.pathname === link.to);
 
   return (
     <header className={`navbar ${isHeroVisible ? 'navbar--hero-mode' : 'navbar--compact'}`} style={{padding: 0}}>
@@ -83,6 +105,41 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          {user && (
+            <div 
+              className="nav__dropdown" 
+              ref={dropdownRef}
+              onMouseEnter={() => setServicesOpen(true)}
+              onMouseLeave={() => setServicesOpen(false)}
+            >
+              <button
+                className={`nav__link nav__dropdown-trigger ${isServiceActive ? "active" : ""}`}
+                onClick={() => setServicesOpen(!servicesOpen)}
+              >
+                Services
+                <span className={`dropdown-arrow ${servicesOpen ? "dropdown-arrow--open" : ""}`}>▼</span>
+              </button>
+
+              {servicesOpen && (
+                <div className="nav__dropdown-menu">
+                  {serviceLinks.map((link) => (
+                    <Link
+                      key={link.to}
+                      to={link.to}
+                      className={`nav__dropdown-item ${location.pathname === link.to ? "active" : ""}`}
+                      onClick={() => {
+                        setServicesOpen(false);
+                        setMenuOpen(false);
+                      }}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </nav>
 
         <button

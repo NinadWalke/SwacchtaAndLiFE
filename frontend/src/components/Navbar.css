@@ -16,7 +16,7 @@
 
 .navbar--compact {
   height: 10vh;
-  overflow: hidden;
+  overflow: visible; /* ← CHANGED FROM hidden TO visible */
 }
 
 .navbar__container {
@@ -281,5 +281,122 @@
     margin-left: 1vh;
     margin-top: 0;
     align-self: center;
+  }
+}
+
+/* ============================================
+   DROPDOWN NAVIGATION
+   ============================================ */
+
+.nav__dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.nav__dropdown-trigger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.5rem;
+}
+
+.dropdown-arrow {
+  font-size: 0.75rem;
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+
+.dropdown-arrow--open {
+  transform: rotate(180deg);
+}
+
+.nav__dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--color-white);
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 1000;
+  animation: dropdownFadeIn 0.2s ease;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav__dropdown-item {
+  display: block;
+  padding: 0.875rem 1.25rem;
+  color: var(--color-text);
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.nav__dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.nav__dropdown-item:hover {
+  background-color: var(--color-accent-green);
+  color: var(--color-white);
+  padding-left: 1.5rem;
+}
+
+.nav__dropdown-item.active {
+  background-color: var(--color-primary-green);
+  color: var(--color-white);
+}
+
+/* Mobile dropdown styles */
+@media (max-width: 992px) {
+  .nav__dropdown {
+    width: 100%;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .nav__dropdown-trigger {
+    width: 100%;
+    justify-content: center;
+    font-size: 1.5rem;
+    padding: 0.5rem 0;
+  }
+
+  .nav__dropdown-menu {
+    position: static;
+    box-shadow: none;
+    width: 100%;
+    background-color: #f0f0f0;
+    border-radius: 0;
+    margin-top: 0.5rem;
+  }
+
+  .nav__dropdown-item {
+    text-align: center;
+    font-size: 1.25rem;
+    padding: 1rem;
+  }
+
+  .nav__dropdown-item:hover {
+    padding-left: 1.25rem;
   }
 }
