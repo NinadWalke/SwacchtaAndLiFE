@@ -1,58 +1,76 @@
 import React, { useState } from "react";
 import "./cfdash.css";
+import { TreeDeciduous, Car, Smartphone, Droplets, Zap } from 'lucide-react'; // Assuming you have lucide-react, or remove icons if not
 
 const CarbonFootprintDash = () => {
   const [wasteType, setWasteType] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [months, setMonths] = useState(1);
 
-  // Waste data with CO2 emissions and disposal impact
+  // 1. UPDATED WASTE DATA with EPA/WARM Conversion Rates
+  // Added energyPerKg (kWh) and waterPerKg (Liters)
   const wasteData = {
     "plastic-bags": { 
-      co2PerKg: 5.9, 
+      co2PerKg: 1.5,      // EPA Data
+      energyPerKg: 5.8,   // EPA Data
+      waterPerKg: 23,     // EPA Data
       name: "Plastic Bags",
       decomposition: "450+ years",
       recyclable: true 
     },
     "plastic-bottles": { 
-      co2PerKg: 3.8, 
+      co2PerKg: 1.5,      // EPA Data (PET)
+      energyPerKg: 5.8, 
+      waterPerKg: 23, 
       name: "Plastic Bottles",
       decomposition: "450+ years",
       recyclable: true 
     },
     "paper-waste": { 
-      co2PerKg: 1.2, 
+      co2PerKg: 1.0,      // EPA Data
+      energyPerKg: 4.0,   // EPA Data
+      waterPerKg: 26,     // EPA Data
       name: "Paper & Cardboard",
       decomposition: "2-6 weeks",
       recyclable: true 
     },
     "food-waste": { 
       co2PerKg: 2.5, 
+      energyPerKg: 0,     // N/A for standard recycling energy savings
+      waterPerKg: 0,
       name: "Food Waste (Landfill)",
       decomposition: "5-30 years",
       recyclable: false,
       compostable: true 
     },
     "glass": { 
-      co2PerKg: 0.6, 
+      co2PerKg: 0.3,      // EPA Data
+      energyPerKg: 0.8,   // EPA Data
+      waterPerKg: 4,      // EPA Data
       name: "Glass",
       decomposition: "1 million+ years",
       recyclable: true 
     },
     "metal": { 
-      co2PerKg: 4.1, 
+      co2PerKg: 9.0,      // EPA Data (Aluminum focus)
+      energyPerKg: 14.0,  // EPA Data
+      waterPerKg: 8,      // EPA Data
       name: "Metal & Aluminum",
       decomposition: "100+ years",
       recyclable: true 
     },
     "textile": { 
       co2PerKg: 6.8, 
+      energyPerKg: 8.0,   // Est.
+      waterPerKg: 100,    // High water footprint
       name: "Textiles",
       decomposition: "200-400 years",
       recyclable: true 
     },
     "electronics": { 
       co2PerKg: 15.2, 
+      energyPerKg: 20.0, 
+      waterPerKg: 15, 
       name: "E-Waste",
       decomposition: "1000+ years",
       recyclable: true,
@@ -60,9 +78,11 @@ const CarbonFootprintDash = () => {
     },
   };
 
-  // Constants
-  const TREE_CO2_ABSORPTION = 21; // kg CO2 per tree per year
-  const LANDFILL_METHANE_FACTOR = 0.5; // Additional emissions from landfill decomposition
+  // Constants for Real World Equivalents
+  const TREE_CO2_ABSORPTION = 22; // kg CO2 per tree per year (Global Carbon Seq. Standard)
+  const CAR_EMISSION_PER_KM = 0.19; // kg CO2 per km
+  const PHONE_CHARGE_KWH = 0.012; // kWh per smartphone charge
+  const SHOWER_LITERS = 65; // Liters per average shower
 
   // Calculate carbon footprint
   const calculateFootprint = () => {
@@ -71,46 +91,50 @@ const CarbonFootprintDash = () => {
     const waste = wasteData[wasteType];
     const totalKg = quantity * months;
     
-    // Direct emissions from waste production/disposal
-    let directEmissions = totalKg * waste.co2PerKg;
-    
-    // Additional methane emissions from landfill
-    const additionalEmissions = totalKg * LANDFILL_METHANE_FACTOR;
-    const totalEmissions = directEmissions + additionalEmissions;
+    // 1. Calculate Base Metrics
+    const totalEmissions = totalKg * waste.co2PerKg;
+    const totalEnergy = totalKg * (waste.energyPerKg || 0);
+    const totalWater = totalKg * (waste.waterPerKg || 0);
 
-    // Recycling impact - if recyclable, reduce by 80%
-    const recyclingFactor = waste.recyclable ? 0.2 : 1;
-    const emissionsIfRecycled = totalEmissions * recyclingFactor;
-    const savedEmissions = totalEmissions - emissionsIfRecycled;
+    // 2. Calculate Savings (If Recycled)
+    // EPA data assumes these values are SAVED if recycled vs virgin production
+    const savedEmissions = totalEmissions; 
+    const savedEnergy = totalEnergy;
+    const savedWater = totalWater;
 
-    // Composting impact for food waste
-    const compostingFactor = waste.compostable ? 0.1 : 1;
-    const emissionsIfComposted = totalEmissions * compostingFactor;
+    // 3. Composting Logic (Specific for Food)
+    const emissionsIfComposted = totalEmissions * 0.1; // 90% reduction
     const savedEmissionsCompost = totalEmissions - emissionsIfComposted;
 
-    // Tree equivalent
-    const treesEquivalent = (totalEmissions / TREE_CO2_ABSORPTION).toFixed(2);
-    const treesIfRecycled = (emissionsIfRecycled / TREE_CO2_ABSORPTION).toFixed(2);
+    // 4. Real World Equivalents
+    const treesEquivalent = (totalEmissions / TREE_CO2_ABSORPTION).toFixed(1);
+    const carKmEquivalent = (totalEmissions / CAR_EMISSION_PER_KM).toFixed(0);
+    const phoneChargesEquivalent = (totalEnergy / PHONE_CHARGE_KWH).toFixed(0);
+    const showersEquivalent = (totalWater / SHOWER_LITERS).toFixed(0);
 
-    // Format emissions in kg (more readable than 0.something tonnes)
+    // Format helpers
     const formatEmissions = (value) => {
-      if (value < 1) {
-        return (value * 1000).toFixed(0) + " g CO₂"; // grams
-      } else if (value < 1000) {
-        return value.toFixed(2) + " kg CO₂"; // kilograms
-      } else {
-        return (value / 1000).toFixed(2) + " tonnes CO₂";
-      }
+      if (value < 1) return (value * 1000).toFixed(0) + " g CO₂";
+      if (value < 1000) return value.toFixed(2) + " kg CO₂";
+      return (value / 1000).toFixed(2) + " tonnes CO₂";
     };
 
     return {
       totalEmissions: formatEmissions(totalEmissions),
-      emissionsIfRecycled: formatEmissions(emissionsIfRecycled),
-      emissionsIfComposted: formatEmissions(emissionsIfComposted),
       savedEmissions: formatEmissions(savedEmissions),
       savedEmissionsCompost: formatEmissions(savedEmissionsCompost),
+      emissionsIfComposted: formatEmissions(emissionsIfComposted),
+      
+      // Raw numbers for display
+      totalEnergy: totalEnergy.toFixed(1),
+      totalWater: totalWater.toFixed(0),
+      
+      // Equivalents
       treesEquivalent,
-      treesIfRecycled,
+      carKmEquivalent,
+      phoneChargesEquivalent,
+      showersEquivalent,
+      
       totalKg,
     };
   };
@@ -123,9 +147,6 @@ const CarbonFootprintDash = () => {
       <div className="cfdash-header">
         <h1 className="cfdash-title">Waste Impact Calculator</h1>
         <h2 className="cfdash-subtitle">See how your waste affects the environment</h2>
-        <p className="cfdash-description">
-          Understand the environmental impact of different waste types and discover how recycling or composting can make a difference.
-        </p>
       </div>
 
       <div className="cfdash-content">
@@ -142,14 +163,9 @@ const CarbonFootprintDash = () => {
               className="form-select"
             >
               <option value="">Choose waste type...</option>
-              <option value="plastic-bags">Plastic Bags</option>
-              <option value="plastic-bottles">Plastic Bottles</option>
-              <option value="paper-waste">Paper & Cardboard</option>
-              <option value="food-waste">Food Waste</option>
-              <option value="glass">Glass</option>
-              <option value="metal">Metal & Aluminum</option>
-              <option value="textile">Textiles & Clothes</option>
-              <option value="electronics">Electronics & E-Waste</option>
+              {Object.keys(wasteData).map((key) => (
+                 <option key={key} value={key}>{wasteData[key].name}</option>
+              ))}
             </select>
           </div>
 
@@ -199,17 +215,12 @@ const CarbonFootprintDash = () => {
               </div>
               {currentWaste.recyclable && (
                 <div className="info-row recyclable">
-                  <span>♻️ Can be recycled</span>
+                  <span>♻️ Recyclable (High Impact)</span>
                 </div>
               )}
               {currentWaste.compostable && (
                 <div className="info-row compostable">
-                  <span>🌱 Can be composted</span>
-                </div>
-              )}
-              {currentWaste.hazardous && (
-                <div className="info-row hazardous">
-                  <span>⚠️ Harmful to environment</span>
+                  <span>🌱 Compostable</span>
                 </div>
               )}
             </div>
@@ -220,43 +231,74 @@ const CarbonFootprintDash = () => {
         <div className="cfdash-results-section">
           {results ? (
             <>
+              {/* 1. Main CO2 Card */}
               <div className="result-card primary">
                 <div className="result-icon">🌍</div>
                 <div className="result-content">
                   <div className="result-value">{results.totalEmissions}</div>
-                  <div className="result-label">Pollution created<br/>(if thrown away)</div>
+                  <div className="result-label">CO₂ Footprint Created</div>
                 </div>
               </div>
 
-              {currentWaste?.recyclable && (
-                <div className="result-card secondary">
-                  <div className="result-icon">♻️</div>
-                  <div className="result-content">
-                    <div className="result-value">{results.emissionsIfRecycled}</div>
-                    <div className="result-label">Pollution if recycled</div>
-                    <div className="result-savings">You save {results.savedEmissions} pollution!</div>
-                  </div>
+              {/* 2. Real World Equivalents Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px' }}>
+                
+                {/* Trees */}
+                <div className="result-card">
+                   <div className="result-icon">🌲</div>
+                   <div className="result-content">
+                     <div className="result-value">{results.treesEquivalent}</div>
+                     <div className="result-label">Trees needed to absorb this</div>
+                   </div>
                 </div>
+
+                {/* Car Miles */}
+                <div className="result-card">
+                   <div className="result-icon">🚗</div>
+                   <div className="result-content">
+                     <div className="result-value">{results.carKmEquivalent} km</div>
+                     <div className="result-label">Driving distance equivalent</div>
+                   </div>
+                </div>
+              </div>
+
+              {/* 3. Recycling Savings (Energy & Water) - ONLY if recyclable */}
+              {currentWaste?.recyclable && (
+                <>
+                  <h4 style={{marginTop: '20px', marginBottom: '10px', color: '#2e7d32'}}>♻️ If You Recycle This:</h4>
+                  
+                  <div className="result-card secondary">
+                    <div className="result-icon">⚡</div>
+                    <div className="result-content">
+                      <div className="result-value">{results.totalEnergy} kWh</div>
+                      <div className="result-label">Energy Saved</div>
+                      <div className="result-savings">Enough to charge {results.phoneChargesEquivalent} phones!</div>
+                    </div>
+                  </div>
+
+                  {currentWaste.waterPerKg > 0 && (
+                    <div className="result-card secondary">
+                      <div className="result-icon">💧</div>
+                      <div className="result-content">
+                        <div className="result-value">{results.totalWater} L</div>
+                        <div className="result-label">Water Saved</div>
+                        <div className="result-savings">Equals {results.showersEquivalent} showers!</div>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
 
+              {/* 4. Composting Savings - ONLY if compostable */}
               {currentWaste?.compostable && (
                 <div className="result-card secondary">
                   <div className="result-icon">🌱</div>
                   <div className="result-content">
-                    <div className="result-value">{results.emissionsIfComposted}</div>
-                    <div className="result-label">Pollution if composted</div>
-                    <div className="result-savings">You save {results.savedEmissionsCompost} pollution!</div>
+                    <div className="result-value">{results.savedEmissionsCompost}</div>
+                    <div className="result-label">CO₂ Saved by Composting</div>
                   </div>
                 </div>
               )}
-
-              <div className="result-card">
-                <div className="result-icon">🌲</div>
-                <div className="result-content">
-                  <div className="result-value">{results.treesEquivalent}</div>
-                  <div className="result-label">Trees needed to clean this up</div>
-                </div>
-              </div>
             </>
           ) : (
             <div className="result-placeholder">
