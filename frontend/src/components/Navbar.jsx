@@ -53,6 +53,7 @@ export default function Navbar() {
     { to: "/osp", label: "OSP", type: "user" },
     { to: "/events", label: "Events", type: "user" },
     { to: "/recycle", label: "Recycle & Earn", type: "user" },
+      { to: "/cfdash", label: "Waste Carbon Footprint", type: "user" },
     { to: "/franchisee-dashboard", label: "Franchisee Dashboard", type: "user" },
     { to: "/training", label: "Training", type: "user" },
     { to: "/committee", label: "Committee", type: "user" },
