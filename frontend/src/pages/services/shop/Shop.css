@@ -1,7 +1,7 @@
 /* Shop Page Container */
 .shop-page {
   min-height: 80vh;
-  background: linear-gradient(to bottom right, #ecfdf5, #ffffff, #f0fdfa);
+  background: var(--color-white);
 }
 
 /* Header Section */

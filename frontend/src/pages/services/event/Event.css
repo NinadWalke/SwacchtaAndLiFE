@@ -24,7 +24,7 @@
 }
 
 .events-page__header {
-  background: linear-gradient(135deg, var(--color-highlight-bg), var(--color-white));
+  background: var(--color-background);
   padding: 4rem 1.5rem;
   text-align: center;
 }
