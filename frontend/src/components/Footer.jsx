@@ -63,7 +63,7 @@ function Footer() {
         <div className="bottom-bar__container">
           <p className="bottom-bar__copyright">
             {/* Dynamic year for copyright */}
-            &copy; {new Date().getFullYear()} Swacchta&Life | Govt. of India
+            &copy; {new Date().getFullYear()} GreenSathi | Govt. of India
           </p>
           <p className="bottom-bar__credit">Made with ❤️ for a cleaner tomorrow</p>
         </div>

@@ -121,7 +121,7 @@ export default function Home() {
         <div className="home__hero-content">
           <h1 className="home__hero-title">Empowering Clean Cities</h1>
           <p className="home__hero-subtitle">
-            Swacchta&Life is a smart waste management platform that leverages
+            GreenSathi is a smart waste management platform that leverages
             machine learning and citizen participation for sustainable urban
             cleanliness. Join us in building a cleaner, greener future.
           </p>
@@ -357,7 +357,7 @@ export default function Home() {
       {/* --- FOOTER --- */}
       <footer className="home__footer">
         <p>
-          &copy; {new Date().getFullYear()} Swacchta&Life. All Rights Reserved.
+          &copy; {new Date().getFullYear()} GreenSathi. All Rights Reserved.
         </p>
       </footer>
     </main>
