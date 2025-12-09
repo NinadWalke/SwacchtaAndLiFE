@@ -1,0 +1,332 @@
+/* ===== Color Variables ===== */
+:root {
+  --primary-green: #16a34a;
+  --primary-teal: #14b8a6;
+  --accent-green: #22c55e;
+  --light-green: #a3e635;
+  --dark-bg: #020617;
+  --card-bg: #0f172a;
+  --text-primary: #f9fafb;
+  --text-muted: #9ca3af;
+  --border-color: rgba(34, 197, 94, 0.3);
+}
+
+/* ===== Layout wrapper ===== */
+.levels-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 100%);
+  min-height: 100vh;
+}
+
+/* ===== Back link ===== */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: var(--light-green);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.back-link:hover {
+  color: var(--accent-green);
+  gap: 0.75rem;
+}
+
+/* ===== Level detail card ===== */
+.level-detail-card {
+  background: linear-gradient(135deg, #0f4c3a 0%, #052e16 100%);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 20px 50px rgba(22, 163, 74, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+/* Header with icon + title */
+.level-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.level-detail-icon {
+  font-size: 3.2rem;
+  background: linear-gradient(135deg, var(--light-green), var(--accent-green));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.level-rank {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--light-green);
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.level-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0.5rem 0 0.25rem;
+  color: var(--text-primary);
+}
+
+.level-tag {
+  display: inline-block;
+  border-radius: 999px;
+  border: 2px solid var(--primary-teal);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--primary-teal);
+  font-weight: 600;
+}
+
+/* Short description */
+.level-detail-description {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* ===== Sections ===== */
+.level-section {
+  margin-bottom: 2.5rem;
+}
+
+.level-section h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.level-section h2::before {
+  content: '';
+  width: 4px;
+  height: 24px;
+  background: linear-gradient(180deg, var(--light-green), var(--accent-green));
+  border-radius: 2px;
+}
+
+.section-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+/* Tasks list */
+.tasks-list {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.tasks-list li {
+  margin-bottom: 0.75rem;
+  color: var(--text-muted);
+  transition: color 0.3s ease;
+}
+
+.tasks-list li::marker {
+  color: var(--light-green);
+  font-weight: 700;
+}
+
+.tasks-list li:hover {
+  color: var(--text-primary);
+}
+
+/* Description points */
+.description-points {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.description-points li {
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  position: relative;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.description-points li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--light-green);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.description-points li:hover {
+  color: var(--text-primary);
+}
+
+/* ===== Proof form ===== */
+.proof-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  background: rgba(15, 23, 42, 0.5);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.file-input-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: var(--text-primary);
+}
+
+.file-input {
+  font-size: 0.85rem;
+  padding: 0.75rem;
+  background: var(--card-bg);
+  border: 2px dashed var(--border-color);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.file-input:hover {
+  border-color: var(--light-green);
+  color: var(--light-green);
+}
+
+.files-preview {
+  list-style: none;
+  padding-left: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.files-preview li {
+  padding: 0.5rem 0.75rem;
+  background: rgba(22, 163, 74, 0.1);
+  border-left: 3px solid var(--accent-green);
+  margin-bottom: 0.35rem;
+  border-radius: 0.25rem;
+}
+
+/* Notes textarea */
+.notes-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: var(--text-primary);
+}
+
+.notes-label textarea {
+  min-height: 110px;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: all 0.3s ease;
+}
+
+.notes-label textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.notes-label textarea:focus {
+  outline: none;
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+  background-color: rgba(15, 23, 42, 0.8);
+}
+
+/* Submit button */
+.btn-primary {
+  padding: 0.9rem 1.5rem;
+  border-radius: 0.75rem;
+  border: none;
+  background: linear-gradient(135deg, var(--accent-green), var(--primary-green));
+  color: #020617;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(34, 197, 94, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .levels-wrapper {
+    padding: 1.5rem 1rem 2.5rem;
+  }
+
+  .level-detail-card {
+    padding: 1.5rem 1.25rem 1.75rem;
+  }
+
+  .level-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .level-detail-icon {
+    font-size: 2.8rem;
+  }
+
+  .level-name {
+    font-size: 1.5rem;
+  }
+
+  .proof-form {
+    gap: 1rem;
+  }
+
+  .level-section h2 {
+    font-size: 1.1rem;
+  }
+}
